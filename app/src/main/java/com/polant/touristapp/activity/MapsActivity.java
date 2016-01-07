@@ -1,6 +1,7 @@
 package com.polant.touristapp.activity;
 
-import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,18 +13,12 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mikepenz.crossfader.Crossfader;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.MiniDrawer;
-import com.mikepenz.materialdrawer.interfaces.ICrossfader;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-import com.mikepenz.materialize.util.UIUtils;
 import com.polant.touristapp.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -31,16 +26,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LAYOUT = R.layout.activity_maps;
     private GoogleMap mMap;
     private Toolbar toolbar;
+    private Drawer navigationDrawer;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppDefault);
         setContentView(LAYOUT);
 
         initMapFragment();
         initToolbar();
         initNavigationDrawer();
+        initFAB();
     }
 
     @Override
@@ -53,6 +51,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
+    @Override
+    public void onBackPressed() {
+        if (navigationDrawer.isDrawerOpen()) {
+            navigationDrawer.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void initMapFragment() {
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -62,36 +69,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
-
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
+//        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//            }
+//        });
     }
 
     private void initNavigationDrawer() {
-        // Create a few sample profile
-        // NOTE you have to define the loader logic too. See the CustomApplication for more details
-        final IProfile profile = new ProfileDrawerItem().withName("Mike Penz")
-                .withEmail("mikepenz@gmail.com")
-                .withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460");
-        final IProfile profile2 = new ProfileDrawerItem().withName("Bernat Borras")
-                .withEmail("alorma@github.com")
-                .withIcon(Uri.parse("https://avatars3.githubusercontent.com/u/887462?v=3&s=460"));
-
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.header)
                 .withTranslucentStatusBar(false)
-                .addProfiles(
-                        profile,
-                        profile2
-                )
                 .build();
 
-        Drawer result = new DrawerBuilder()
+        navigationDrawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withTranslucentStatusBar(false)
@@ -107,43 +100,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-
                         return false;
                     }
                 })
-                .withGenerateMiniDrawer(true)
-                .buildView();
-
-        //the MiniDrawer is managed by the Drawer and we just get it to hook it into the Crossfader
-        MiniDrawer miniResult = result.getMiniDrawer();
-
-        //get the widths in px for the first and second panel
-        int firstWidth = (int) UIUtils.convertDpToPixel(300, this);
-        int secondWidth = (int) UIUtils.convertDpToPixel(72, this);
-
-        //create and build our crossfader (see the MiniDrawer is also builded in here, as the build method returns the view to be used in the crossfader)
-        //the crossfader library can be found here: https://github.com/mikepenz/Crossfader
-        final Crossfader crossFader = new Crossfader()
-                .withContent(findViewById(R.id.contentMain))//тут я сам поменял.
-                .withFirst(result.getSlider(), firstWidth)
-                .withSecond(miniResult.build(this), secondWidth)
                 .build();
+    }
 
-        //define the crossfader to be used with the miniDrawer. This is required to be able to automatically toggle open / close
-        miniResult.withCrossFader(new ICrossfader() {
+    private void initFAB(){
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void crossfade() {
-                crossFader.crossFade();
-            }
-
-            @Override
-            public boolean isCrossfaded() {
-                return crossFader.isCrossFaded();
+            public void onClick(View view) {
+                Snackbar.make(view, "My fab action", Snackbar.LENGTH_LONG).show();
             }
         });
-
-        //define a shadow (this is only for normal LTR layouts if you have a RTL app you need to define the other one
-        crossFader.getCrossFadeSlidingPaneLayout().setShadowResourceLeft(R.drawable.material_drawer_shadow_left);
     }
 
 
