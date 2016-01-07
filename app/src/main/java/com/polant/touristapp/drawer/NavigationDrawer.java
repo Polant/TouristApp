@@ -43,7 +43,9 @@ public class NavigationDrawer {
                         new PrimaryDrawerItem().withName("Поиск").withIcon(R.drawable.ic_magnify).withIdentifier(2),
                         new PrimaryDrawerItem().withName("Метки").withIcon(R.drawable.ic_bookmark).withIdentifier(3),
                         new PrimaryDrawerItem().withName("Настройки").withIcon(R.drawable.ic_settings).withIdentifier(4),
-                        new PrimaryDrawerItem().withName("Помощь").withIcon(R.drawable.ic_help).withIdentifier(5),
+                        new PrimaryDrawerItem().withName("Помощь").withIcon(R.drawable.ic_help).withIdentifier(5)
+                )
+                .addStickyDrawerItems(
                         new PrimaryDrawerItem().withName("Обратная связь").withIcon(R.drawable.ic_contact_mail).withIdentifier(6)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
