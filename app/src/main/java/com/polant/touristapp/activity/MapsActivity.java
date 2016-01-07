@@ -5,7 +5,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -65,6 +68,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Toolbar initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
+
+        toolbar.inflateMenu(R.menu.toolbar_maps_activity);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //TODO: реализовать обработчик фильтрации.
+                int id = item.getItemId();
+                switch (id){
+                    case R.id.item_filter:
+                        return true;
+                }
+                return false;
+            }
+        });
         return toolbar;
     }
 
@@ -82,6 +99,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-
 
 }

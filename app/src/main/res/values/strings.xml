@@ -2,4 +2,5 @@
     <string name="app_name">Tourist app</string>
     <string name="navigation_view_open">drawer open</string>
     <string name="navigation_view_close">drawer close</string>
+    <string name="menu_toolbar_filter">Фильтр</string>
 </resources>
