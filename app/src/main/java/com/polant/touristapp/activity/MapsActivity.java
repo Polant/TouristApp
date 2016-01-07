@@ -16,15 +16,18 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 import com.mikepenz.materialdrawer.Drawer;
 import com.polant.touristapp.R;
 import com.polant.touristapp.drawer.NavigationDrawer;
+import com.polant.touristapp.maps.MapClusterItem;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int LAYOUT = R.layout.activity_maps;
 
     private GoogleMap mMap;
+    private ClusterManager<MapClusterItem> mClusterManager;
 
     private Drawer navigationDrawer;
 
@@ -48,6 +51,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        //Устанавливаю менеджер кластеризации.
+        setUpClusterer();
     }
 
     @Override
@@ -63,6 +69,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    private void setUpClusterer() {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+
+        // Initialize the manager with the context and the map.
+        mClusterManager = new ClusterManager<>(this, mMap);
+
+        mMap.setOnCameraChangeListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
+        addItemsToMap();
+    }
+
+    private void addItemsToMap() {
+        //Случайные выбранные координаты.
+        double lat = 51.5145160;
+        double lng = -0.1270060;
+
+        //Добавляю 10 MapClusterItem-ов.
+        for (int i = 0; i < 10; i++) {
+            double offset = i / 60d;
+            lat = lat + offset;
+            lng = lng + offset;
+
+            MapClusterItem clusterItem = new MapClusterItem(lat, lng);
+            mClusterManager.addItem(clusterItem);
+        }
     }
 
     private Toolbar initToolbar() {
