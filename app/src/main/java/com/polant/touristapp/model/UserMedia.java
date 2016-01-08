@@ -13,6 +13,7 @@ public class UserMedia {
     private int longitude;
     private String mediaExternalPath;
     private int isInGallery;
+    private long createdDate;
 
     //так как в базе данные о поле isInGallery хранятся как числа, то ввожу две константы.
     public static final int NOT_IN_GALLERY = 0;
@@ -20,7 +21,7 @@ public class UserMedia {
 
     public UserMedia(int id, String name, String description, int userId,
                      int latitude, int longitude,
-                     String mediaExternalPath, int isInGallery) {
+                     String mediaExternalPath, int isInGallery, long createdDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -29,6 +30,7 @@ public class UserMedia {
         this.longitude = longitude;
         this.mediaExternalPath = mediaExternalPath;
         this.isInGallery = isInGallery;
+        this.createdDate = createdDate;
     }
 
     public int getId() {
@@ -100,6 +102,15 @@ public class UserMedia {
 
     public UserMedia setIsInGallery(int isInGallery) {
         this.isInGallery = isInGallery;
+        return this;
+    }
+
+    public long getCreatedDate() {
+        return createdDate;
+    }
+
+    public UserMedia setCreatedDate(long createdDate) {
+        this.createdDate = createdDate;
         return this;
     }
 }

@@ -5,19 +5,46 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.Calendar;
+
 /**
  * Created by Антон on 08.01.2016.
  */
 public class Database {
 
+    private Context context;
+
+    private TouristOpenHelper touristOpenHelper;
+    private SQLiteDatabase sqLiteDatabase;
+
+    public Database(Context context) {
+        this.context = context;
+    }
+
+    public void open(){
+        touristOpenHelper = new TouristOpenHelper(context);
+        sqLiteDatabase = touristOpenHelper.getWritableDatabase();
+    }
+
+    public void close(){
+        if (touristOpenHelper != null){
+            touristOpenHelper.close();
+            touristOpenHelper = null;
+        }
+    }
+
+
+
 
     //-------------------------Названия таблиц и их атрибуты--------------------------------//
 
+    //Пользователи.
     public static final String TABLE_USERS = "TABLE_USERS";
     public static final String USER_ID = "USER_ID";
     public static final String USER_LOGIN = "USER_LOGIN";
     public static final String USER_PASSWORD = "USER_PASSWORD";
 
+    //Медиа.
     public static final String TABLE_USERS_MEDIA = "TABLE_USERS_MEDIA";
     public static final String MEDIA_ID = "MEDIA_ID";
     public static final String MEDIA_NAME = "MEDIA_NAME";
@@ -27,16 +54,21 @@ public class Database {
     public static final String MEDIA_LONGITUDE = "MEDIA_LONGITUDE";
     public static final String MEDIA_EXTERNAL_PATH = "MEDIA_EXTERNAL_PATH";
     public static final String MEDIA_IS_IN_GALLERY = "MEDIA_IS_IN_GALLERY";
+    public static final String MEDIA_CREATED_DATE = "MEDIA_CREATED_DATE";
 
+    //Записи о метках (т.к. одно медиа может иметь несколько меток).
     public static final String TABLE_MARK_RECORDS = "TABLE_MARK_RECORDS";
     public static final String MARK_RECORD_ID = "MARK_RECORD_ID";
     public static final String MARK_RECORD_MEDIA_ID = "MARK_RECORD_MEDIA_ID";//Внешний ключ.
     public static final String MARK_RECORD_MARK_ID = "MARK_RECORD_MARK_ID";  //Внешний ключ.
 
+    //Метки.
     public static final String TABLE_MARKS = "TABLE_MARKS";
     public static final String MARK_ID = "MARK_ID";
     public static final String MARK_NAME = "MARK_NAME";
     public static final String MARK_DESCRIPTION = "MARK_DESCRIPTION";
+
+
 
     private static class TouristOpenHelper extends SQLiteOpenHelper{
 
@@ -56,7 +88,8 @@ public class Database {
                 MEDIA_LATITUDE + " DOUBLE , " +
                 MEDIA_LONGITUDE + " DOUBLE , " +
                 MEDIA_EXTERNAL_PATH + " TEXT , " +
-                MEDIA_IS_IN_GALLERY + " INT2);";
+                MEDIA_IS_IN_GALLERY + " INT2, " +
+                MEDIA_CREATED_DATE + "INTEGER);";
 
         private static final String CREATE_TABLE_MARK_RECORDS = "CREATE TABLE " + TABLE_MARK_RECORDS + " ( " +
                 MARK_RECORD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -107,7 +140,6 @@ public class Database {
          */
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS_MEDIA + ";");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_MARK_RECORDS + ";");
@@ -116,5 +148,4 @@ public class Database {
             onCreate(db);
         }
     }
-
 }
