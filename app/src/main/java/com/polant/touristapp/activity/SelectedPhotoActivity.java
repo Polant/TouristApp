@@ -24,6 +24,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppDefault);
         setContentView(LAYOUT);
 
         initNavigationDrawer(initToolbar());

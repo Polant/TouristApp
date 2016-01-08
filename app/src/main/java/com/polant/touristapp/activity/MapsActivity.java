@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 //TODO: сделать генерацию имени файла.
-                File image = new File(Environment.getExternalStorageDirectory(), "test.jpg");
+                File image = new File(getExternalFilesDir(null), "test.jpg");
                 Uri outputFileUri = Uri.fromFile(image);
 
                 //Путь к последнему сделанному изображению сохраняю в поле класса.
@@ -131,10 +132,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 startActivityForResult(intent, SHOW_SELECTED_PHOTO_ACTIVITY);
             }
-        }
-        if (requestCode == SHOW_SELECTED_PHOTO_ACTIVITY){
-            Snackbar.make(findViewById(R.id.fab), "Фото сохранено: " + lastImagePath, Snackbar.LENGTH_LONG)
-                    .show();
         }
     }
 }
