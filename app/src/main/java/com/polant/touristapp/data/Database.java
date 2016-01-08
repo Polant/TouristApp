@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.Calendar;
+import com.polant.touristapp.model.Mark;
+
+import java.util.ArrayList;
 
 /**
  * Created by Антон on 08.01.2016.
@@ -112,32 +114,28 @@ public class Database {
             db.execSQL(CREATE_TABLE_MARK_RECORDS);
             db.execSQL(CREATE_TABLE_MARKS);
 
+            //Добавил одного пользователя.
             ContentValues cv = new ContentValues();
             cv.put(USER_LOGIN, "polant");
             cv.put(USER_PASSWORD, "qwerty");
             db.insert(TABLE_USERS, null, cv);
+
+            //Добавил 5 меток по умолчанию.
+            ArrayList<Mark> marks = new ArrayList<>(5);
+            marks.add(new Mark(1, "Отдых", "Здесь находятся все данные с различных поездок, отпусков, вечеринок..."));
+            marks.add(new Mark(2, "Работа", "Здесь находятся все данные, связанные с работой."));
+            marks.add(new Mark(3, "Учеба", "Здесь находятся все данные, связанные с учебой."));
+            marks.add(new Mark(4, "Путеществия", "Здесь находятся все данные, связанные с путеществиями."));
+            marks.add(new Mark(5, "Другое", "Здесь находятся все данные с другой различной информацией"));
+
+            for (Mark m : marks){
+                cv = new ContentValues();
+                cv.put(MARK_NAME, m.getName());
+                cv.put(MARK_DESCRIPTION, m.getDescription());
+                db.insert(TABLE_MARKS, null, cv);
+            }
         }
 
-        /**
-         * Called when the database needs to be upgraded. The implementation
-         * should use this method to drop tables, add tables, or do anything else it
-         * needs to upgrade to the new schema version.
-         * <p/>
-         * <p>
-         * The SQLite ALTER TABLE documentation can be found
-         * <a href="http://sqlite.org/lang_altertable.html">here</a>. If you add new columns
-         * you can use ALTER TABLE to insert them into a live table. If you rename or remove columns
-         * you can use ALTER TABLE to rename the old table, then create the new table and then
-         * populate the new table with the contents of the old table.
-         * </p><p>
-         * This method executes within a transaction.  If an exception is thrown, all changes
-         * will automatically be rolled back.
-         * </p>
-         *
-         * @param db         The database.
-         * @param oldVersion The old database version.
-         * @param newVersion The new database version.
-         */
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS + ";");

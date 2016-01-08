@@ -3,4 +3,8 @@
     <string name="navigation_view_open">drawer open</string>
     <string name="navigation_view_close">drawer close</string>
     <string name="menu_toolbar_filter">Фильтр</string>
+    <string name="menu_toolbar_map_marker">Показать на карте</string>
+    <string name="menu_toolbar_check_confirm">Сохранить</string>
+    <string name="title_activity_selected_photo">Фото</string>
+    <string name="content_description_selected_photo">Выбранное фото</string>
 </resources>

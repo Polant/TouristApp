@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/item_map_marker"
+        android:title="@string/menu_toolbar_map_marker"
+        android:icon="@drawable/ic_map_marker"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/item_check_confirm"
+        android:title="@string/menu_toolbar_check_confirm"
+        android:icon="@drawable/ic_check"
+        app:showAsAction="ifRoom"/>
+</menu>
