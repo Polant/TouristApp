@@ -19,7 +19,6 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     private static final int LAYOUT = R.layout.activity_selected_photo;
     public static final String IMAGE_EXTERNAL_PATH = "IMAGE_EXTERNAL_PATH"; //используется как ключ в полученном намерении.
 
-    private Drawer navigationDrawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +26,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         setTheme(R.style.AppDefault);
         setContentView(LAYOUT);
 
-        initNavigationDrawer(initToolbar());
+        initToolbar();
         //Инициализирую ImageView полученным фото.
         initImageView();
     }
@@ -44,16 +43,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (navigationDrawer.isDrawerOpen()) {
-            navigationDrawer.closeDrawer();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    private Toolbar initToolbar() {
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_activity_selected_photo);
 
@@ -81,11 +71,6 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                 finish();
             }
         });
-        return toolbar;
     }
 
-    private void initNavigationDrawer(Toolbar toolbar) {
-        NavigationDrawer drawer = new NavigationDrawer(this, toolbar);
-        navigationDrawer = drawer.getMaterialDrawer();
-    }
 }
