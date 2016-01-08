@@ -12,4 +12,12 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!-- Edit text style -->
+    <style name="AppEditTextTheme" parent="MaterialTheme.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorEditTextUnderline</item>
+        <item name="colorControlNormal">@color/colorWhite</item>
+    </style>
+
 </resources>

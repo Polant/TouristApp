@@ -27,19 +27,32 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-    <ScrollView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/scrollView" >
+        android:id="@+id/imageViewSelectedPhoto"
+        android:contentDescription="@string/content_description_selected_photo"
+        android:clickable="false"
+        android:src="@drawable/header"
+        android:layout_weight="1"
+        android:layout_margin="10dp" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageViewSelectedPhoto"
-            android:contentDescription="@string/content_description_selected_photo"
-            android:clickable="false"
-            android:src="@drawable/header" />
-    </ScrollView>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/editTextPhotoName"
+        android:layout_weight="3"
+        android:hint="@string/hint_photo_name"
+        android:theme="@style/AppEditTextTheme"
+        android:layout_margin="8dp" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/editTextPhotoDescription"
+        android:layout_weight="3"
+        android:hint="@string/hint_photo_description"
+        android:theme="@style/AppEditTextTheme"
+        android:layout_margin="8dp" />
 
 </LinearLayout>

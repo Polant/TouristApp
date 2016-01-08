@@ -5,6 +5,10 @@
         android:title="@string/menu_toolbar_map_marker"
         android:icon="@drawable/ic_map_marker"
         app:showAsAction="ifRoom"/>
+    <item android:id="@+id/item_export_to_gallery"
+        android:title="@string/menu_toolbar_export_to_gallery"
+        android:icon="@drawable/ic_export"
+        app:showAsAction="ifRoom"/>
     <item android:id="@+id/item_check_confirm"
         android:title="@string/menu_toolbar_check_confirm"
         android:icon="@drawable/ic_check"
