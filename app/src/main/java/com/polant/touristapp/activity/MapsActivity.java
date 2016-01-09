@@ -102,7 +102,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 //TODO: сделать генерацию имени файла.
-                File image = new File(getExternalFilesDir(null), "test.jpg");
+                File image = new File(getExternalFilesDir(null), "temporary.jpg");
                 Uri outputFileUri = Uri.fromFile(image);
 
                 //Путь к последнему сделанному изображению сохраняю в поле класса.

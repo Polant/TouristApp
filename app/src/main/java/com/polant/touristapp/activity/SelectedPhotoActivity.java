@@ -11,12 +11,14 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.polant.touristapp.R;
+import com.polant.touristapp.data.Database;
 
 public class SelectedPhotoActivity extends AppCompatActivity {
 
     private static final int LAYOUT = R.layout.activity_selected_photo;
     public static final String IMAGE_EXTERNAL_PATH = "IMAGE_EXTERNAL_PATH"; //используется как ключ в полученном намерении.
 
+    private Database db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +26,16 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         setTheme(R.style.AppDefault);
         setContentView(LAYOUT);
 
+        db = new Database(this);
+        db.open();
+
         initToolbar();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
         //Инициализирую ImageView полученным фото.
         initImageView();
     }
@@ -36,9 +47,32 @@ public class SelectedPhotoActivity extends AppCompatActivity {
             String imagePath = responseIntent.getStringExtra(IMAGE_EXTERNAL_PATH);
             ImageView imageView = (ImageView)findViewById(R.id.imageViewSelectedPhoto);
 
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            imageView.setImageBitmap(bitmap);
+            //TODO: попробовать сжимать изображение до размеров ImageView, так как сейчас фото большого расширения не отображается.
+
+            imageView.setImageBitmap(createBitmap(imagePath, imageView.getWidth(), imageView.getHeight()));
         }
+    }
+
+    //Изменяю размер фото чтоб оно поместилось в ImageView.
+    private Bitmap createBitmap(String imagePath, int width, int height) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+        //Установив данное поле true, я не получаю сам объект Bitmap, а только получаю его размеры.
+        options.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeFile(imagePath, options);
+
+        int originalImageWidth = options.outWidth;
+        int originalImageHeight = options.outHeight;
+
+        //Определяю насколько нужно уменьшить изображение.
+        int scaleFactor = Math.min(originalImageWidth / width, originalImageHeight / height);
+
+        //Получаю объект Bitmap, который имеет размеры соответствующие ImageView.
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = scaleFactor;
+
+        return BitmapFactory.decodeFile(imagePath, options);
     }
 
     private void initToolbar() {
@@ -75,4 +109,10 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
+    }
 }

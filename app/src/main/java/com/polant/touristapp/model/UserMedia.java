@@ -33,6 +33,20 @@ public class UserMedia {
         this.createdDate = createdDate;
     }
 
+    public UserMedia(String name, String description, int userId,
+                     int latitude, int longitude,
+                     String mediaExternalPath, int isInGallery, long createdDate) {
+        this.id = -1;
+        this.name = name;
+        this.description = description;
+        this.userId = userId;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.mediaExternalPath = mediaExternalPath;
+        this.isInGallery = isInGallery;
+        this.createdDate = createdDate;
+    }
+
     public int getId() {
         return id;
     }

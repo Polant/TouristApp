@@ -33,9 +33,9 @@
         android:id="@+id/imageViewSelectedPhoto"
         android:contentDescription="@string/content_description_selected_photo"
         android:clickable="false"
-        android:src="@drawable/header"
         android:layout_weight="1"
-        android:layout_margin="10dp" />
+        android:layout_margin="10dp"
+        android:adjustViewBounds="true"/>
 
     <EditText
         android:layout_width="match_parent"

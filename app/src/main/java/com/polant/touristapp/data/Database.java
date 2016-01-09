@@ -4,8 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.polant.touristapp.model.Mark;
+import com.polant.touristapp.model.UserMedia;
 
 import java.util.ArrayList;
 
@@ -34,7 +36,6 @@ public class Database {
             touristOpenHelper = null;
         }
     }
-
 
 
 
@@ -76,6 +77,7 @@ public class Database {
 
         private static final int DB_VERSION = 1;
         private static final String DB_NAME = "Tourist";
+        private static final String LOG_TAG = TouristOpenHelper.class.getName();
 
         private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + " ( " +
                 USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -84,18 +86,18 @@ public class Database {
 
         private static final String CREATE_TABLE_USERS_MEDIA = "CREATE TABLE " + TABLE_USERS_MEDIA + " ( " +
                 MEDIA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                MEDIA_NAME + " TEXT , " +
-                MEDIA_DESCRIPTION + " TEXT , " +
-                MEDIA_USER_ID + " INTEGER REFERENCES " + TABLE_USERS + "(" + USER_ID + ") ON DELETE CASCADE " +
-                MEDIA_LATITUDE + " DOUBLE , " +
-                MEDIA_LONGITUDE + " DOUBLE , " +
-                MEDIA_EXTERNAL_PATH + " TEXT , " +
+                MEDIA_NAME + " TEXT, " +
+                MEDIA_DESCRIPTION + " TEXT, " +
+                MEDIA_USER_ID + " INTEGER REFERENCES " + TABLE_USERS + "(" + USER_ID + ") ON DELETE CASCADE, " +
+                MEDIA_LATITUDE + " DOUBLE, " +
+                MEDIA_LONGITUDE + " DOUBLE, " +
+                MEDIA_EXTERNAL_PATH + " TEXT, " +
                 MEDIA_IS_IN_GALLERY + " INT2, " +
                 MEDIA_CREATED_DATE + "INTEGER);";
 
         private static final String CREATE_TABLE_MARK_RECORDS = "CREATE TABLE " + TABLE_MARK_RECORDS + " ( " +
                 MARK_RECORD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                MARK_RECORD_MEDIA_ID + " INTEGER REFERENCES " + TABLE_USERS_MEDIA + "(" + MEDIA_ID + ") ON DELETE CASCADE " +
+                MARK_RECORD_MEDIA_ID + " INTEGER REFERENCES " + TABLE_USERS_MEDIA + "(" + MEDIA_ID + ") ON DELETE CASCADE, " +
                 MARK_RECORD_MARK_ID + " INTEGER REFERENCES " + TABLE_MARKS + "(" + MARK_ID + ") ON DELETE CASCADE);";
 
         private static final String CREATE_TABLE_MARKS = "CREATE TABLE " + TABLE_MARKS + " ( " +
@@ -118,7 +120,7 @@ public class Database {
             ContentValues cv = new ContentValues();
             cv.put(USER_LOGIN, "polant");
             cv.put(USER_PASSWORD, "qwerty");
-            db.insert(TABLE_USERS, null, cv);
+            Log.d(LOG_TAG, String.valueOf(db.insert(TABLE_USERS, null, cv)));
 
             //Добавил 5 меток по умолчанию.
             ArrayList<Mark> marks = new ArrayList<>(5);
