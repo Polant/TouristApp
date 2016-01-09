@@ -17,6 +17,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mikepenz.materialdrawer.Drawer;
+import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.drawer.NavigationDrawer;
 
@@ -32,8 +33,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Drawer navigationDrawer;
 
-    private String lastImagePath;           //Путь к последнему созданному изображению.
-
+    private String lastImagePath; //Путь к последнему созданному изображению.
+    private int userId = Constants.DEFAULT_USER_ID_VALUE; //Id пользователя по умолчанию.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +125,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (data == null){
                 Intent intent = new Intent(this, SelectedPhotoActivity.class);
                 intent.putExtra(SelectedPhotoActivity.IMAGE_EXTERNAL_PATH, lastImagePath);
+                intent.putExtra(Constants.USER_ID, userId); //Передаю Id пользователя.
 
                 startActivityForResult(intent, SHOW_SELECTED_PHOTO_ACTIVITY);
             }

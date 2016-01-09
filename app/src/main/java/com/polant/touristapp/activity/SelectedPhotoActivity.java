@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
 
@@ -19,6 +20,8 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     public static final String IMAGE_EXTERNAL_PATH = "IMAGE_EXTERNAL_PATH"; //используется как ключ в полученном намерении.
 
     private Database db;
+    private int userId;
+    private String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,28 +32,32 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         db = new Database(this);
         db.open();
 
+        getDataFromIntent();
+
         initToolbar();
+    }
+
+    private void getDataFromIntent() {
+        Intent responseIntent = getIntent();
+        if (responseIntent != null && responseIntent.getExtras() != null){
+            imagePath = responseIntent.getStringExtra(IMAGE_EXTERNAL_PATH);
+            userId = responseIntent.getIntExtra(Constants.USER_ID, 1);
+        }
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        //Инициализирую ImageView полученным фото.
+        /*Инициализирую ImageView полученным фото после того как весь интерфейс загрузился,
+          чтоб можно было получить данные о размере ImageView. Если делать это в onCreate(), то
+          методы imageView.getWidth() и imageView.getHeight() всегда возвращают значение 0.*/
         initImageView();
     }
 
     private void initImageView() {
-        Intent responseIntent = getIntent();
-        if (responseIntent != null && responseIntent.getExtras() != null){
-
-            String imagePath = responseIntent.getStringExtra(IMAGE_EXTERNAL_PATH);
-            ImageView imageView = (ImageView)findViewById(R.id.imageViewSelectedPhoto);
-
-            //TODO: попробовать сжимать изображение до размеров ImageView, так как сейчас фото большого расширения не отображается.
-
-            imageView.setImageBitmap(createBitmap(imagePath, imageView.getWidth(), imageView.getHeight()));
-        }
+        ImageView imageView = (ImageView) findViewById(R.id.imageViewSelectedPhoto);
+        imageView.setImageBitmap(createBitmap(imagePath, imageView.getWidth(), imageView.getHeight()));
     }
 
     //Изменяю размер фото чтоб оно поместилось в ImageView.
