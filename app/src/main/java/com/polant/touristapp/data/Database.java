@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.polant.touristapp.model.Mark;
+import com.polant.touristapp.model.MarkRecord;
 import com.polant.touristapp.model.UserMedia;
 
 import java.util.ArrayList;
@@ -35,6 +36,53 @@ public class Database {
             touristOpenHelper.close();
             touristOpenHelper = null;
         }
+    }
+
+
+    //Вставка записи в TABLE_USERS_MEDIA.
+    public int insertMedia(UserMedia media){
+        ContentValues cv = putUsersMediaContentValues(media);
+        return (int) sqLiteDatabase.insert(TABLE_USERS_MEDIA, null, cv);
+    }
+
+    public void updateMedia(UserMedia media){
+        ContentValues cv = putUsersMediaContentValues(media);
+
+        String where = MEDIA_ID + "=?";
+        String[] whereArgs = { String.valueOf(media.getId()) };
+        sqLiteDatabase.update(TABLE_USERS_MEDIA, cv, where, whereArgs);
+    }
+
+    //Создание ContentValues для талбицы TABLE_USERS_MEDIA.
+    private ContentValues putUsersMediaContentValues(UserMedia media){
+        ContentValues cv = new ContentValues();
+        cv.put(MEDIA_NAME, media.getName());
+        cv.put(MEDIA_DESCRIPTION, media.getDescription());
+        cv.put(MEDIA_USER_ID, media.getUserId());
+        cv.put(MEDIA_LATITUDE, media.getLatitude());
+        cv.put(MEDIA_LONGITUDE, media.getLongitude());
+        cv.put(MEDIA_EXTERNAL_PATH, media.getMediaExternalPath());
+        cv.put(MEDIA_IS_IN_GALLERY, media.isInGallery());
+        cv.put(MEDIA_CREATED_DATE, media.getCreatedDate());
+
+        return cv;
+    }
+
+
+    //Вставка записи в TABLE_MARK_RECORDS.
+    public int insertMarkRecord(MarkRecord record){
+        ContentValues cv = puvMarkRecordContentValues(record);
+        return (int)sqLiteDatabase.insert(TABLE_MARK_RECORDS, null, cv);
+    }
+
+    //Создание ContentValues для талбицы TABLE_MARK_RECORDS.
+    private ContentValues puvMarkRecordContentValues(MarkRecord record){
+        ContentValues cv = new ContentValues();
+        cv.put(MARK_RECORD_MEDIA_ID, record.getMediaId());
+        if (record.getMarkId() >= 0) {
+            cv.put(MARK_RECORD_MARK_ID, record.getMarkId());
+        }
+        return cv;
     }
 
 
@@ -74,7 +122,7 @@ public class Database {
 
     private static class TouristOpenHelper extends SQLiteOpenHelper{
 
-        private static final int DB_VERSION = 1;
+        private static final int DB_VERSION = 3;
         private static final String DB_NAME = "Tourist";
         private static final String LOG_TAG = TouristOpenHelper.class.getName();
 
@@ -92,7 +140,7 @@ public class Database {
                 MEDIA_LONGITUDE + " DOUBLE, " +
                 MEDIA_EXTERNAL_PATH + " TEXT, " +
                 MEDIA_IS_IN_GALLERY + " INT2, " +
-                MEDIA_CREATED_DATE + "INTEGER);";
+                MEDIA_CREATED_DATE + " INTEGER);";
 
         private static final String CREATE_TABLE_MARK_RECORDS = "CREATE TABLE " + TABLE_MARK_RECORDS + " ( " +
                 MARK_RECORD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -119,7 +167,7 @@ public class Database {
             ContentValues cv = new ContentValues();
             cv.put(USER_LOGIN, "polant");
             cv.put(USER_PASSWORD, "qwerty");
-            Log.d(LOG_TAG, String.valueOf(db.insert(TABLE_USERS, null, cv)));
+            db.insert(TABLE_USERS, null, cv);
 
             //Добавил 5 меток по умолчанию.
             ArrayList<Mark> marks = new ArrayList<>(5);
@@ -139,6 +187,8 @@ public class Database {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            Log.d(LOG_TAG, "UPDATE_DATABASE");
+
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS_MEDIA + ";");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_MARK_RECORDS + ";");

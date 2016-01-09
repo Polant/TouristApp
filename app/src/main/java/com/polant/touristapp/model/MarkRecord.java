@@ -15,6 +15,11 @@ public class MarkRecord {
         this.markId = markId;
     }
 
+    public MarkRecord(int mediaId, int markId) {
+        this.mediaId = mediaId;
+        this.markId = markId;
+    }
+
     public int getId() {
         return id;
     }

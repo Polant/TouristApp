@@ -1,10 +1,17 @@
 package com.polant.touristapp.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -26,10 +33,14 @@ import java.io.File;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int LAYOUT = R.layout.activity_maps;
-    private static final int TAKE_PHOTO = 0;//передается в startActivityForResult() для получения фото;
+    private static final int TAKE_PHOTO = 0;//передается в startActivityForResult() для получения фото.
     private static final int SHOW_SELECTED_PHOTO_ACTIVITY = 1;
 
     private GoogleMap mMap;
+
+    private LocationManager locationManager;
+    private Criteria criteria;
+    private Location currentLocation;   //Текущее местоположение.
 
     private Drawer navigationDrawer;
 
@@ -43,6 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(LAYOUT);
 
         initMapFragment();
+        initLocationManager();
         initNavigationDrawer(initToolbar());
         initFAB();
     }
@@ -82,7 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMenuItemClick(MenuItem item) {
                 //TODO: реализовать обработчик фильтрации.
                 int id = item.getItemId();
-                switch (id){
+                switch (id) {
                     case R.id.item_filter:
                         return true;
                 }
@@ -97,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         navigationDrawer = drawer.getMaterialDrawer();
     }
 
-    private void initFAB(){
+    private void initFAB() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,14 +133,92 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == TAKE_PHOTO && resultCode == RESULT_OK){
-            if (data == null){
+        if (requestCode == TAKE_PHOTO && resultCode == RESULT_OK) {
+            if (data == null) {
                 Intent intent = new Intent(this, SelectedPhotoActivity.class);
+
+                //Передаю путь к изображению, Id пользователя, текущее местоположение.
                 intent.putExtra(SelectedPhotoActivity.IMAGE_EXTERNAL_PATH, lastImagePath);
-                intent.putExtra(Constants.USER_ID, userId); //Передаю Id пользователя.
+                intent.putExtra(Constants.USER_ID, userId);
+                intent.putExtra(SelectedPhotoActivity.IMAGE_LOCATION, currentLocation);
 
                 startActivityForResult(intent, SHOW_SELECTED_PHOTO_ACTIVITY);
             }
         }
     }
+
+    //------------Регистрация и отмена регистрации слушателя геолокации------------------//
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerLocationListener();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterLocationListener();
+    }
+
+    //---------------------------------Геолокация--------------------------------------//
+
+    private void initLocationManager() {
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        //Составляю критерии выбора лучшего провайдера.
+        criteria = initCriteria();
+        //Выбираю лучщий провайдер.
+        String provider = locationManager.getBestProvider(criteria, true);
+        //Сразу делаю запрос на местоположение.
+        //locationManager.requestSingleUpdate(provider, locationListener, null);
+        Location l = locationManager.getLastKnownLocation(provider);
+        updateMapWithLocation(l);
+    }
+
+    private Criteria initCriteria(){
+        Criteria c = new Criteria();
+        c.setAccuracy(Criteria.ACCURACY_FINE);
+        c.setPowerRequirement(Criteria.POWER_LOW);
+        c.setAltitudeRequired(false);
+        c.setBearingRequired(false);
+        c.setSpeedRequired(false);
+        c.setCostAllowed(true);
+
+        return c;
+    }
+
+    //Обновление местоположения.
+    private void updateMapWithLocation(Location location) {
+        //TODO: сделать обработку изменения локации.
+        currentLocation = location;
+    }
+
+    private void registerLocationListener(){
+        String provider = locationManager.getBestProvider(criteria, true);
+        locationManager.requestLocationUpdates(provider,
+                Constants.LOCATION_UPDATE_FREQUENCY,
+                Constants.LOCATION_UPDATE_MIN_DISTANCE,
+                locationListener);
+    }
+
+    private void unregisterLocationListener(){
+        locationManager.removeUpdates(locationListener);
+    }
+
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            updateMapWithLocation(location);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+        @Override
+        public void onProviderEnabled(String provider) {}
+
+        @Override
+        public void onProviderDisabled(String provider) {}
+    };
 }

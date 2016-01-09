@@ -9,8 +9,8 @@ public class UserMedia {
     private String name;
     private String description;
     private int userId;
-    private int latitude;
-    private int longitude;
+    private double latitude;
+    private double longitude;
     private String mediaExternalPath;
     private int isInGallery;
     private long createdDate;
@@ -20,7 +20,7 @@ public class UserMedia {
     public static final int IN_GALLERY = 1;
 
     public UserMedia(int id, String name, String description, int userId,
-                     int latitude, int longitude,
+                     double latitude, double longitude,
                      String mediaExternalPath, int isInGallery, long createdDate) {
         this.id = id;
         this.name = name;
@@ -34,7 +34,7 @@ public class UserMedia {
     }
 
     public UserMedia(String name, String description, int userId,
-                     int latitude, int longitude,
+                     double latitude, double longitude,
                      String mediaExternalPath, int isInGallery, long createdDate) {
         this.id = -1;
         this.name = name;
@@ -83,20 +83,20 @@ public class UserMedia {
         return this;
     }
 
-    public int getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public UserMedia setLatitude(int latitude) {
+    public UserMedia setLatitude(double latitude) {
         this.latitude = latitude;
         return this;
     }
 
-    public int getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public UserMedia setLongitude(int longitude) {
+    public UserMedia setLongitude(double longitude) {
         this.longitude = longitude;
         return this;
     }
@@ -126,5 +126,20 @@ public class UserMedia {
     public UserMedia setCreatedDate(long createdDate) {
         this.createdDate = createdDate;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "UserMedia{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", userId=" + userId +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", mediaExternalPath='" + mediaExternalPath + '\'' +
+                ", isInGallery=" + isInGallery +
+                ", createdDate=" + createdDate +
+                '}';
     }
 }
