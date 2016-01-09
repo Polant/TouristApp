@@ -10,4 +10,5 @@
     <string name="menu_toolbar_export_to_gallery">Экспорт в галерею</string>
     <string name="hint_photo_name">Название</string>
     <string name="hint_photo_description">Описание</string>
+    <string name="menu_toolbar_bookmark">Добавить метки</string>
 </resources>

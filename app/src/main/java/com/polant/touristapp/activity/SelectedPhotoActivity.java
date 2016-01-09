@@ -52,11 +52,13 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                 //TODO: реализовать обработчик выбора пункта меню toolbar-а.
                 int id = item.getItemId();
                 switch (id) {
+                    case R.id.item_check_confirm:
+                        return true;
+                    case R.id.item_bookmark:
+                        return true;
                     case R.id.item_map_marker:
                         return true;
                     case R.id.item_export_to_gallery:
-                        return true;
-                    case R.id.item_check_confirm:
                         return true;
                 }
                 return false;

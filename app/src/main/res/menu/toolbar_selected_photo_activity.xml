@@ -9,8 +9,12 @@
         android:title="@string/menu_toolbar_export_to_gallery"
         android:icon="@drawable/ic_export"
         app:showAsAction="ifRoom"/>
+    <item android:id="@+id/item_bookmark"
+        android:title="@string/menu_toolbar_bookmark"
+        android:icon="@drawable/ic_bookmark_white"
+        app:showAsAction="always"/>
     <item android:id="@+id/item_check_confirm"
         android:title="@string/menu_toolbar_check_confirm"
         android:icon="@drawable/ic_check"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 </menu>
