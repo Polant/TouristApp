@@ -97,9 +97,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //устанавливаю рендерер.
         mClusterManager.setRenderer(new CustomImageRenderer(this, mMap, mClusterManager));
 
-        mMap.setOnCameraChangeListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
-        mMap.setOnInfoWindowClickListener(mClusterManager);
+//        mMap.setOnCameraChangeListener(mClusterManager);
+//        mMap.setOnMarkerClickListener(mClusterManager);
+//        mMap.setOnInfoWindowClickListener(mClusterManager);
 
         addItemsToMap();
     }

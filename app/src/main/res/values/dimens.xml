@@ -6,4 +6,7 @@
 
     <dimen name="custom_cluster_image">50dp</dimen>
     <dimen name="custom_cluster_text_padding">2dp</dimen>
+
+    <dimen name="default_info_window_width">175dp</dimen>
+    <dimen name="default_info_window_height">250dp</dimen>
 </resources>
