@@ -1,8 +1,6 @@
 package com.polant.touristapp.activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -28,7 +25,7 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.drawer.NavigationDrawer;
-import com.polant.touristapp.maps.MapClusterItem;
+import com.polant.touristapp.maps.clustering.MapClusterItem;
 
 import java.io.File;
 
@@ -72,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         //Устанавливаю менеджер кластеризации.
-        setUpClusterer();
+//        setUpClusterer();
     }
 
     @Override
@@ -101,24 +98,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnCameraChangeListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
 
-        addItemsToMap();
+//        addItemsToMap();
     }
 
-    private void addItemsToMap() {
-        //Случайные выбранные координаты.
-        double lat = 51.5145160;
-        double lng = -0.1270060;
-
-        //Добавляю 10 MapClusterItem-ов.
-        for (int i = 0; i < 10; i++) {
-            double offset = i / 60d;
-            lat = lat + offset;
-            lng = lng + offset;
-
-            MapClusterItem clusterItem = new MapClusterItem(lat, lng);
-            mClusterManager.addItem(clusterItem);
-        }
-    }
+//    private void addItemsToMap() {
+//        //Случайные выбранные координаты.
+//        double lat = 51.5145160;
+//        double lng = -0.1270060;
+//
+//        //Добавляю 10 MapClusterItem-ов.
+//        for (int i = 0; i < 10; i++) {
+//            double offset = i / 60d;
+//            lat = lat + offset;
+//            lng = lng + offset;
+//
+//            MapClusterItem clusterItem = new MapClusterItem(lat, lng);
+//            mClusterManager.addItem(clusterItem);
+//        }
+//    }
 
     //--------------------------------------------------------------//
 
