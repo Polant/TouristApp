@@ -10,6 +10,4 @@ public class Constants {
 
     public static final int LOCATION_UPDATE_FREQUENCY = 10000;//частота обновлений местонахождения.
     public static final int LOCATION_UPDATE_MIN_DISTANCE = 5;//минимальная разница координат местоположения (в метрах).
-    public static final double LOCATION_LATITUDE_DEFAULT = 50.004555;   //Широта по умолчанию.
-    public static final double LOCATION_LONGITUDE_DEFAULT = 36.233701;  //Долгота по умолчанию.
 }

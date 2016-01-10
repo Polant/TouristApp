@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.polant.touristapp.Constants;
+import com.polant.touristapp.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.model.MarkRecord;
@@ -47,12 +48,14 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         setTheme(R.style.AppDefault);
         setContentView(LAYOUT);
 
+        openDatabase();
+        getDataFromIntent();
+        initToolbar();
+    }
+
+    private void openDatabase() {
         db = new Database(this);
         db.open();
-
-        getDataFromIntent();
-
-        initToolbar();
     }
 
     private void getDataFromIntent() {
@@ -75,38 +78,17 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
         db.close();
     }
 
     private void initImageView() {
         ImageView imageView = (ImageView) findViewById(R.id.imageViewSelectedPhoto);
 
-        Bitmap bitmap = createBitmap(imagePath, imageView.getWidth(), imageView.getHeight());
+        //Изменяю размер фото чтоб оно поместилось в ImageView.
+        Bitmap bitmap = ImageUtils.createBitmap(imagePath, imageView.getWidth(), imageView.getHeight());
         imageView.setImageBitmap(bitmap);
-    }
-
-    //Изменяю размер фото чтоб оно поместилось в ImageView.
-    private Bitmap createBitmap(String imagePath, int width, int height) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-
-        //Установив данное поле true, я не получаю сам объект Bitmap, а только получаю его размеры.
-        options.inJustDecodeBounds = true;
-
-        BitmapFactory.decodeFile(imagePath, options);
-
-        int originalImageWidth = options.outWidth;
-        int originalImageHeight = options.outHeight;
-
-        //Определяю насколько нужно уменьшить изображение.
-        int scaleFactor = Math.min(originalImageWidth / width, originalImageHeight / height);
-
-        //Получаю объект Bitmap, который имеет размеры соответствующие ImageView.
-        options.inJustDecodeBounds = false;
-        options.inSampleSize = scaleFactor;
-
-        return BitmapFactory.decodeFile(imagePath, options);
     }
 
     private void initToolbar() {

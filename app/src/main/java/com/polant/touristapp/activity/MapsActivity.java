@@ -19,7 +19,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mikepenz.materialdrawer.Drawer;
 import com.polant.touristapp.Constants;
@@ -59,14 +58,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setTheme(R.style.AppDefault);
         setContentView(LAYOUT);
 
-        initDatabase();
+        openDatabase();
         initMapFragment();
         initLocationManager();
         initNavigationDrawer(initToolbar());
         initFAB();
     }
 
-    private void initDatabase(){
+    private void openDatabase(){
         db = new Database(this);
         db.open();  //А закрываю в OnStop().
     }
