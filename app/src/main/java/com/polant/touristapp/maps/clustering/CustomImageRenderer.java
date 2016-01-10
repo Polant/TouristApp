@@ -16,6 +16,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+import com.polant.touristapp.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.maps.drawable.MultiDrawable;
 import com.polant.touristapp.model.UserMedia;
@@ -62,8 +63,8 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
 
         UserMedia userMedia = item.getMedia();
 
-        //Тут нужно установить InfoWindow.
-        //TODO: проверить корректность следующей строки кода.
+        //Тут нужно каким то образом установить InfoWindow.
+
         mImageView.setImageURI(Uri.parse(userMedia.getMediaExternalPath()));
         Bitmap icon = mIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon))
@@ -82,7 +83,10 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
 
         for (MapClusterItem item : cluster.getItems()){
             if (photos.size() == 4) break;
-            Drawable drawable = new BitmapDrawable(mContext.getResources(), item.getMedia().getMediaExternalPath());
+
+            Drawable drawable = new BitmapDrawable(mContext.getResources(),
+                    ImageUtils.createBitmap(item.getMedia().getMediaExternalPath(), width, height));
+
             drawable.setBounds(0, 0, width, height);
             photos.add(drawable);
         }

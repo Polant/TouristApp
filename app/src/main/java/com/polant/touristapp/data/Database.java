@@ -2,6 +2,7 @@ package com.polant.touristapp.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -38,6 +39,43 @@ public class Database {
         }
     }
 
+
+    public ArrayList<UserMedia> selectAllUserMediaByUserId(int userId){
+        ArrayList<UserMedia> result = new ArrayList<>();
+
+        String where = MEDIA_USER_ID + "=?";
+        String[] whereArgs = {String.valueOf(userId)};
+        Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, whereArgs, null, null, null);
+        if (c != null) {
+            if (c.moveToFirst()) {
+                int colId = c.getColumnIndex(MEDIA_ID);
+                int colName = c.getColumnIndex(MEDIA_NAME);
+                int colDescription = c.getColumnIndex(MEDIA_DESCRIPTION);
+                int colUserId = c.getColumnIndex(MEDIA_USER_ID);
+                int colLatitude = c.getColumnIndex(MEDIA_LATITUDE);
+                int colLongitude = c.getColumnIndex(MEDIA_LONGITUDE);
+                int colExternalPath = c.getColumnIndex(MEDIA_EXTERNAL_PATH);
+                int colIsInGallery = c.getColumnIndex(MEDIA_IS_IN_GALLERY);
+                int colCreatedDate = c.getColumnIndex(MEDIA_CREATED_DATE);
+                do {
+                    UserMedia media = new UserMedia(
+                            c.getInt(colId),
+                            c.getString(colName),
+                            c.getString(colDescription),
+                            c.getInt(colUserId),
+                            c.getDouble(colLatitude),
+                            c.getDouble(colLongitude),
+                            c.getString(colExternalPath),
+                            c.getInt(colIsInGallery),
+                            c.getLong(colCreatedDate)
+                    );
+                    result.add(media);
+                } while (c.moveToNext());
+            }
+            c.close();
+        }
+        return result;
+    }
 
     //Вставка записи в TABLE_USERS_MEDIA.
     public int insertMedia(UserMedia media){

@@ -24,10 +24,14 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.mikepenz.materialdrawer.Drawer;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.data.Database;
 import com.polant.touristapp.drawer.NavigationDrawer;
+import com.polant.touristapp.maps.clustering.CustomImageRenderer;
 import com.polant.touristapp.maps.clustering.MapClusterItem;
+import com.polant.touristapp.model.UserMedia;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -38,6 +42,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private ClusterManager<MapClusterItem> mClusterManager;
 
+    private Database db;    //База данных.
+
     private LocationManager locationManager;
     private Criteria criteria;
     private Location currentLocation;   //Текущее местоположение.
@@ -45,7 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Drawer navigationDrawer;
 
     private String lastImagePath; //Путь к последнему созданному изображению.
-    private int userId = Constants.DEFAULT_USER_ID_VALUE; //Id пользователя по умолчанию.
+    private final int userId = Constants.DEFAULT_USER_ID_VALUE; //Id пользователя по умолчанию.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,32 +59,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setTheme(R.style.AppDefault);
         setContentView(LAYOUT);
 
+        initDatabase();
         initMapFragment();
         initLocationManager();
         initNavigationDrawer(initToolbar());
         initFAB();
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-        //Устанавливаю менеджер кластеризации.
-//        setUpClusterer();
+    private void initDatabase(){
+        db = new Database(this);
+        db.open();  //А закрываю в OnStop().
     }
 
     @Override
-    public void onBackPressed() {
-        if (navigationDrawer.isDrawerOpen()) {
-            navigationDrawer.closeDrawer();
-        } else {
-            super.onBackPressed();
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        if (currentLocation != null){
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(
+                    new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
         }
+        //Устанавливаю менеджер кластеризации.
+        setUpClusterer();
     }
 
     private void initMapFragment() {
@@ -92,30 +93,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void setUpClusterer() {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
 
-        // Initialize the manager with the context and the map.
+        //Создаю менеджер кластеризации.
         mClusterManager = new ClusterManager<>(this, mMap);
+        //устанавливаю рендерер.
+        mClusterManager.setRenderer(new CustomImageRenderer(this, mMap, mClusterManager));
 
         mMap.setOnCameraChangeListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnInfoWindowClickListener(mClusterManager);
 
-//        addItemsToMap();
+        addItemsToMap();
     }
 
-//    private void addItemsToMap() {
-//        //Случайные выбранные координаты.
-//        double lat = 51.5145160;
-//        double lng = -0.1270060;
-//
-//        //Добавляю 10 MapClusterItem-ов.
-//        for (int i = 0; i < 10; i++) {
-//            double offset = i / 60d;
-//            lat = lat + offset;
-//            lng = lng + offset;
-//
-//            MapClusterItem clusterItem = new MapClusterItem(lat, lng);
-//            mClusterManager.addItem(clusterItem);
-//        }
-//    }
+    private void addItemsToMap() {
+        ArrayList<UserMedia> medias = db.selectAllUserMediaByUserId(userId);
+        for (UserMedia media : medias){
+            mClusterManager.addItem(new MapClusterItem(media));
+        }
+    }
 
     //--------------------------------------------------------------//
 
@@ -149,7 +144,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: сделать генерацию имени файла.
                 File image = new File(getExternalFilesDir(null), "temporary.jpg");
                 Uri outputFileUri = Uri.fromFile(image);
 
@@ -180,6 +174,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivityForResult(intent, SHOW_SELECTED_PHOTO_ACTIVITY);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (navigationDrawer.isDrawerOpen()) {
+            navigationDrawer.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    //---------------------------------Закрытие базы-------------------------------//
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        db.close();
     }
 
     //------------Регистрация и отмена регистрации слушателя геолокации------------------//
@@ -224,9 +235,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //Обновление местоположения.
-    private void updateMapWithLocation(Location location) {
+    private void updateMapWithLocation(Location l) {
         //TODO: сделать обработку изменения локации.
-        currentLocation = location;
+        currentLocation = l;
+        if (mMap != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(l.getLatitude(), l.getLongitude())));
+        }
     }
 
     private void registerLocationListener(){
