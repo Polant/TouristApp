@@ -90,6 +90,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
+    //---------------------------Кластеризация------------------------------//
+
     private void setUpClusterer() {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
 
@@ -117,6 +119,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mClusterManager.addItem(clusterItem);
         }
     }
+
+    //--------------------------------------------------------------//
 
     private Toolbar initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
