@@ -94,12 +94,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Создаю менеджер кластеризации.
         mClusterManager = new ClusterManager<>(this, mMap);
-        //устанавливаю рендерер.
+        //устанавливаю рендерер. Listener-ы и адаптеры устанавливаются внутри CustomImageRenderer.
         mClusterManager.setRenderer(new CustomImageRenderer(this, mMap, mClusterManager));
-
-//        mMap.setOnCameraChangeListener(mClusterManager);
-//        mMap.setOnMarkerClickListener(mClusterManager);
-//        mMap.setOnInfoWindowClickListener(mClusterManager);
 
         addItemsToMap();
     }
@@ -173,6 +169,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivityForResult(intent, SHOW_SELECTED_PHOTO_ACTIVITY);
             }
         }
+        //TODO: сделать обновление карты после добавления нового фото.
     }
 
     @Override
