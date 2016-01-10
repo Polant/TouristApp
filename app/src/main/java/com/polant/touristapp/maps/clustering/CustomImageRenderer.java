@@ -42,11 +42,9 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
 
     private final Activity mContext;
 
-    //Сохраняю последний кластеризированный маркер и сам кластер при клике.
+    //Сохраняю последний кластеризированный маркер.
     private MapClusterItem clickedClusterItem;
-    private Cluster<MapClusterItem> clickedCluster;
-
-    private static final String LOG_TAG = "CLUSTER_RENDERER";
+//    private Cluster<MapClusterItem> clickedCluster;
 
 
     /**
@@ -79,30 +77,31 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
     }
 
     private void initInfoWindowAdapterSettings(Activity activity, GoogleMap map, ClusterManager<MapClusterItem> clusterManager) {
-        map.setOnCameraChangeListener(clusterManager);
-        //map.setOnInfoWindowClickListener(clusterManager);
+        map.setOnCameraChangeListener(clusterManager);//Обязательно, иначе кластеры не распадаются при увеличении масштаба.
         map.setInfoWindowAdapter(clusterManager.getMarkerManager());
 
-        //TODO: возможно для целого кластера не нужно выводить InfoWindow.
-        clusterManager.getClusterMarkerCollection()
-                .setOnInfoWindowAdapter(new ClusterInfoWindowAdapter());
+        /*Для целого кластера не вывожу InfoWindow, но чтоб это сделать нужно
+           раскомментировать следующую строку, реализовать clusterManager.setOnClusterClickListener(),
+           а также еще один InfoWindowAdapter.
+         */
+//        clusterManager.getClusterMarkerCollection()
+//                .setOnInfoWindowAdapter(new ClusterInfoWindowAdapter());
         clusterManager.getMarkerCollection()
                 .setOnInfoWindowAdapter(new ClusterItemInfoWindowAdapter(activity));
 
+        //TODO: если нужно обработать клик по InfoWindow, то listener стоит указать здесь.
         map.setOnMarkerClickListener(clusterManager);
-        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MapClusterItem>() {
-            @Override
-            public boolean onClusterClick(Cluster<MapClusterItem> cluster) {
-                clickedCluster = cluster;
-                Log.d(LOG_TAG, "clickedCluster");
-                return false;
-            }
-        });
+//        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MapClusterItem>() {
+//            @Override
+//            public boolean onClusterClick(Cluster<MapClusterItem> cluster) {
+//                clickedCluster = cluster;
+//                return false;
+//            }
+//        });
         clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MapClusterItem>() {
             @Override
             public boolean onClusterItemClick(MapClusterItem mapClusterItem) {
                 clickedClusterItem = mapClusterItem;
-                Log.d(LOG_TAG, "clickedClusterItem");
                 return false;
             }
         });
@@ -112,14 +111,9 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
     protected void onBeforeClusterItemRendered(MapClusterItem item, MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
 
-        UserMedia userMedia = item.getMedia();
-
-        //TODO: возможно нужно убрать title и snippet из markerOptions, так как создаю свое InfoWindow.
-        mImageView.setImageURI(Uri.parse(userMedia.getMediaExternalPath()));
+        mImageView.setImageURI(Uri.parse(item.getMedia().getMediaExternalPath()));
         Bitmap icon = mIconGenerator.makeIcon();
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon))
-                .title(userMedia.getName())
-                .snippet(userMedia.getDescription());
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }
 
     /**Данный метод
@@ -159,27 +153,8 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
     //---------------------------------Реализация InfoWindowAdapter-ов---------------------------//
 
 
-    /**Адаптер для клика по всему кластеру.*/
-    class ClusterInfoWindowAdapter implements GoogleMap.InfoWindowAdapter{
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-            Log.d(LOG_TAG, "get cluster info window");
-            return null;
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            Log.d(LOG_TAG, "get cluster info contents");
-            return null;
-        }
-    }
-
     /**Адаптер для клика по одному единственному маркеру.*/
     private class ClusterItemInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
-        private final int infoWindowWidth; //по умолчанию 175dp.
-        private final int infoWindowHeight;//по умолчанию 250dp.
 
         private final View mWindow;
         private final View mContents;
@@ -187,18 +162,13 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
         public ClusterItemInfoWindowAdapter(Activity activity) {
             mWindow = activity.getLayoutInflater().inflate(R.layout.cluster_item_info_window, null);
             mContents = activity.getLayoutInflater().inflate(R.layout.cluster_item_info_window, null);
-
-            infoWindowWidth = (int) activity.getResources().getDimension(R.dimen.default_info_window_width);
-            infoWindowHeight = (int) activity.getResources().getDimension(R.dimen.default_info_window_height);
         }
 
         @Override
         public View getInfoWindow(Marker marker) {
-
             if (clickedClusterItem != null){
                 render(clickedClusterItem, mWindow);
             }
-            Log.d(LOG_TAG, "get cluster item info window");
             return mWindow;
         }
 
@@ -207,7 +177,6 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
             if (clickedClusterItem != null){
                 render(clickedClusterItem, mContents);
             }
-            Log.d(LOG_TAG, "get cluster item info contents");
             return mContents;
         }
 
@@ -224,4 +193,21 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
             description.setText(media.getDescription());
         }
     }
+
+
+//    /**Адаптер для клика по всему кластеру.*/
+//    class ClusterInfoWindowAdapter implements GoogleMap.InfoWindowAdapter{
+//
+//        @Override
+//        public View getInfoWindow(Marker marker) {
+//            Log.d(LOG_TAG, "get cluster info window");
+//            return null;
+//        }
+//
+//        @Override
+//        public View getInfoContents(Marker marker) {
+//            Log.d(LOG_TAG, "get cluster info contents");
+//            return null;
+//        }
+//    }
 }

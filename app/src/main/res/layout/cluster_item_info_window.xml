@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/info_window_background">
 
     <ImageView
         android:layout_width="@dimen/default_info_window_width"
         android:layout_height="@dimen/default_info_window_height"
-        android:id="@+id/imageClusterItemInfoWindow" />
+        android:id="@+id/imageClusterItemInfoWindow"
+        android:layout_margin="5dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="New Text"
         android:textSize="20sp"
-        android:id="@+id/textViewClusterItemName" />
+        android:textColor="@android:color/black"
+        android:id="@+id/textViewClusterItemName"
+        android:layout_margin="5dp"
+        android:gravity="center_horizontal" />
 
     <TextView
         android:layout_width="match_parent"
@@ -21,5 +26,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
         android:textSize="15sp"
-        android:id="@+id/textViewClusterItemDescription" />
+        android:textColor="@android:color/black"
+        android:id="@+id/textViewClusterItemDescription"
+        android:layout_margin="5dp" />
 </LinearLayout>
