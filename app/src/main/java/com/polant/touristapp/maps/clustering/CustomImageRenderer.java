@@ -111,6 +111,7 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
     protected void onBeforeClusterItemRendered(MapClusterItem item, MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
 
+        //TODO: надо все таки ужимать фото.
         mImageView.setImageURI(Uri.parse(item.getMedia().getMediaExternalPath()));
         Bitmap icon = mIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));

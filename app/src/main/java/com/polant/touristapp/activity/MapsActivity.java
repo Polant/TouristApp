@@ -58,13 +58,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setTheme(R.style.AppDefault);
         setContentView(LAYOUT);
 
-        openDatabase();
-        initMapFragment();
         initLocationManager();
+        initMapFragment();
         initNavigationDrawer(initToolbar());
         initFAB();
     }
 
+    //База открывается и закрывается в onStart() и onStop().
     private void openDatabase(){
         db = new Database(this);
         db.open();  //А закрываю в OnStop().
@@ -90,8 +90,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //---------------------------Кластеризация------------------------------//
 
     private void setUpClusterer() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
-
         //Создаю менеджер кластеризации.
         mClusterManager = new ClusterManager<>(this, mMap);
         //устанавливаю рендерер. Listener-ы и адаптеры устанавливаются внутри CustomImageRenderer.
@@ -159,18 +157,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (requestCode == TAKE_PHOTO && resultCode == RESULT_OK) {
             if (data == null) {
-                Intent intent = new Intent(this, SelectedPhotoActivity.class);
-
-                //Передаю путь к изображению, Id пользователя, текущее местоположение.
-                intent.putExtra(SelectedPhotoActivity.IMAGE_EXTERNAL_PATH, lastImagePath);
-                intent.putExtra(Constants.USER_ID, userId);
-                intent.putExtra(SelectedPhotoActivity.IMAGE_LOCATION, currentLocation);
-
-                startActivityForResult(intent, SHOW_SELECTED_PHOTO_ACTIVITY);
+                //После создания фото перехожу к его просмотру и сохранению.
+                startSelectedPhotoActivity();
             }
         }
-        //TODO: сделать обновление карты после добавления нового фото.
+        else if (requestCode == SHOW_SELECTED_PHOTO_ACTIVITY && resultCode == RESULT_OK){
+            openDatabase();
+            //Обновляю кластеры после добавления нового фото.
+            updateClusters();
+        }
     }
+
+    private void startSelectedPhotoActivity(){
+        Intent intent = new Intent(this, SelectedPhotoActivity.class);
+
+        //Передаю путь к изображению, Id пользователя, текущее местоположение.
+        intent.putExtra(SelectedPhotoActivity.IMAGE_EXTERNAL_PATH, lastImagePath);
+        intent.putExtra(Constants.USER_ID, userId);
+        intent.putExtra(SelectedPhotoActivity.IMAGE_LOCATION, currentLocation);
+
+        startActivityForResult(intent, SHOW_SELECTED_PHOTO_ACTIVITY);
+    }
+
+    private void updateClusters() {
+        mClusterManager.clearItems();
+        addItemsToMap();
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -181,7 +194,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    //---------------------------------Закрытие базы-------------------------------//
+    //------------------------------Открытие и закрытие базы----------------------------//
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        openDatabase();
+    }
 
     @Override
     protected void onStop() {
@@ -234,9 +254,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void updateMapWithLocation(Location l) {
         //TODO: сделать обработку изменения локации.
         currentLocation = l;
-        if (mMap != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(l.getLatitude(), l.getLongitude())));
-        }
+//        if (mMap != null) {
+//            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(l.getLatitude(), l.getLongitude())));
+//        }
     }
 
     private void registerLocationListener(){

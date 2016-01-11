@@ -48,11 +48,11 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         setTheme(R.style.AppDefault);
         setContentView(LAYOUT);
 
-        openDatabase();
         getDataFromIntent();
         initToolbar();
     }
 
+    //База открывается и закрывается в onStart() и onStop().
     private void openDatabase() {
         db = new Database(this);
         db.open();
@@ -81,6 +81,12 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         db.close();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        openDatabase();
     }
 
     private void initImageView() {
