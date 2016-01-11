@@ -11,4 +11,6 @@
     <string name="hint_photo_name">Название</string>
     <string name="hint_photo_description">Описание</string>
     <string name="menu_toolbar_bookmark">Добавить метки</string>
+    <string name="title_activity_marks">MarksActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>
