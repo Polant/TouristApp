@@ -10,4 +10,8 @@ public class Constants {
 
     public static final int LOCATION_UPDATE_FREQUENCY = 10000;//частота обновлений местонахождения.
     public static final int LOCATION_UPDATE_MIN_DISTANCE = 5;//минимальная разница координат местоположения (в метрах).
+
+    public static final int DEFAULT_CAMERA_ZOOM_LEVEL = 15;
+
+    public static final String APP_LOG_TAG = "POLANT_LOGS"; //Используется в логах.
 }

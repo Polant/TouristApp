@@ -74,8 +74,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (currentLocation != null){
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(
-                    new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                    Constants.DEFAULT_CAMERA_ZOOM_LEVEL));
         }
         //Устанавливаю менеджер кластеризации.
         setUpClusterer();

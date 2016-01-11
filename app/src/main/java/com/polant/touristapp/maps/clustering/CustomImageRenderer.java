@@ -19,6 +19,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+import com.polant.touristapp.Constants;
 import com.polant.touristapp.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.maps.drawable.MultiDrawable;
@@ -89,7 +90,6 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
         clusterManager.getMarkerCollection()
                 .setOnInfoWindowAdapter(new ClusterItemInfoWindowAdapter(activity));
 
-        //TODO: если нужно обработать клик по InfoWindow, то listener стоит указать здесь.
         map.setOnMarkerClickListener(clusterManager);
 //        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MapClusterItem>() {
 //            @Override
@@ -105,17 +105,18 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
                 return false;
             }
         });
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                //TODO: здесь нужно будет обработать клик по InfoWindow.
+            }
+        });
     }
 
     @Override
     protected void onBeforeClusterItemRendered(MapClusterItem item, MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
 
-//        int iconWidth = (int) mContext.getResources().getDimension(R.dimen.default_info_window_width);
-//        int iconHeight = (int) mContext.getResources().getDimension(R.dimen.default_info_window_height);
-//
-//        mImageView.setImageBitmap(
-//                ImageUtils.createBitmap(item.getMedia().getMediaExternalPath(), iconWidth, iconHeight));
         mImageView.setImageURI(Uri.parse(item.getMedia().getMediaExternalPath()));
         Bitmap icon = mIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
@@ -205,21 +206,4 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
             description.setText(media.getDescription());
         }
     }
-
-
-//    /**Адаптер для клика по всему кластеру.*/
-//    class ClusterInfoWindowAdapter implements GoogleMap.InfoWindowAdapter{
-//
-//        @Override
-//        public View getInfoWindow(Marker marker) {
-//            Log.d(LOG_TAG, "get cluster info window");
-//            return null;
-//        }
-//
-//        @Override
-//        public View getInfoContents(Marker marker) {
-//            Log.d(LOG_TAG, "get cluster info contents");
-//            return null;
-//        }
-//    }
 }
