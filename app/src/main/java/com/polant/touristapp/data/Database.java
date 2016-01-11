@@ -124,6 +124,13 @@ public class Database {
     }
 
 
+    public Cursor selectAllMarksCursor(){
+        //Обязательно надо указать псевдоним '_id' для поля id, чтоб он смог обработаться адаптером.
+        String[] projection = { MARK_ID + " AS _id", MARK_NAME, MARK_DESCRIPTION };
+        return sqLiteDatabase.query(TABLE_MARKS, projection, null, null, null, null, null);
+    }
+
+
     //-------------------------Названия таблиц и их атрибуты--------------------------------//
 
     //Пользователи.

@@ -62,7 +62,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         Intent responseIntent = getIntent();
         if (responseIntent != null && responseIntent.getExtras() != null){
             imagePath = responseIntent.getStringExtra(IMAGE_EXTERNAL_PATH);
-            userId = responseIntent.getIntExtra(Constants.USER_ID, 1);
+            userId = responseIntent.getIntExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
             location = (Location)responseIntent.getExtras().get(IMAGE_LOCATION);
         }
     }

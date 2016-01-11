@@ -37,6 +37,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LAYOUT = R.layout.activity_maps;
     private static final int TAKE_PHOTO = 0;//передается в startActivityForResult() для получения фото.
     private static final int SHOW_SELECTED_PHOTO_ACTIVITY = 1;
+    private static final int SHOW_MARKS_ACTIVITY = 2;
 
     private GoogleMap mMap;
     private ClusterManager<MapClusterItem> mClusterManager;
@@ -120,6 +121,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 int id = item.getItemId();
                 switch (id) {
                     case R.id.item_filter:
+                        //TODO: этот код отсюда нужно убрать.
+                        Intent intent = new Intent(MapsActivity.this, MarksActivity.class);
+                        intent.putExtra(Constants.USER_ID, userId);
+                        intent.putExtra(MarksActivity.IS_ADD_MARK_TO_PHOTO, true);
+
+                        startActivityForResult(intent, SHOW_MARKS_ACTIVITY);
                         return true;
                 }
                 return false;
@@ -166,6 +173,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             openDatabase();
             //Обновляю кластеры после добавления нового фото.
             updateClusters();
+        }
+        else if (requestCode == SHOW_MARKS_ACTIVITY && resultCode == RESULT_OK){
         }
     }
 
