@@ -111,7 +111,11 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
     protected void onBeforeClusterItemRendered(MapClusterItem item, MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
 
-        //TODO: надо все таки ужимать фото.
+//        int iconWidth = (int) mContext.getResources().getDimension(R.dimen.default_info_window_width);
+//        int iconHeight = (int) mContext.getResources().getDimension(R.dimen.default_info_window_height);
+//
+//        mImageView.setImageBitmap(
+//                ImageUtils.createBitmap(item.getMedia().getMediaExternalPath(), iconWidth, iconHeight));
         mImageView.setImageURI(Uri.parse(item.getMedia().getMediaExternalPath()));
         Bitmap icon = mIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
@@ -160,9 +164,15 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
         private final View mWindow;
         private final View mContents;
 
+        private final int mInfoWindowWidth;
+        private final int mInfoWindowHeight;
+
         public ClusterItemInfoWindowAdapter(Activity activity) {
             mWindow = activity.getLayoutInflater().inflate(R.layout.cluster_item_info_window, null);
             mContents = activity.getLayoutInflater().inflate(R.layout.cluster_item_info_window, null);
+
+            mInfoWindowWidth = (int) activity.getResources().getDimension(R.dimen.default_info_window_width);
+            mInfoWindowHeight = (int) activity.getResources().getDimension(R.dimen.default_info_window_height);
         }
 
         @Override
@@ -185,7 +195,8 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
             UserMedia media = clusterItem.getMedia();
 
             ImageView photo = (ImageView) view.findViewById(R.id.imageClusterItemInfoWindow);
-            photo.setImageURI(Uri.parse(media.getMediaExternalPath()));
+            photo.setImageBitmap(ImageUtils.createBitmap(
+                    media.getMediaExternalPath(), mInfoWindowWidth, mInfoWindowHeight));
 
             TextView name = (TextView) view.findViewById(R.id.textViewClusterItemName);
             name.setText(media.getName());
