@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.polant.touristapp.Constants;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.MarkRecord;
 import com.polant.touristapp.model.UserMedia;
@@ -109,12 +110,12 @@ public class Database {
 
     //Вставка записи в TABLE_MARK_RECORDS.
     public int insertMarkRecord(MarkRecord record){
-        ContentValues cv = puvMarkRecordContentValues(record);
+        ContentValues cv = putMarkRecordContentValues(record);
         return (int)sqLiteDatabase.insert(TABLE_MARK_RECORDS, null, cv);
     }
 
     //Создание ContentValues для талбицы TABLE_MARK_RECORDS.
-    private ContentValues puvMarkRecordContentValues(MarkRecord record){
+    private ContentValues putMarkRecordContentValues(MarkRecord record){
         ContentValues cv = new ContentValues();
         cv.put(MARK_RECORD_MEDIA_ID, record.getMediaId());
         if (record.getMarkId() >= 0) {
@@ -123,11 +124,15 @@ public class Database {
         return cv;
     }
 
-
-    public Cursor selectAllMarksCursor(){
+    public Cursor selectAllMarksCursorByUserId(int userId){
         //Обязательно надо указать псевдоним '_id' для поля id, чтоб он смог обработаться адаптером.
-        String[] projection = { MARK_ID + " AS _id", MARK_NAME, MARK_DESCRIPTION };
-        return sqLiteDatabase.query(TABLE_MARKS, projection, null, null, null, null, null);
+        String query = "SELECT "  + MARK_ID + " AS _id, " +
+                                    MARK_NAME + ", " +
+                                    MARK_DESCRIPTION + ", " +
+                                    MARK_USER_ID +
+                        " FROM "  + TABLE_MARKS +
+                        " WHERE " + MARK_USER_ID + "="+ userId + ";";
+        return sqLiteDatabase.rawQuery(query, null);
     }
 
 
@@ -162,14 +167,14 @@ public class Database {
     public static final String MARK_ID = "MARK_ID";
     public static final String MARK_NAME = "MARK_NAME";
     public static final String MARK_DESCRIPTION = "MARK_DESCRIPTION";
+    public static final String MARK_USER_ID = "MARK_USER_ID";
 
 
 
     private static class TouristOpenHelper extends SQLiteOpenHelper{
 
-        private static final int DB_VERSION = 3;
+        private static final int DB_VERSION = 6;
         private static final String DB_NAME = "Tourist";
-        private static final String LOG_TAG = TouristOpenHelper.class.getName();
 
         private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + " ( " +
                 USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -195,7 +200,8 @@ public class Database {
         private static final String CREATE_TABLE_MARKS = "CREATE TABLE " + TABLE_MARKS + " ( " +
                 MARK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 MARK_NAME + " TEXT, " +
-                MARK_DESCRIPTION + " TEXT);";
+                MARK_DESCRIPTION + " TEXT, " +
+                MARK_USER_ID + " INTEGER REFERENCES " + TABLE_USERS + "(" + USER_ID + ") ON DELETE CASCADE);";
 
         TouristOpenHelper(Context context){
             super(context, DB_NAME, null, DB_VERSION);
@@ -212,33 +218,36 @@ public class Database {
             ContentValues cv = new ContentValues();
             cv.put(USER_LOGIN, "polant");
             cv.put(USER_PASSWORD, "qwerty");
-            db.insert(TABLE_USERS, null, cv);
+            int userId = (int)db.insert(TABLE_USERS, null, cv);
 
             //Добавил 5 меток по умолчанию.
             ArrayList<Mark> marks = new ArrayList<>(5);
-            marks.add(new Mark(1, "Отдых", "Здесь находятся все данные с различных поездок, отпусков, вечеринок..."));
-            marks.add(new Mark(2, "Работа", "Здесь находятся все данные, связанные с работой."));
-            marks.add(new Mark(3, "Учеба", "Здесь находятся все данные, связанные с учебой."));
-            marks.add(new Mark(4, "Путеществия", "Здесь находятся все данные, связанные с путеществиями."));
-            marks.add(new Mark(5, "Другое", "Здесь находятся все данные с другой различной информацией"));
+            marks.add(new Mark(1, "Отдых", "Здесь находятся все данные с различных поездок, отпусков, вечеринок...", userId));
+            marks.add(new Mark(2, "Работа", "Здесь находятся все данные, связанные с работой.", userId));
+            marks.add(new Mark(3, "Учеба", "Здесь находятся все данные, связанные с учебой.", userId));
+            marks.add(new Mark(4, "Путеществия", "Здесь находятся все данные, связанные с путеществиями.", userId));
+            marks.add(new Mark(5, "Другое", "Здесь находятся все данные с другой различной информацией", userId));
 
             for (Mark m : marks){
                 cv = new ContentValues();
                 cv.put(MARK_NAME, m.getName());
                 cv.put(MARK_DESCRIPTION, m.getDescription());
+                cv.put(MARK_USER_ID, m.getUserId());
                 db.insert(TABLE_MARKS, null, cv);
             }
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.d(LOG_TAG, "UPDATE_DATABASE");
+            Log.d(Constants.APP_LOG_TAG, "UPDATE_DATABASE");
 
+//            db.execSQL("ALTER TABLE " + TABLE_MARKS +
+//                    " ADD COLUMN " + MARK_USER_ID +
+//                    " INTEGER REFERENCES " + TABLE_USERS + "(" + USER_ID + ") ON DELETE CASCADE;");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS_MEDIA + ";");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_MARK_RECORDS + ";");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_MARKS + ";");
-
             onCreate(db);
         }
     }

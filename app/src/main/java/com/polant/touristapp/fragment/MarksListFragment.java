@@ -82,7 +82,7 @@ public class MarksListFragment extends Fragment implements LoaderManager.LoaderC
         return new CursorLoader(activity, null, null, null, null, null){
             @Override
             public Cursor loadInBackground() {
-                return db.selectAllMarksCursor();
+                return db.selectAllMarksCursorByUserId(userId);
             }
         };
     }

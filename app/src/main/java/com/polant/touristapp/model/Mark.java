@@ -8,11 +8,13 @@ public class Mark {
     private int id;
     private String name;
     private String description;
+    private int userId;
 
-    public Mark(int id, String name, String description) {
+    public Mark(int id, String name, String description, int userId) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.userId = userId;
     }
 
     public int getId() {
@@ -39,6 +41,15 @@ public class Mark {
 
     public Mark setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public Mark setUserId(int userId) {
+        this.userId = userId;
         return this;
     }
 }
