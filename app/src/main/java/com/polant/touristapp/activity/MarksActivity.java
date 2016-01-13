@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -120,12 +121,12 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                buildNewMarkDialog();
+                buildNewMarkDialog(view);
             }
         });
     }
 
-    private void buildNewMarkDialog(){
+    private void buildNewMarkDialog(final View fab){
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //Передаю не id лайаута, а ссылку View, чтобы потом получить доступ к нему.
         final View alertView = getLayoutInflater().inflate(R.layout.alert_new_mark, null);
@@ -138,7 +139,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                 .setPositiveButton(getString(R.string.alertResultPositive), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        addMark(alertView);
+                        addMark(fab, alertView);
                     }
                 })
                 .setNegativeButton(getString(R.string.alertResultNegative), new DialogInterface.OnClickListener() {
@@ -157,7 +158,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
     }
 
     //Обработчик добавления новой метки с помощью FAB.
-    private void addMark(View alertView) {
+    private void addMark(View fab, View alertView) {
         EditText nameText = (EditText) alertView.findViewById(R.id.editTextNewMarkName);
         EditText descriptionText = (EditText) alertView.findViewById(R.id.editTextNewMarkDescription);
 
@@ -171,6 +172,8 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         //Обновляю ListView во фрагменте.
         MarksListFragment fragment = findMarksListFragmentByTag();
         fragment.notifyList();
+        //Уведобляю пользователя.
+        Snackbar.make(fab, "Метка добавлена", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
