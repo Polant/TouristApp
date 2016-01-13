@@ -1,18 +1,23 @@
 package com.polant.touristapp.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.IWorkWithDatabaseActivity;
 import com.polant.touristapp.fragment.MarksListFragment;
+import com.polant.touristapp.model.Mark;
 
 public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity {
 
@@ -36,6 +41,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         getDataFromIntent();
         initToolbar();
         initMarksListFragment();
+        initFAB();
     }
 
     //База открывается и закрывается в onStart() и onStop().
@@ -69,6 +75,11 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         transaction.commit();
     }
 
+    private MarksListFragment findMarksListFragmentByTag(){
+        return (MarksListFragment)getSupportFragmentManager()
+                .findFragmentByTag(MARK_LIST_FRAGMENT_TAG);
+    }
+
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_activity_marks);
@@ -84,8 +95,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                             //TODO: реализовать обработчик выбора пункта меню toolbar-а.
                             //TODO: даный код нужно убрать, т.к. он только для отдалки.
                             // Вместо него стоит например получить массив выбранных Id.
-                            MarksListFragment mlf = (MarksListFragment)getSupportFragmentManager()
-                                    .findFragmentByTag(MARK_LIST_FRAGMENT_TAG);
+                            MarksListFragment mlf = findMarksListFragmentByTag();
                             mlf.showSelectedItemsId();
                             return true;
                     }
@@ -103,6 +113,64 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                 finish();
             }
         });
+    }
+
+    private void initFAB() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buildNewMarkDialog();
+            }
+        });
+    }
+
+    private void buildNewMarkDialog(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //Передаю не id лайаута, а ссылку View, чтобы потом получить доступ к нему.
+        final View alertView = getLayoutInflater().inflate(R.layout.alert_new_mark, null);
+
+        builder.setTitle(R.string.alertNewMarkTilte)
+                .setMessage(R.string.alertNewMarkMessage)
+                .setCancelable(true)
+                .setIcon(R.drawable.ic_bookmark)
+                .setView(alertView)
+                .setPositiveButton(getString(R.string.alertResultPositive), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        addMark(alertView);
+                    }
+                })
+                .setNegativeButton(getString(R.string.alertResultNegative), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    //Обработчик добавления новой метки с помощью FAB.
+    private void addMark(View alertView) {
+        EditText nameText = (EditText) alertView.findViewById(R.id.editTextNewMarkName);
+        EditText descriptionText = (EditText) alertView.findViewById(R.id.editTextNewMarkDescription);
+
+        //TODO: сделать проверки на входные параметры: пустая строка и т.д.
+        String name = nameText.getText().toString();
+        String description = descriptionText.getText().toString();
+
+        Mark mark = new Mark(name, description, userId);
+        db.insertMark(mark);    //Вставляю метку в БД.
+
+        //Обновляю ListView во фрагменте.
+        MarksListFragment fragment = findMarksListFragmentByTag();
+        fragment.notifyList();
     }
 
     @Override

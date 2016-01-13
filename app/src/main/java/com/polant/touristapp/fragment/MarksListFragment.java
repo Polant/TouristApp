@@ -23,7 +23,8 @@ import com.polant.touristapp.data.Database;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MarksListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MarksListFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>, IListFragment{
 
     private View view;
     private Activity activity;
@@ -77,6 +78,21 @@ public class MarksListFragment extends Fragment implements LoaderManager.LoaderC
         Log.d(Constants.APP_LOG_TAG, String.valueOf(isAddMarkToPhoto));
     }
 
+    //Реализация IListFragment.
+    @Override
+    public void notifyList() {
+        getLoaderManager().restartLoader(0, null, this);
+    }
+
+    //ТОЛЬКО ДЛЯ ОТЛАДКИ.
+    public void showSelectedItemsId() {
+        ListView listViewMarks = (ListView) view.findViewById(R.id.listViewMarks);
+        long[] ids = listViewMarks.getCheckedItemIds();
+        for (long id : ids) {
+            Log.d(Constants.APP_LOG_TAG, String.valueOf(id));
+        }
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(activity, null, null, null, null, null){
@@ -95,14 +111,5 @@ public class MarksListFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         multiAdapter.swapCursor(null);
-    }
-
-    //ТОЛЬКО ДЛЯ ОТЛАДКИ.
-    public void showSelectedItemsId() {
-        ListView listViewMarks = (ListView) view.findViewById(R.id.listViewMarks);
-        long[] ids = listViewMarks.getCheckedItemIds();
-        for (long id : ids) {
-            Log.d(Constants.APP_LOG_TAG, String.valueOf(id));
-        }
     }
 }

@@ -17,6 +17,12 @@ public class Mark {
         this.userId = userId;
     }
 
+    public Mark(String name, String description, int userId) {
+        this.name = name;
+        this.description = description;
+        this.userId = userId;
+    }
+
     public int getId() {
         return id;
     }

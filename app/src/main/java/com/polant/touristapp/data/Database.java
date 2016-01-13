@@ -124,6 +124,7 @@ public class Database {
         return cv;
     }
 
+
     public Cursor selectAllMarksCursorByUserId(int userId){
         //Обязательно надо указать псевдоним '_id' для поля id, чтоб он смог обработаться адаптером.
         String query = "SELECT "  + MARK_ID + " AS _id, " +
@@ -133,6 +134,21 @@ public class Database {
                         " FROM "  + TABLE_MARKS +
                         " WHERE " + MARK_USER_ID + "="+ userId + ";";
         return sqLiteDatabase.rawQuery(query, null);
+    }
+
+    public int insertMark(Mark mark) {
+        ContentValues cv = putMarkContentValues(mark);
+        return (int)sqLiteDatabase.insert(TABLE_MARKS, null, cv);
+    }
+
+    //Создание ContentValues для талбицы TABLE_MARKS.
+    private ContentValues putMarkContentValues(Mark mark){
+        ContentValues cv = new ContentValues();
+        cv.put(MARK_NAME, mark.getName());
+        cv.put(MARK_DESCRIPTION, mark.getDescription());
+        cv.put(MARK_USER_ID, mark.getUserId());
+
+        return cv;
     }
 
 
@@ -168,7 +184,6 @@ public class Database {
     public static final String MARK_NAME = "MARK_NAME";
     public static final String MARK_DESCRIPTION = "MARK_DESCRIPTION";
     public static final String MARK_USER_ID = "MARK_USER_ID";
-
 
 
     private static class TouristOpenHelper extends SQLiteOpenHelper{
