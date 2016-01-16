@@ -40,7 +40,8 @@ public class MarksListFragment extends Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         if (!(context instanceof IWorkWithDatabaseActivity)) {
-            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT IWorkWithDatabaseActivity");
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT IWorkWithDatabaseActivity " +
+                    "and InitFABListener");
         }
         activity = (Activity) context;
     }
@@ -49,6 +50,9 @@ public class MarksListFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_marks_list, container, false);
+        //Инициализирую привязку FAB к ListView.
+        ((InitFABListener)activity).initFAB((ListView)view.findViewById(R.id.listViewMarks));
+
         return view;
     }
 
@@ -75,7 +79,6 @@ public class MarksListFragment extends Fragment
 
             getLoaderManager().initLoader(0, null, this);
         }
-        Log.d(Constants.APP_LOG_TAG, String.valueOf(isAddMarkToPhoto));
     }
 
     //Реализация IListFragment.

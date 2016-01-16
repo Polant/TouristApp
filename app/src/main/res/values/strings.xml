@@ -19,4 +19,5 @@
     <string name="alertNewMarkMessage">Введите название и описание</string>
     <string name="alertResultPositive">OK</string>
     <string name="alertResultNegative">Отмена</string>
+    <string name="snackbar_close_text">Закрыть</string>
 </resources>

@@ -3,8 +3,8 @@ package com.polant.touristapp.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,15 +12,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.IWorkWithDatabaseActivity;
+import com.polant.touristapp.fragment.InitFABListener;
 import com.polant.touristapp.fragment.MarksListFragment;
 import com.polant.touristapp.model.Mark;
 
-public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity {
+public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
+        InitFABListener {
 
     private static final int LAYOUT = R.layout.activity_marks;
 
@@ -42,7 +46,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         getDataFromIntent();
         initToolbar();
         initMarksListFragment();
-        initFAB();
+        //initFAB();инициализирую во фрагменте.
     }
 
     //База открывается и закрывается в onStart() и onStop().
@@ -116,14 +120,16 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         });
     }
 
-    private void initFAB() {
+    @Override
+    public void initFAB(ListView listView) {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                buildNewMarkDialog(view);
+            public void onClick(View v) {
+                buildNewMarkDialog(v);
             }
         });
+        fab.attachToListView(listView);
     }
 
     private void buildNewMarkDialog(final View fab){
@@ -172,8 +178,14 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         //Обновляю ListView во фрагменте.
         MarksListFragment fragment = findMarksListFragmentByTag();
         fragment.notifyList();
-        //Уведобляю пользователя.
-        Snackbar.make(fab, "Метка добавлена", Snackbar.LENGTH_SHORT).show();
+        //Уведомляю пользователя.
+        Snackbar.make(fab, "Метка добавлена", Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.snackbar_close_text, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                })
+                .show();
     }
 
     @Override
