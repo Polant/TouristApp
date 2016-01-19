@@ -16,7 +16,7 @@ import android.widget.ListView;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
-import com.polant.touristapp.activity.MarksActivity;
+import com.polant.touristapp.activity.MarksMultiChoiceActivity;
 import com.polant.touristapp.adapter.MultiChoiceListAdapter;
 import com.polant.touristapp.data.Database;
 
@@ -63,7 +63,7 @@ public class MarksListFragment extends Fragment
         if (getArguments() != null){
             Bundle args = getArguments();
             userId = args.getInt(Constants.USER_ID);
-            isAddMarkToPhoto = args.getBoolean(MarksActivity.IS_ADD_MARK_TO_PHOTO);
+            isAddMarkToPhoto = args.getBoolean(MarksMultiChoiceActivity.IS_ADD_MARK_TO_PHOTO);
         }
         //Получил уже открытую базу.
         db = ((IWorkWithDatabaseActivity) activity).getDatabase();

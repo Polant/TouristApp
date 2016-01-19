@@ -47,7 +47,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.SelectedPhotoActivity" />
-        <activity android:name=".activity.MarksActivity"/>
+        <activity android:name=".activity.MarksMultiChoiceActivity"/>
     </application>
 
 </manifest>

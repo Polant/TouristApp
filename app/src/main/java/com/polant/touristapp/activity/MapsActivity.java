@@ -132,9 +132,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 switch (id) {
                     case R.id.item_filter:
                         //TODO: этот код отсюда нужно убрать.
-                        Intent intent = new Intent(MapsActivity.this, MarksActivity.class);
+                        Intent intent = new Intent(MapsActivity.this, MarksMultiChoiceActivity.class);
                         intent.putExtra(Constants.USER_ID, userId);
-                        intent.putExtra(MarksActivity.IS_ADD_MARK_TO_PHOTO, true);
+                        intent.putExtra(MarksMultiChoiceActivity.IS_ADD_MARK_TO_PHOTO, true);
 
                         startActivityForResult(intent, SHOW_MARKS_ACTIVITY);
                         return true;

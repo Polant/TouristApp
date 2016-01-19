@@ -22,7 +22,7 @@ import com.polant.touristapp.fragment.InitFABListener;
 import com.polant.touristapp.fragment.MarksListFragment;
 import com.polant.touristapp.model.Mark;
 
-public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
+public class MarksMultiChoiceActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
         InitFABListener {
 
     private static final int LAYOUT = R.layout.activity_marks;
