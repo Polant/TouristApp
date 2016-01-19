@@ -1,10 +1,7 @@
 package com.polant.touristapp.activity;
 
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,6 +24,7 @@ import com.polant.touristapp.data.Database;
 import com.polant.touristapp.drawer.NavigationDrawer;
 import com.polant.touristapp.maps.clustering.CustomImageRenderer;
 import com.polant.touristapp.maps.clustering.MapClusterItem;
+import com.polant.touristapp.maps.location.TouristLocationManager;
 import com.polant.touristapp.model.UserMedia;
 
 import java.io.File;
@@ -44,9 +42,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Database db;    //База данных.
 
-    private LocationManager locationManager;
-    private Criteria criteria;
-    private Location currentLocation;   //Текущее местоположение.
+    private TouristLocationManager mLocationManager;
 
     private Drawer navigationDrawer;
 
@@ -65,22 +61,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         initFAB();
     }
 
-    //База открывается и закрывается в onStart() и onStop().
     private void openDatabase(){
         db = new Database(this);
-        db.open();  //А закрываю в OnStop().
+        db.open();//База открывается и закрывается в onStart() и onStop().
+    }
+
+    //---------------------------------Геолокация и карта------------------------------------//
+
+    private void initLocationManager() {
+        mLocationManager = new TouristLocationManager(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        //Обязательно, т.к. обработка геолокации на карте находится в TouristLocationManager!
+        mLocationManager.setGoogleMap(googleMap);
+
+        Location currentLocation = mLocationManager.getLastLocation();
         if (currentLocation != null){
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                     Constants.DEFAULT_CAMERA_ZOOM_LEVEL));
         }
         //Устанавливаю менеджер кластеризации.
-        setUpClusterer();
+        setUpClusterManager();
     }
 
     private void initMapFragment() {
@@ -91,10 +97,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //---------------------------Кластеризация------------------------------//
 
-    private void setUpClusterer() {
-        //Создаю менеджер кластеризации.
+    private void setUpClusterManager() {
         mClusterManager = new ClusterManager<>(this, mMap);
-        //устанавливаю рендерер. Listener-ы и адаптеры устанавливаются внутри CustomImageRenderer.
+        //Устанавливаю свой рендерер. Listener-ы и адаптеры устанавливаются внутри CustomImageRenderer.
         mClusterManager.setRenderer(new CustomImageRenderer(this, mMap, mClusterManager));
 
         addItemsToMap();
@@ -107,7 +112,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    //--------------------------------------------------------------//
+    private void updateClusters() {
+        mClusterManager.clearItems();
+        addItemsToMap();
+    }
+
+    //---------------------Toolbar, Navigation Drawer and FAB----------------------------//
 
     private Toolbar initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -159,6 +169,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    //--------------------------------------------------------------------------//
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -184,14 +196,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Передаю путь к изображению, Id пользователя, текущее местоположение.
         intent.putExtra(SelectedPhotoActivity.IMAGE_EXTERNAL_PATH, lastImagePath);
         intent.putExtra(Constants.USER_ID, userId);
-        intent.putExtra(SelectedPhotoActivity.IMAGE_LOCATION, currentLocation);
+        intent.putExtra(SelectedPhotoActivity.IMAGE_LOCATION, mLocationManager.getLastLocation());
 
         startActivityForResult(intent, SHOW_SELECTED_PHOTO_ACTIVITY);
-    }
-
-    private void updateClusters() {
-        mClusterManager.clearItems();
-        addItemsToMap();
     }
 
 
@@ -205,7 +212,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //------------------------------Открытие и закрытие базы----------------------------//
-
 
     @Override
     protected void onStart() {
@@ -224,76 +230,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
-        registerLocationListener();
+        mLocationManager.registerListener();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterLocationListener();
+        mLocationManager.unregisterListener();
     }
 
-    //---------------------------------Геолокация--------------------------------------//
-
-    private void initLocationManager() {
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        //Составляю критерии выбора лучшего провайдера.
-        criteria = initCriteria();
-        //Выбираю лучщий провайдер.
-        String provider = locationManager.getBestProvider(criteria, true);
-        //Сразу делаю запрос на местоположение.
-        //locationManager.requestSingleUpdate(provider, locationListener, null);
-        Location l = locationManager.getLastKnownLocation(provider);
-        updateMapWithLocation(l);
-    }
-
-    private Criteria initCriteria(){
-        Criteria c = new Criteria();
-        c.setAccuracy(Criteria.ACCURACY_FINE);
-        c.setPowerRequirement(Criteria.POWER_LOW);
-        c.setAltitudeRequired(false);
-        c.setBearingRequired(false);
-        c.setSpeedRequired(false);
-        c.setCostAllowed(true);
-
-        return c;
-    }
-
-    //Обновление местоположения.
-    private void updateMapWithLocation(Location l) {
-        //TODO: сделать обработку изменения локации.
-        currentLocation = l;
-//        if (mMap != null) {
-//            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(l.getLatitude(), l.getLongitude())));
-//        }
-    }
-
-    private void registerLocationListener(){
-        String provider = locationManager.getBestProvider(criteria, true);
-        locationManager.requestLocationUpdates(provider,
-                Constants.LOCATION_UPDATE_FREQUENCY,
-                Constants.LOCATION_UPDATE_MIN_DISTANCE,
-                locationListener);
-    }
-
-    private void unregisterLocationListener(){
-        locationManager.removeUpdates(locationListener);
-    }
-
-    private final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            updateMapWithLocation(location);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-        @Override
-        public void onProviderEnabled(String provider) {}
-
-        @Override
-        public void onProviderDisabled(String provider) {}
-    };
 }

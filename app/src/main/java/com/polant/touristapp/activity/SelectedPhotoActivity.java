@@ -2,13 +2,11 @@ package com.polant.touristapp.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -52,10 +50,9 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         initToolbar();
     }
 
-    //База открывается и закрывается в onStart() и onStop().
     private void openDatabase() {
         db = new Database(this);
-        db.open();
+        db.open();//База открывается и закрывается в onStart() и onStop().
     }
 
     private void getDataFromIntent() {
@@ -65,36 +62,6 @@ public class SelectedPhotoActivity extends AppCompatActivity {
             userId = responseIntent.getIntExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
             location = (Location)responseIntent.getExtras().get(IMAGE_LOCATION);
         }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        /*Инициализирую ImageView полученным фото после того как весь интерфейс загрузился,
-          чтоб можно было получить данные о размере ImageView. Если делать это в onCreate(), то
-          методы imageView.getWidth() и imageView.getHeight() всегда возвращают значение 0.*/
-        initImageView();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        db.close();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        openDatabase();
-    }
-
-    private void initImageView() {
-        ImageView imageView = (ImageView) findViewById(R.id.imageViewSelectedPhoto);
-
-        //Изменяю размер фото чтоб оно поместилось в ImageView.
-        Bitmap bitmap = ImageUtils.createBitmap(imagePath, imageView.getWidth(), imageView.getHeight());
-        imageView.setImageBitmap(bitmap);
     }
 
     private void initToolbar() {
@@ -133,6 +100,24 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        /*Инициализирую ImageView полученным фото после того как весь интерфейс загрузился,
+          чтоб можно было получить данные о размере ImageView. Если делать это в onCreate(), то
+          методы imageView.getWidth() и imageView.getHeight() всегда возвращают значение 0.*/
+        initImageView();
+    }
+
+    private void initImageView() {
+        ImageView imageView = (ImageView) findViewById(R.id.imageViewSelectedPhoto);
+
+        //Изменяю размер фото чтоб оно поместилось в ImageView.
+        Bitmap bitmap = ImageUtils.createBitmap(imagePath, imageView.getWidth(), imageView.getHeight());
+        imageView.setImageBitmap(bitmap);
+    }
+
     //----------------------------Сохранение фото------------------------------//
 
     private void savePhoto() {
@@ -145,7 +130,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
             //Геолокация
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
-            //Дата.
+            //Дата и время.
             ExifInterface metadata = new ExifInterface(imagePath);
             String date = metadata.getAttribute(ExifInterface.TAG_DATETIME);
 
@@ -178,7 +163,6 @@ public class SelectedPhotoActivity extends AppCompatActivity {
             exportInGallery(renamedPath);
 
             setResult(RESULT_OK);
-            //Log.d("MY_LOGS_CREATED_PHOTO", newMedia.toString());
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -204,5 +188,17 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         //TODO: реализовать экспорт в галарею.
     }
 
-    //------------------------------------------------------------//
+    //----------------------Открытие и закрытие базы-----------------------------//
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        openDatabase();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        db.close();
+    }
 }
