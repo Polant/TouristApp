@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -29,7 +30,6 @@ import com.polant.touristapp.model.UserMedia;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -99,29 +99,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Устанавливаю свой рендерер. Listener-ы и адаптеры устанавливаются внутри CustomImageRenderer.
         mClusterManager.setRenderer(new CustomImageRenderer(this, mMap, mClusterManager));
 
-        addItemsToMap();
+        ArrayList<UserMedia> medias = db.selectAllUserMediaByUserId(userId);
+        addItemsToMap(medias);
     }
 
-    private void addItemsToMap() {
-        ArrayList<UserMedia> medias = db.selectAllUserMediaByUserId(userId);
+    private void addItemsToMap(ArrayList<UserMedia> medias) {
         for (UserMedia media : medias){
             mClusterManager.addItem(new MapClusterItem(media));
         }
     }
 
-    private void updateClusters() {
-        mClusterManager.clearItems();
-        addItemsToMap();
-        mClusterManager.cluster();
-    }
-
+    //Передать null, если надо вывести все фото.
     private void updateClustersByFilter(long[] markIds){
         mClusterManager.clearItems();
 
-        ArrayList<UserMedia> medias = db.selectUserMediaByFilter(userId, markIds);
-        for (UserMedia media : medias){
-            mClusterManager.addItem(new MapClusterItem(media));
+        ArrayList<UserMedia> medias;
+        if (markIds != null && markIds.length > 0){
+            medias = db.selectUserMediaByFilter(userId, markIds);
         }
+        else{
+            medias = db.selectAllUserMediaByUserId(userId);
+        }
+        addItemsToMap(medias);
         mClusterManager.cluster();
     }
 
@@ -135,14 +134,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //TODO: реализовать обработчик фильтрации.
                 int id = item.getItemId();
                 switch (id) {
                     case R.id.item_filter:
                         //Фильтрация меток на карте.
                         Intent intent = new Intent(MapsActivity.this, MarksMultiChoiceActivity.class);
                         intent.putExtra(Constants.USER_ID, userId);
-
                         startActivityForResult(intent, Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY);
                         return true;
                 }
@@ -191,7 +188,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         else if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
             //Обновляю кластеры после добавления нового фото.
-            updateClusters();
+            updateClustersByFilter(null);
         }
         else if (requestCode == Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();

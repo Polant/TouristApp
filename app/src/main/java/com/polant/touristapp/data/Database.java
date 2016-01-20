@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.polant.touristapp.Constants;
@@ -131,7 +132,7 @@ public class Database {
         }
     }
 
-    private ArrayList<Long> selectUserMediaIdsByMarkFilter(long[] markIds){
+    private ArrayList<Long> selectUserMediaIdsByMarkFilter(@NonNull long[] markIds){
         ArrayList<Long> mediaIds = new ArrayList<>();
 
         String query = "SELECT DISTINCT " + MARK_RECORD_MEDIA_ID + " FROM " + TABLE_MARK_RECORDS +
@@ -148,9 +149,13 @@ public class Database {
         return mediaIds;
     }
 
-    public ArrayList<UserMedia> selectUserMediaByFilter(int userId, long[] markIds){
+    public ArrayList<UserMedia> selectUserMediaByFilter(int userId, @NonNull long[] markIds){
         ArrayList<Long> medias = selectUserMediaIdsByMarkFilter(markIds);   //Получил все Id медиа.
         ArrayList<UserMedia> result = new ArrayList<>(medias.size());
+
+        if (medias.size() == 0){//Если не нашлось результатов.
+            return result;
+        }
 
         String query = "SELECT * FROM " + TABLE_USERS_MEDIA + " WHERE " + MEDIA_USER_ID + "=" + userId + " AND " +
                 MEDIA_ID + " IN (";

@@ -84,12 +84,7 @@ public class MarksListFragment extends Fragment
     //Получаю список Id выбранных элементов списка.
     public long[] getSelectedItemsIdsArray() {
         ListView listViewMarks = (ListView) view.findViewById(R.id.listViewMarks);
-        long[] ids = listViewMarks.getCheckedItemIds();
-        //TODO: убрать этот цикл, он только для отладки.
-        for (long id : ids) {
-            Log.d(Constants.APP_LOG_TAG, String.valueOf(id));
-        }
-        return ids;
+        return listViewMarks.getCheckedItemIds();
     }
 
     @Override
