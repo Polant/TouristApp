@@ -1,4 +1,4 @@
-package com.polant.touristapp.fragment;
+package com.polant.touristapp.interfaces;
 
 import android.widget.ListView;
 

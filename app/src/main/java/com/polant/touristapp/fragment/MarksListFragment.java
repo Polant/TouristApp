@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +17,16 @@ import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.MultiChoiceListAdapter;
 import com.polant.touristapp.data.Database;
+import com.polant.touristapp.interfaces.IListFragment;
+import com.polant.touristapp.interfaces.IMultiChoiceListFragment;
+import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
+import com.polant.touristapp.interfaces.InitFABListener;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MarksListFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, IListFragment{
+        implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceListFragment {
 
     private View view;
     private Activity activity;
@@ -82,6 +85,7 @@ public class MarksListFragment extends Fragment
     }
 
     //Получаю список Id выбранных элементов списка.
+    @Override
     public long[] getSelectedItemsIdsArray() {
         ListView listViewMarks = (ListView) view.findViewById(R.id.listViewMarks);
         return listViewMarks.getCheckedItemIds();

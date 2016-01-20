@@ -17,8 +17,8 @@ import com.melnykov.fab.FloatingActionButton;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.fragment.IWorkWithDatabaseActivity;
-import com.polant.touristapp.fragment.InitFABListener;
+import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
+import com.polant.touristapp.interfaces.InitFABListener;
 import com.polant.touristapp.fragment.MarksListFragment;
 import com.polant.touristapp.model.Mark;
 

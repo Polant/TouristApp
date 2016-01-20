@@ -1,4 +1,4 @@
-package com.polant.touristapp.fragment;
+package com.polant.touristapp.interfaces;
 
 import com.polant.touristapp.data.Database;
 
