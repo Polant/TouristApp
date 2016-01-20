@@ -15,12 +15,15 @@ import android.widget.ListView;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.activity.MarksMultiChoiceActivity;
 import com.polant.touristapp.adapter.MultiChoiceListAdapter;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.interfaces.IListFragment;
 import com.polant.touristapp.interfaces.IMultiChoiceListFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.interfaces.InitFABListener;
+
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -36,6 +39,7 @@ public class MarksListFragment extends Fragment
     private Database db;
 
     private int userId;
+    private ArrayList<Long> inputMarks;
 
     @Override
     public void onAttach(Context context) {
@@ -52,7 +56,7 @@ public class MarksListFragment extends Fragment
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_marks_list, container, false);
         //Инициализирую привязку FAB к ListView.
-        ((InitFABListener)activity).initFAB((ListView)view.findViewById(R.id.listViewMarks));
+        ((InitFABListener)activity).initFAB((ListView) view.findViewById(R.id.listViewMarks));
 
         return view;
     }
@@ -64,6 +68,12 @@ public class MarksListFragment extends Fragment
         Bundle args = getArguments();
         if (args != null) {
             userId = args.getInt(Constants.USER_ID);
+            long[] checkedIds = args.getLongArray(MarksMultiChoiceActivity.INPUT_CHECKED_LIST_ITEMS_IDS);
+            if (checkedIds != null) {
+                inputMarks = new ArrayList<>(checkedIds.length);
+                for (long id : checkedIds)
+                    inputMarks.add(id);
+            }
         }
         //Получил уже открытую базу.
         db = ((IWorkWithDatabaseActivity) activity).getDatabase();
@@ -77,6 +87,20 @@ public class MarksListFragment extends Fragment
 
         getLoaderManager().initLoader(0, null, this);
     }
+
+    //Устанавливаю уже заранее выбранные элементы списка.
+    private void setCheckedIds(){
+        if (inputMarks == null)
+            return;
+        ListView listViewMarks = (ListView) view.findViewById(R.id.listViewMarks);
+        for (int pos = 0; pos < listViewMarks.getCount(); pos++){
+            long id = listViewMarks.getItemIdAtPosition(pos);
+            if (inputMarks.contains(id)){
+                listViewMarks.setItemChecked(pos, true);
+            }
+        }
+    }
+
 
     //Реализация IListFragment.
     @Override
@@ -104,6 +128,7 @@ public class MarksListFragment extends Fragment
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         multiAdapter.swapCursor(data);
+        setCheckedIds();
     }
 
     @Override

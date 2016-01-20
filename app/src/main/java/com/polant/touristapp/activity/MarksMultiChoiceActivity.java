@@ -27,12 +27,14 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
 
     private static final int LAYOUT = R.layout.activity_marks;
 
-    public static final String OUT_LIST_ITEMS_IDS = "OUT_LIST_ITEMS_IDS";
+    public static final String OUTPUT_CHECKED_LIST_ITEMS_IDS = "OUTPUT_CHECKED_LIST_ITEMS_IDS";
+    public static final String INPUT_CHECKED_LIST_ITEMS_IDS = "INPUT_CHECKED_LIST_ITEMS_IDS";
     private static final String MARK_LIST_FRAGMENT_TAG = MarksListFragment.class.toString();
 
     private Database db;
 
     private int userId;
+    private long[] inputMarks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         Intent responseIntent = getIntent();
         if (responseIntent != null && responseIntent.getExtras() != null){
             userId = responseIntent.getIntExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
+            inputMarks = responseIntent.getLongArrayExtra(INPUT_CHECKED_LIST_ITEMS_IDS);
         }
     }
 
@@ -64,9 +67,12 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         MarksListFragment fragment = new MarksListFragment();
-        //Передаю Id пользователя во фрагмент.
+        //Передаю Id пользователя и массив выбранных Id меток во фрагмент.
         Bundle args = new Bundle();
         args.putInt(Constants.USER_ID, userId);
+        if (inputMarks != null && inputMarks.length > 0){
+            args.putLongArray(INPUT_CHECKED_LIST_ITEMS_IDS, inputMarks);
+        }
 
         fragment.setArguments(args);
         transaction.add(R.id.container_marks,
@@ -96,7 +102,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
                         long[] markIds = mlf.getSelectedItemsIdsArray();
 
                         Intent backIntent = new Intent();
-                        backIntent.putExtra(OUT_LIST_ITEMS_IDS, markIds);
+                        backIntent.putExtra(OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
                         setResult(RESULT_OK, backIntent);
                         finish();
                         return true;

@@ -8,7 +8,6 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -45,6 +44,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private String lastImagePath; //Путь к последнему созданному изображению.
     private final int userId = Constants.DEFAULT_USER_ID_VALUE; //Id пользователя по умолчанию.
+
+    private long[] filterMarks; //Фильтр, который хранит Id меток.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +141,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //Фильтрация меток на карте.
                         Intent intent = new Intent(MapsActivity.this, MarksMultiChoiceActivity.class);
                         intent.putExtra(Constants.USER_ID, userId);
+                        intent.putExtra(MarksMultiChoiceActivity.INPUT_CHECKED_LIST_ITEMS_IDS, filterMarks);
                         startActivityForResult(intent, Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY);
                         return true;
                 }
@@ -188,12 +190,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         else if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
             //Обновляю кластеры после добавления нового фото.
-            updateClustersByFilter(null);
+            updateClustersByFilter(filterMarks);
         }
         else if (requestCode == Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
             if (data != null && data.getExtras() != null){//Обновляю метки на карте.
-                long[] marksIds = data.getLongArrayExtra(MarksMultiChoiceActivity.OUT_LIST_ITEMS_IDS);
+                long[] marksIds = data.getLongArrayExtra(MarksMultiChoiceActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS);
+                filterMarks = marksIds;
                 updateClustersByFilter(marksIds);
             }
         }
