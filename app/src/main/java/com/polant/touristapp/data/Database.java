@@ -13,6 +13,7 @@ import com.polant.touristapp.model.MarkRecord;
 import com.polant.touristapp.model.UserMedia;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Антон on 08.01.2016.
@@ -47,6 +48,12 @@ public class Database {
         String where = MEDIA_USER_ID + "=?";
         String[] whereArgs = {String.valueOf(userId)};
         Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, whereArgs, null, null, null);
+
+        parseUserMediaCursor(c, result);
+        return result;
+    }
+
+    private void parseUserMediaCursor(Cursor c, ArrayList<UserMedia> result){
         if (c != null) {
             if (c.moveToFirst()) {
                 int colId = c.getColumnIndex(MEDIA_ID);
@@ -75,7 +82,6 @@ public class Database {
             }
             c.close();
         }
-        return result;
     }
 
     //Вставка записи в TABLE_USERS_MEDIA.
@@ -107,11 +113,57 @@ public class Database {
         return cv;
     }
 
-
     //Вставка записи в TABLE_MARK_RECORDS.
     public int insertMarkRecord(MarkRecord record){
         ContentValues cv = putMarkRecordContentValues(record);
         return (int)sqLiteDatabase.insert(TABLE_MARK_RECORDS, null, cv);
+    }
+
+    private void parseMarkRecordCursor(Cursor c, ArrayList<Long> result){
+        if (c != null) {
+            if (c.moveToFirst()) {
+                int colId = c.getColumnIndex(MARK_RECORD_MEDIA_ID);
+                do {
+                    result.add(c.getLong(colId));
+                } while (c.moveToNext());
+            }
+            c.close();
+        }
+    }
+
+    private ArrayList<Long> selectUserMediaIdsByMarkFilter(long[] markIds){
+        ArrayList<Long> mediaIds = new ArrayList<>();
+
+        String query = "SELECT DISTINCT " + MARK_RECORD_MEDIA_ID + " FROM " + TABLE_MARK_RECORDS +
+                        " WHERE " + MARK_RECORD_MARK_ID  + " IN (";
+        StringBuilder whereBuilder = new StringBuilder(query);
+        for (long id : markIds){
+            whereBuilder.append(id).append(", ");
+        }
+        whereBuilder.delete(whereBuilder.length() - 2, whereBuilder.length());//Убираю последнюю запятую.
+        whereBuilder.append(");");
+        Cursor c = sqLiteDatabase.rawQuery(whereBuilder.toString(), null);
+
+        parseMarkRecordCursor(c, mediaIds);
+        return mediaIds;
+    }
+
+    public ArrayList<UserMedia> selectUserMediaByFilter(int userId, long[] markIds){
+        ArrayList<Long> medias = selectUserMediaIdsByMarkFilter(markIds);   //Получил все Id медиа.
+        ArrayList<UserMedia> result = new ArrayList<>(medias.size());
+
+        String query = "SELECT * FROM " + TABLE_USERS_MEDIA + " WHERE " + MEDIA_USER_ID + "=" + userId + " AND " +
+                MEDIA_ID + " IN (";
+        StringBuilder whereBuilder = new StringBuilder(query);
+        for (long id : medias){
+            whereBuilder.append(id).append(", ");
+        }
+        whereBuilder.delete(whereBuilder.length() - 2, whereBuilder.length());//Убираю последнюю запятую.
+        whereBuilder.append(");");
+        Cursor c = sqLiteDatabase.rawQuery(whereBuilder.toString(), null);
+
+        parseUserMediaCursor(c, result);
+        return result;
     }
 
     //Создание ContentValues для талбицы TABLE_MARK_RECORDS.

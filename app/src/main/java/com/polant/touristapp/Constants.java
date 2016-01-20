@@ -13,5 +13,10 @@ public class Constants {
 
     public static final int DEFAULT_CAMERA_ZOOM_LEVEL = 15;
 
+    //Передается в startActivityForResult() для получения фото.
+    public static final int TAKE_PHOTO = 0;
+    public static final int SHOW_SELECTED_PHOTO_ACTIVITY = 1;
+    public static final int SHOW_MARKS_MULTI_CHOICE_ACTIVITY = 2;
+
     public static final String APP_LOG_TAG = "POLANT_LOGS"; //Используется в логах.
 }

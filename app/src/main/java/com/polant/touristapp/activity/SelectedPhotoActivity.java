@@ -40,6 +40,8 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     private String imagePath;
     private boolean exportToGalleryFlag = false;  //TODO: когда сделаю настройки приложения, то сделать проверку этого флага.
 
+    private long[] marksIds;    //Массив Id выбранных меток.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,11 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                         savePhoto();
                         return true;
                     case R.id.item_bookmark:
+                        //Выбор меток для фото.
+                        Intent intent = new Intent(SelectedPhotoActivity.this, MarksMultiChoiceActivity.class);
+                        intent.putExtra(Constants.USER_ID, userId);
+
+                        startActivityForResult(intent, Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY);
                         return true;
                     case R.id.item_map_marker:
                         return true;
@@ -88,12 +95,10 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: реализовать обработчик навигации toolbar-а.
                 setResult(RESULT_CANCELED);
                 finish();
             }
@@ -122,6 +127,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
 
     private void savePhoto() {
         try {
+            //TODO: проверить на корректность введенных данных (пустые строки и т.д.).
             //Получаю название фото и его описание.
             EditText nameText = (EditText) findViewById(R.id.editTextPhotoName);
             EditText descriptionText = (EditText) findViewById(R.id.editTextPhotoDescription);
@@ -156,10 +162,15 @@ public class SelectedPhotoActivity extends AppCompatActivity {
             db.updateMedia(newMedia);
 
             //Добавление записи о медиа и ее метках в промежуточную сущность БД.
-            //TODO: убрать -1 из аргументов конструктора, заменив проверкой на количество меток.
-            db.insertMarkRecord(new MarkRecord(mediaId, -1));
-
-            //Экспорт в галерею (проверка на то нужно ли экспортировать внутри метода.
+            if (marksIds == null) { //Нет меток.
+                db.insertMarkRecord(new MarkRecord(mediaId, -1));
+            }
+            else {  //Есть метки.
+                for (long marksId : marksIds) {
+                    db.insertMarkRecord(new MarkRecord(mediaId, (int)marksId));
+                }
+            }
+            //Экспорт в галерею (проверка на то нужно ли экспортировать внутри метода).
             exportInGallery(renamedPath);
 
             setResult(RESULT_OK);
@@ -186,6 +197,18 @@ public class SelectedPhotoActivity extends AppCompatActivity {
 
     private void exportInGallery(String path) {
         //TODO: реализовать экспорт в галарею.
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY && resultCode == RESULT_OK){
+            if (data != null && data.getExtras() != null) {
+                //Просто сохраняю массив Id выбранных из списка меток.
+                marksIds = data.getLongArrayExtra(MarksMultiChoiceActivity.OUT_LIST_ITEMS_IDS);
+            }
+        }
     }
 
     //----------------------Открытие и закрытие базы-----------------------------//

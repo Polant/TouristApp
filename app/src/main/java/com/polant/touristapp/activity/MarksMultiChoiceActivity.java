@@ -27,13 +27,12 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
 
     private static final int LAYOUT = R.layout.activity_marks;
 
-    public static final String IS_ADD_MARK_TO_PHOTO = "IS_ADD_MARK_TO_PHOTO"; //Используется в Extras intent-ов.
+    public static final String OUT_LIST_ITEMS_IDS = "OUT_LIST_ITEMS_IDS";
     private static final String MARK_LIST_FRAGMENT_TAG = MarksListFragment.class.toString();
 
     private Database db;
 
     private int userId;
-    private boolean isAddMarkToPhoto = false;   //Флаг добавления меток к выбранному фото.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,6 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         Intent responseIntent = getIntent();
         if (responseIntent != null && responseIntent.getExtras() != null){
             userId = responseIntent.getIntExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
-            isAddMarkToPhoto = responseIntent.getBooleanExtra(IS_ADD_MARK_TO_PHOTO, false);
         }
     }
 
@@ -66,10 +64,9 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         MarksListFragment fragment = new MarksListFragment();
-        //Передаю Id пользователя и флаг добавления меток во фрагмент.
+        //Передаю Id пользователя во фрагмент.
         Bundle args = new Bundle();
         args.putInt(Constants.USER_ID, userId);
-        args.putBoolean(IS_ADD_MARK_TO_PHOTO, isAddMarkToPhoto);
 
         fragment.setArguments(args);
         transaction.add(R.id.container_marks,
@@ -87,31 +84,30 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_activity_marks);
 
-        if (isAddMarkToPhoto) {
-            toolbar.inflateMenu(R.menu.toolbar_marks_edit);
-            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    int id = item.getItemId();
-                    switch (id) {
-                        case R.id.item_check_confirm:
-                            //TODO: реализовать обработчик выбора пункта меню toolbar-а.
-                            //TODO: даный код нужно убрать, т.к. он только для отдалки.
-                            // Вместо него стоит например получить массив выбранных Id.
-                            MarksListFragment mlf = findMarksListFragmentByTag();
-                            mlf.showSelectedItemsId();
-                            return true;
-                    }
-                    return false;
-                }
-            });
-        }
+        toolbar.inflateMenu(R.menu.toolbar_marks_edit);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.item_check_confirm:
+                        //Получаю из фрагмента массив выбранных Id элементов списка.
+                        MarksListFragment mlf = findMarksListFragmentByTag();
+                        long[] markIds = mlf.getSelectedItemsIdsArray();
 
+                        Intent backIntent = new Intent();
+                        backIntent.putExtra(OUT_LIST_ITEMS_IDS, markIds);
+                        setResult(RESULT_OK, backIntent);
+                        finish();
+                        return true;
+                }
+                return false;
+            }
+        });
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: реализовать обработчик навигации toolbar-а.
                 setResult(RESULT_CANCELED);
                 finish();
             }
@@ -150,11 +146,6 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                    }
                 });
 
         AlertDialog dialog = builder.create();
@@ -176,7 +167,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         //Обновляю ListView во фрагменте.
         MarksListFragment fragment = findMarksListFragmentByTag();
         fragment.notifyList();
-        //Уведомляю пользователя.
+        //Уведомляю пользователя. TODO: snackbar перекрывает FAB.
         Snackbar.make(fab, "Метка добавлена", Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_close_text, new View.OnClickListener() {
                     @Override

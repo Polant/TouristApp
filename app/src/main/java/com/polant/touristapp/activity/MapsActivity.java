@@ -29,20 +29,17 @@ import com.polant.touristapp.model.UserMedia;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int LAYOUT = R.layout.activity_maps;
-    private static final int TAKE_PHOTO = 0;//передается в startActivityForResult() для получения фото.
-    private static final int SHOW_SELECTED_PHOTO_ACTIVITY = 1;
-    private static final int SHOW_MARKS_ACTIVITY = 2;
 
     private GoogleMap mMap;
     private ClusterManager<MapClusterItem> mClusterManager;
+    private TouristLocationManager mLocationManager; //Работа с геолокацией.
 
     private Database db;    //База данных.
-
-    private TouristLocationManager mLocationManager;
 
     private Drawer navigationDrawer;
 
@@ -115,6 +112,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void updateClusters() {
         mClusterManager.clearItems();
         addItemsToMap();
+        mClusterManager.cluster();
+    }
+
+    private void updateClustersByFilter(long[] markIds){
+        mClusterManager.clearItems();
+
+        ArrayList<UserMedia> medias = db.selectUserMediaByFilter(userId, markIds);
+        for (UserMedia media : medias){
+            mClusterManager.addItem(new MapClusterItem(media));
+        }
+        mClusterManager.cluster();
     }
 
     //---------------------Toolbar, Navigation Drawer and FAB----------------------------//
@@ -131,12 +139,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 int id = item.getItemId();
                 switch (id) {
                     case R.id.item_filter:
-                        //TODO: этот код отсюда нужно убрать.
+                        //Фильтрация меток на карте.
                         Intent intent = new Intent(MapsActivity.this, MarksMultiChoiceActivity.class);
                         intent.putExtra(Constants.USER_ID, userId);
-                        intent.putExtra(MarksMultiChoiceActivity.IS_ADD_MARK_TO_PHOTO, true);
 
-                        startActivityForResult(intent, SHOW_MARKS_ACTIVITY);
+                        startActivityForResult(intent, Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY);
                         return true;
                 }
                 return false;
@@ -160,11 +167,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 //Путь к последнему сделанному изображению сохраняю в поле класса.
                 lastImagePath = outputFileUri.getPath();
-
+                //Намерение для вызова камеры.
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
 
-                startActivityForResult(intent, TAKE_PHOTO);
+                startActivityForResult(intent, Constants.TAKE_PHOTO);
             }
         });
     }
@@ -175,18 +182,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == TAKE_PHOTO && resultCode == RESULT_OK) {
+        if (requestCode == Constants.TAKE_PHOTO && resultCode == RESULT_OK) {
             if (data == null) {
                 //После создания фото перехожу к его просмотру и сохранению.
                 startSelectedPhotoActivity();
             }
         }
-        else if (requestCode == SHOW_SELECTED_PHOTO_ACTIVITY && resultCode == RESULT_OK){
+        else if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
             //Обновляю кластеры после добавления нового фото.
             updateClusters();
         }
-        else if (requestCode == SHOW_MARKS_ACTIVITY && resultCode == RESULT_OK){
+        else if (requestCode == Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY && resultCode == RESULT_OK){
+            openDatabase();
+            if (data != null && data.getExtras() != null){//Обновляю метки на карте.
+                long[] marksIds = data.getLongArrayExtra(MarksMultiChoiceActivity.OUT_LIST_ITEMS_IDS);
+                updateClustersByFilter(marksIds);
+            }
         }
     }
 
@@ -198,7 +210,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         intent.putExtra(Constants.USER_ID, userId);
         intent.putExtra(SelectedPhotoActivity.IMAGE_LOCATION, mLocationManager.getLastLocation());
 
-        startActivityForResult(intent, SHOW_SELECTED_PHOTO_ACTIVITY);
+        startActivityForResult(intent, Constants.SHOW_SELECTED_PHOTO_ACTIVITY);
     }
 
 

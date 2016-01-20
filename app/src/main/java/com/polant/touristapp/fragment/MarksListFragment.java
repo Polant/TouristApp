@@ -16,7 +16,6 @@ import android.widget.ListView;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
-import com.polant.touristapp.activity.MarksMultiChoiceActivity;
 import com.polant.touristapp.adapter.MultiChoiceListAdapter;
 import com.polant.touristapp.data.Database;
 
@@ -34,7 +33,6 @@ public class MarksListFragment extends Fragment
     private Database db;
 
     private int userId;
-    private boolean isAddMarkToPhoto;
 
     @Override
     public void onAttach(Context context) {
@@ -60,25 +58,21 @@ public class MarksListFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getArguments() != null){
-            Bundle args = getArguments();
+        Bundle args = getArguments();
+        if (args != null) {
             userId = args.getInt(Constants.USER_ID);
-            isAddMarkToPhoto = args.getBoolean(MarksMultiChoiceActivity.IS_ADD_MARK_TO_PHOTO);
         }
         //Получил уже открытую базу.
         db = ((IWorkWithDatabaseActivity) activity).getDatabase();
 
         ListView listViewMarks = (ListView) view.findViewById(R.id.listViewMarks);
-        //Если выбран флаг добавления меток к выбранному фото, то ставлю "мульти-выбор".
-        listViewMarks.setChoiceMode(
-                isAddMarkToPhoto ? ListView.CHOICE_MODE_MULTIPLE : ListView.CHOICE_MODE_SINGLE);
+        //Ставлю "мульти-выбор".
+        listViewMarks.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-        if (isAddMarkToPhoto) {
-            multiAdapter = new MultiChoiceListAdapter(activity, null, 0);
-            listViewMarks.setAdapter(multiAdapter);
+        multiAdapter = new MultiChoiceListAdapter(activity, null, 0);
+        listViewMarks.setAdapter(multiAdapter);
 
-            getLoaderManager().initLoader(0, null, this);
-        }
+        getLoaderManager().initLoader(0, null, this);
     }
 
     //Реализация IListFragment.
@@ -87,13 +81,15 @@ public class MarksListFragment extends Fragment
         getLoaderManager().restartLoader(0, null, this);
     }
 
-    //ТОЛЬКО ДЛЯ ОТЛАДКИ.
-    public void showSelectedItemsId() {
+    //Получаю список Id выбранных элементов списка.
+    public long[] getSelectedItemsIdsArray() {
         ListView listViewMarks = (ListView) view.findViewById(R.id.listViewMarks);
         long[] ids = listViewMarks.getCheckedItemIds();
+        //TODO: убрать этот цикл, он только для отладки.
         for (long id : ids) {
             Log.d(Constants.APP_LOG_TAG, String.valueOf(id));
         }
+        return ids;
     }
 
     @Override
