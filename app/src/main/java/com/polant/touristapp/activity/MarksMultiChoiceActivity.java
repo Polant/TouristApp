@@ -19,7 +19,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.interfaces.InitFABListener;
-import com.polant.touristapp.fragment.MarksListFragment;
+import com.polant.touristapp.fragment.MarksListMultiFragment;
 import com.polant.touristapp.model.Mark;
 
 public class MarksMultiChoiceActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
@@ -29,7 +29,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
 
     public static final String OUTPUT_CHECKED_LIST_ITEMS_IDS = "OUTPUT_CHECKED_LIST_ITEMS_IDS";
     public static final String INPUT_CHECKED_LIST_ITEMS_IDS = "INPUT_CHECKED_LIST_ITEMS_IDS";
-    private static final String MARK_LIST_FRAGMENT_TAG = MarksListFragment.class.toString();
+    private static final String MARK_LIST_FRAGMENT_TAG = MarksListMultiFragment.class.toString();
 
     private Database db;
 
@@ -66,7 +66,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
     private void initMarksListFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        MarksListFragment fragment = new MarksListFragment();
+        MarksListMultiFragment fragment = new MarksListMultiFragment();
         //Передаю Id пользователя и массив выбранных Id меток во фрагмент.
         Bundle args = new Bundle();
         args.putInt(Constants.USER_ID, userId);
@@ -81,8 +81,8 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         transaction.commit();
     }
 
-    private MarksListFragment findMarksListFragmentByTag(){
-        return (MarksListFragment)getSupportFragmentManager()
+    private MarksListMultiFragment findMarksListMultiFragmentByTag(){
+        return (MarksListMultiFragment)getSupportFragmentManager()
                 .findFragmentByTag(MARK_LIST_FRAGMENT_TAG);
     }
 
@@ -98,7 +98,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
                 switch (id) {
                     case R.id.item_check_confirm:
                         //Получаю из фрагмента массив выбранных Id элементов списка.
-                        MarksListFragment mlf = findMarksListFragmentByTag();
+                        MarksListMultiFragment mlf = findMarksListMultiFragmentByTag();
                         long[] markIds = mlf.getSelectedItemsIdsArray();
 
                         Intent backIntent = new Intent();
@@ -171,7 +171,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         db.insertMark(mark);    //Вставляю метку в БД.
 
         //Обновляю ListView во фрагменте.
-        MarksListFragment fragment = findMarksListFragmentByTag();
+        MarksListMultiFragment fragment = findMarksListMultiFragmentByTag();
         fragment.notifyList();
         //Уведомляю пользователя. TODO: snackbar перекрывает FAB.
         Snackbar.make(fab, "Метка добавлена", Snackbar.LENGTH_INDEFINITE)

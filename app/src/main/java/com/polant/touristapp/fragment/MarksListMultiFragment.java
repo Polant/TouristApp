@@ -28,7 +28,7 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MarksListFragment extends Fragment
+public class MarksListMultiFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceListFragment {
 
     private static final int LAYOUT = R.layout.fragment_marks_list;
