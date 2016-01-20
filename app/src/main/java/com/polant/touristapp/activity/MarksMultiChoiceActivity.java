@@ -25,7 +25,7 @@ import com.polant.touristapp.model.Mark;
 public class MarksMultiChoiceActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
         InitFABListener {
 
-    private static final int LAYOUT = R.layout.activity_marks;
+    private static final int LAYOUT = R.layout.activity_marks_multi_choice;
 
     public static final String OUTPUT_CHECKED_LIST_ITEMS_IDS = "OUTPUT_CHECKED_LIST_ITEMS_IDS";
     public static final String INPUT_CHECKED_LIST_ITEMS_IDS = "INPUT_CHECKED_LIST_ITEMS_IDS";

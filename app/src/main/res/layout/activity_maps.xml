@@ -17,7 +17,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main"
+    <include layout="@layout/content_maps"
         android:id="@+id/contentMain" />
 
     <android.support.design.widget.FloatingActionButton

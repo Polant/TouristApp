@@ -16,7 +16,7 @@ import com.polant.touristapp.data.Database;
  */
 public class MultiChoiceListAdapter extends CursorAdapter{
 
-    private static final int LAYOUT = R.layout.list_item_mark;
+    private static final int LAYOUT = R.layout.list_item_mark_multi_choice;
 
     private Context mContext;
     private LayoutInflater mLayoutInflater;

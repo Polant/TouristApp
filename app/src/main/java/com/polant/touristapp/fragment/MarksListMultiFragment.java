@@ -18,7 +18,6 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksMultiChoiceActivity;
 import com.polant.touristapp.adapter.MultiChoiceListAdapter;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.interfaces.IListFragment;
 import com.polant.touristapp.interfaces.IMultiChoiceListFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.interfaces.InitFABListener;
@@ -31,7 +30,7 @@ import java.util.ArrayList;
 public class MarksListMultiFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceListFragment {
 
-    private static final int LAYOUT = R.layout.fragment_marks_list;
+    private static final int LAYOUT = R.layout.fragment_marks_list_multi_choice;
 
     private View view;
     private Activity activity;
