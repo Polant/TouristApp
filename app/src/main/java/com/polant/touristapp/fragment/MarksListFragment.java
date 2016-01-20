@@ -31,6 +31,8 @@ import java.util.ArrayList;
 public class MarksListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceListFragment {
 
+    private static final int LAYOUT = R.layout.fragment_marks_list;
+
     private View view;
     private Activity activity;
 
@@ -54,7 +56,7 @@ public class MarksListFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_marks_list, container, false);
+        view = inflater.inflate(LAYOUT, container, false);
         //Инициализирую привязку FAB к ListView.
         ((InitFABListener)activity).initFAB((ListView) view.findViewById(R.id.listViewMarks));
 

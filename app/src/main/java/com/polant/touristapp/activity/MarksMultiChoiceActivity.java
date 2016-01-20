@@ -88,7 +88,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.title_activity_marks);
+        toolbar.setTitle(R.string.title_activity_marks_multi_choice);
 
         toolbar.inflateMenu(R.menu.toolbar_marks_edit);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
