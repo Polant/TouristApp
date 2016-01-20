@@ -84,7 +84,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                         //Выбор меток для фото.
                         Intent intent = new Intent(SelectedPhotoActivity.this, MarksMultiChoiceActivity.class);
                         intent.putExtra(Constants.USER_ID, userId);
-
+                        intent.putExtra(MarksMultiChoiceActivity.INPUT_CHECKED_LIST_ITEMS_IDS, marksIds);
                         startActivityForResult(intent, Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY);
                         return true;
                     case R.id.item_map_marker:
