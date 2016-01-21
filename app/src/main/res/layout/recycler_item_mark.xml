@@ -14,8 +14,9 @@
         android:layout_height="match_parent">
 
         <com.mikhaellopez.circularimageview.CircularImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:id="@+id/imageViewMark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
             app:border_color="#ED5C02"

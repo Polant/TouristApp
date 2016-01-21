@@ -1,6 +1,7 @@
 package com.polant.touristapp.drawer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,7 +12,9 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.activity.MarksActivity;
 
 /**
  * Реализация NavigationDrawer - для использования его во всех activity.
@@ -52,6 +55,13 @@ public class NavigationDrawer {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         //TODO: реализовать обработку.
+                        switch (position){
+                            case 3://Метки.
+                                Intent marks = new Intent(activity, MarksActivity.class);
+                                marks.putExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
+                                activity.startActivityForResult(marks, Constants.SHOW_MARKS_ACTIVITY);
+                                return true;
+                        }
                         return false;
                     }
                 })
