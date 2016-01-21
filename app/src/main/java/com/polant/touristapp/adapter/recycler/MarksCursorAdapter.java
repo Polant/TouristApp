@@ -39,26 +39,20 @@ public class MarksCursorAdapter extends CursorRecyclerViewAdapter<MarksCursorAda
     }
 
 
-
     public static class MarkViewHolder extends RecyclerView.ViewHolder{
 
         private CircularImageView imageView;
         private TextView textName;
-        private TextView textDescription;
 
         public MarkViewHolder(View itemView) {
             super(itemView);
-
             imageView = (CircularImageView) itemView.findViewById(R.id.imageViewMark);
             textName = (TextView) itemView.findViewById(R.id.textMarkName);
-            textDescription = (TextView) itemView.findViewById(R.id.textMarkDescription);
         }
 
         public void bindData(Cursor c){
             imageView.setImageResource(R.drawable.mark);
             textName.setText(c.getString(c.getColumnIndex(Database.MARK_NAME)));
-            textDescription.setText(c.getString(c.getColumnIndex(Database.MARK_DESCRIPTION)));
         }
     }
-
 }

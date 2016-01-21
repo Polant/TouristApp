@@ -15,15 +15,10 @@
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/imageViewMark"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
-            app:border_color="#ED5C02"
-            app:border_width="2dp"
-            app:shadow="true"
-            app:shadow_radius="10"
-            app:shadow_color="#282C34"/>
+            android:layout_margin="10dp" />
 
         <LinearLayout android:orientation="vertical"
             android:layout_gravity="center_vertical"
@@ -36,12 +31,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Base.TextAppearance.AppCompat.Headline"/>
-            <TextView
-                android:id="@+id/textMarkDescription"
-                android:layout_margin="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Base.TextAppearance.AppCompat.Subhead"/>
         </LinearLayout>
     </LinearLayout>
 

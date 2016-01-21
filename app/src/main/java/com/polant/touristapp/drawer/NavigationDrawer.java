@@ -54,13 +54,13 @@ public class NavigationDrawer {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        //TODO: реализовать обработку.
+                        //TODO: реализовать обработку клика по navigation drawer.
                         switch (position){
                             case 3://Метки.
                                 Intent marks = new Intent(activity, MarksActivity.class);
                                 marks.putExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
                                 activity.startActivityForResult(marks, Constants.SHOW_MARKS_ACTIVITY);
-                                return true;
+                                break;
                         }
                         return false;
                     }
