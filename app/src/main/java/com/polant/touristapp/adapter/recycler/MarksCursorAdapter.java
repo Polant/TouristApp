@@ -55,7 +55,7 @@ public class MarksCursorAdapter extends CursorRecyclerViewAdapter<MarksCursorAda
         }
 
         public void bindData(Cursor c){
-            //imageView.setImageResource(R.drawable.mark);
+            imageView.setImageResource(R.drawable.mark);
             textName.setText(c.getString(c.getColumnIndex(Database.MARK_NAME)));
             textDescription.setText(c.getString(c.getColumnIndex(Database.MARK_DESCRIPTION)));
         }
