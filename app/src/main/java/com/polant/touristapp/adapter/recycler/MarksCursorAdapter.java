@@ -2,7 +2,6 @@ package com.polant.touristapp.adapter.recycler;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,16 +42,19 @@ public class MarksCursorAdapter extends CursorRecyclerViewAdapter<MarksCursorAda
 
         private CircularImageView imageView;
         private TextView textName;
+        private TextView textPhotosCount;
 
         public MarkViewHolder(View itemView) {
             super(itemView);
             imageView = (CircularImageView) itemView.findViewById(R.id.imageViewMark);
             textName = (TextView) itemView.findViewById(R.id.textMarkName);
+            textPhotosCount = (TextView) itemView.findViewById(R.id.textMarkPhotosCount);
         }
 
         public void bindData(Cursor c){
             imageView.setImageResource(R.drawable.mark);
             textName.setText(c.getString(c.getColumnIndex(Database.MARK_NAME)));
+            textPhotosCount.setText(String.format("%d фото", c.getInt(c.getColumnIndex(Database.COUNT_PHOTOS_BY_MARK))));
         }
     }
 }

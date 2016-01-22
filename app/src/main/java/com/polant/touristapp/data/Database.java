@@ -14,7 +14,6 @@ import com.polant.touristapp.model.MarkRecord;
 import com.polant.touristapp.model.UserMedia;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by Антон on 08.01.2016.
@@ -190,6 +189,24 @@ public class Database {
                                     MARK_USER_ID +
                         " FROM "  + TABLE_MARKS +
                         " WHERE " + MARK_USER_ID + "="+ userId + ";";
+        return sqLiteDatabase.rawQuery(query, null);
+    }
+
+    public static final String COUNT_PHOTOS_BY_MARK = "COUNT_PHOTOS_BY_MARK";
+    //Сортирую по убыванию количества фото, а по имени по возрастанию.
+    public Cursor selectMarksAndPhotosCountCursor(int userId){
+        //Обязательно надо указать псевдоним '_id' для поля id, чтоб он смог обработаться адаптером.
+        String query = "SELECT "  + MARK_ID + " AS _id, " +
+                MARK_NAME + ", " +
+                MARK_DESCRIPTION + ", " +
+                MARK_USER_ID + ", " +
+                " Count(" + MARK_RECORD_MEDIA_ID + ") AS " + COUNT_PHOTOS_BY_MARK +
+                " FROM "  + TABLE_MARKS +
+                " LEFT OUTER JOIN " + TABLE_MARK_RECORDS + " ON " +
+                            TABLE_MARK_RECORDS + "." + MARK_RECORD_MARK_ID + "=_id " +
+                " WHERE " + MARK_USER_ID + "="+ userId +
+                " GROUP BY _id, " + MARK_NAME + ", " + MARK_DESCRIPTION + ", " + MARK_USER_ID +
+                " ORDER BY " + COUNT_PHOTOS_BY_MARK + " DESC, " + MARK_NAME + ";";
         return sqLiteDatabase.rawQuery(query, null);
     }
 

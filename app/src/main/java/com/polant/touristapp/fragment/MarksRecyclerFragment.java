@@ -83,7 +83,7 @@ public class MarksRecyclerFragment extends Fragment
         return new CursorLoader(mActivity, null, null, null, null, null){
             @Override
             public Cursor loadInBackground() {
-                return db.selectAllMarksCursorByUserId(mUserId);
+                return db.selectMarksAndPhotosCountCursor(mUserId);
             }
         };
     }
