@@ -1,9 +1,11 @@
-package com.polant.touristapp.adapter.recycler;
+package com.polant.touristapp.adapter.base;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
+
+import com.polant.touristapp.adapter.base.CursorRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

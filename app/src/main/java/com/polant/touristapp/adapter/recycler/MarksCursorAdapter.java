@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.polant.touristapp.R;
+import com.polant.touristapp.adapter.base.CursorRecyclerViewAdapter;
 import com.polant.touristapp.data.Database;
 
 /**

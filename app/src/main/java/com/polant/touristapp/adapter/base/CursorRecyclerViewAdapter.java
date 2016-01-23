@@ -1,4 +1,4 @@
-package com.polant.touristapp.adapter.recycler;
+package com.polant.touristapp.adapter.base;
 
 import android.content.Context;
 import android.database.Cursor;
