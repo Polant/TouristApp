@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/listViewMarks"
-        android:choiceMode="multipleChoice"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewMarks"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

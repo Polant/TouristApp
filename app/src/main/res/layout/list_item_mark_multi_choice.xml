@@ -1,28 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.polant.touristapp.CheckableLinearLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="4dp">
 
-    <CheckBox
-        android:id="@+id/checkboxMarkListItem"
-        android:clickable="false"
-        android:focusable="false"
-        android:layout_margin="15dp"
-        android:padding="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="false" />
-    <TextView
-        android:id="@+id/textViewMarkName"
-        android:layout_margin="15dp"
-        android:padding="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:textSize="18sp"
-        android:focusable="false"
-        />
 
-</com.polant.touristapp.CheckableLinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/imageViewMark"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp" />
+
+        <LinearLayout android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textMarkName"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Base.TextAppearance.AppCompat.Headline"/>
+            <TextView
+                android:id="@+id/textMarkPhotosCount"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/selected_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/selected_overlay"
+        android:visibility="invisible" />
+
+</android.support.v7.widget.CardView>

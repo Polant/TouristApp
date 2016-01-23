@@ -3,27 +3,25 @@ package com.polant.touristapp.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
-import com.polant.touristapp.interfaces.InitFABListener;
 import com.polant.touristapp.fragment.MarksListMultiFragment;
+import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 
-public class MarksMultiChoiceActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
-        InitFABListener {
+public class MarksMultiChoiceActivity extends AppCompatActivity implements IWorkWithDatabaseActivity {
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
 
@@ -46,7 +44,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         getDataFromIntent();
         initToolbar();
         initMarksListFragment();
-        //initFAB();инициализирую во фрагменте.
+        initFAB();
     }
 
     private void openDatabase() {
@@ -62,7 +60,6 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         }
     }
 
-    //Добавляю фрагмент со списком меток в контейнер.
     private void initMarksListFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -90,26 +87,26 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_activity_marks_multi_choice);
 
-        toolbar.inflateMenu(R.menu.toolbar_marks_edit);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.item_check_confirm:
-                        //Получаю из фрагмента массив выбранных Id элементов списка.
-                        MarksListMultiFragment mlf = findMarksListMultiFragmentByTag();
-                        long[] markIds = mlf.getSelectedItemsIdsArray();
-
-                        Intent backIntent = new Intent();
-                        backIntent.putExtra(OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
-                        setResult(RESULT_OK, backIntent);
-                        finish();
-                        return true;
-                }
-                return false;
-            }
-        });
+//        toolbar.inflateMenu(R.menu.toolbar_marks_selected);
+//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                int id = item.getItemId();
+//                switch (id) {
+//                    case R.id.item_check_confirm:
+//                        //Получаю из фрагмента массив выбранных Id элементов списка.
+//                        MarksListMultiFragment mlf = findMarksListMultiFragmentByTag();
+//                        long[] markIds = mlf.getSelectedItemsIdsArray();
+//
+//                        Intent backIntent = new Intent();
+//                        backIntent.putExtra(OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
+//                        setResult(RESULT_OK, backIntent);
+//                        finish();
+//                        return true;
+//                }
+//                return false;
+//            }
+//        });
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,10 +115,11 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
                 finish();
             }
         });
+        //TODO: проверить необходимость этого.
+        //setSupportActionBar(toolbar);
     }
 
-    @Override
-    public void initFAB(ListView listView) {
+    public void initFAB() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +127,6 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
                 buildNewMarkDialog(v);
             }
         });
-        fab.attachToListView(listView);
     }
 
     private void buildNewMarkDialog(final View fab){
@@ -158,7 +155,6 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         dialog.show();
     }
 
-    //Обработчик добавления новой метки с помощью FAB.
     private void addMark(View fab, View alertView) {
         EditText nameText = (EditText) alertView.findViewById(R.id.editTextNewMarkName);
         EditText descriptionText = (EditText) alertView.findViewById(R.id.editTextNewMarkDescription);
@@ -173,7 +169,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         //Обновляю ListView во фрагменте.
         MarksListMultiFragment fragment = findMarksListMultiFragmentByTag();
         fragment.notifyList();
-        //Уведомляю пользователя. TODO: snackbar перекрывает FAB.
+
         Snackbar.make(fab, "Метка добавлена", Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_close_text, new View.OnClickListener() {
                     @Override

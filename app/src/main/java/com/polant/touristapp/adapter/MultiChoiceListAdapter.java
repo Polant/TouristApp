@@ -34,7 +34,7 @@ public class MultiChoiceListAdapter extends CursorAdapter{
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView markerNameTextView = (TextView) view.findViewById(R.id.textViewMarkName);
-        markerNameTextView.setText(cursor.getString(cursor.getColumnIndex(Database.MARK_NAME)));
+//        TextView markerNameTextView = (TextView) view.findViewById(R.id.textViewMarkName);
+//        markerNameTextView.setText(cursor.getString(cursor.getColumnIndex(Database.MARK_NAME)));
     }
 }
