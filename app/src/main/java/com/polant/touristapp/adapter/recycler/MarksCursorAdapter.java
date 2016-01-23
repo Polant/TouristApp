@@ -17,12 +17,12 @@ import com.polant.touristapp.data.Database;
  */
 public class MarksCursorAdapter extends CursorRecyclerViewAdapter<MarksCursorAdapter.MarkViewHolder> {
 
+    private static Context mContext;
     private LayoutInflater mInflater;
-//    private View.OnClickListener mClickListener;
-//    private View.OnLongClickListener mLongClickListener;
 
     public MarksCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor);
+        mContext = context;
         mInflater = LayoutInflater.from(context);
     }
 
@@ -46,6 +46,7 @@ public class MarksCursorAdapter extends CursorRecyclerViewAdapter<MarksCursorAda
 
         public MarkViewHolder(View itemView) {
             super(itemView);
+
             imageView = (CircularImageView) itemView.findViewById(R.id.imageViewMark);
             textName = (TextView) itemView.findViewById(R.id.textMarkName);
             textPhotosCount = (TextView) itemView.findViewById(R.id.textMarkPhotosCount);
@@ -54,7 +55,9 @@ public class MarksCursorAdapter extends CursorRecyclerViewAdapter<MarksCursorAda
         public void bindData(Cursor c){
             imageView.setImageResource(R.drawable.mark);
             textName.setText(c.getString(c.getColumnIndex(Database.MARK_NAME)));
-            textPhotosCount.setText(String.format("%d фото", c.getInt(c.getColumnIndex(Database.COUNT_PHOTOS_BY_MARK))));
+            textPhotosCount.setText(String.format("%d %s",
+                    c.getInt(c.getColumnIndex(Database.COUNT_PHOTOS_BY_MARK)),
+                    mContext.getString(R.string.photo_text)));
         }
     }
 }

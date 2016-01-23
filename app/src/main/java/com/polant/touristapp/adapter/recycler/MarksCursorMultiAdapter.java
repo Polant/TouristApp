@@ -23,17 +23,19 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
     private static final int LAYOUT_SELECTED = R.layout.recycler_item_mark_multi_choice_selected;
     private static final int LAYOUT_NON_SELECTED = R.layout.recycler_item_mark_multi_choice;
 
+    private static Context mContext;
     private LayoutInflater mInflater;
     private MarkViewHolder.ClickListener mClickListener;
 
     public MarksCursorMultiAdapter(Context context, Cursor cursor, MarkViewHolder.ClickListener clickListener) {
         super(context, cursor);
+        mContext = context;
         mClickListener = clickListener;
         mInflater = LayoutInflater.from(context);
     }
 
     @Override
-    public synchronized void onBindViewHolder(MarkViewHolder holder, Cursor c) {
+    public void onBindViewHolder(MarkViewHolder holder, Cursor c) {
         long id = c.getLong(c.getColumnIndex("_id"));
         int pos = c.getPosition();
         /*Не знаю почему, но курсор будет иметь не ту позицию, если просто его передать
@@ -90,7 +92,9 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
             c.moveToPosition(pos);
             imageView.setImageResource(R.drawable.mark);
             textName.setText(c.getString(c.getColumnIndex(Database.MARK_NAME)));
-            textPhotosCount.setText(String.format("%d фото", c.getInt(c.getColumnIndex(Database.COUNT_PHOTOS_BY_MARK))));
+            textPhotosCount.setText(String.format("%d %s",
+                    c.getInt(c.getColumnIndex(Database.COUNT_PHOTOS_BY_MARK)),
+                    mContext.getString(R.string.photo_text)));
             selectedOverlay.setVisibility(isSelected ? View.VISIBLE : View.INVISIBLE);
         }
 
