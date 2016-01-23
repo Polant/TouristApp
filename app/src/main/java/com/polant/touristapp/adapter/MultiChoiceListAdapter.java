@@ -6,17 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.TextView;
 
 import com.polant.touristapp.R;
-import com.polant.touristapp.data.Database;
 
 /**
  * Created by Антон on 11.01.2016.
  */
 public class MultiChoiceListAdapter extends CursorAdapter{
 
-    private static final int LAYOUT = R.layout.list_item_mark_multi_choice;
+    private static final int LAYOUT = R.layout.recycler_item_mark_multi_choice;
 
     private Context mContext;
     private LayoutInflater mLayoutInflater;

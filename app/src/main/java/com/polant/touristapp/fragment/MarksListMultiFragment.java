@@ -38,7 +38,7 @@ public class MarksListMultiFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceListFragment,
                    MarksCursorMultiAdapter.MarkViewHolder.ClickListener {
 
-    private static final int LAYOUT = R.layout.fragment_marks_list_multi_choice;
+    private static final int LAYOUT = R.layout.fragment_marks_recycler_multi_choice;
 
     private View view;
     private Activity activity;

@@ -17,6 +17,12 @@ import com.polant.touristapp.data.Database;
  */
 public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<MarksCursorMultiAdapter.MarkViewHolder> {
 
+    private static final int TYPE_SELECTED = 0;
+    private static final int TYPE_NON_SELECTED = 1;
+
+    private static final int LAYOUT_SELECTED = R.layout.recycler_item_mark_multi_choice_selected;
+    private static final int LAYOUT_NON_SELECTED = R.layout.recycler_item_mark_multi_choice;
+
     private LayoutInflater mInflater;
     private MarkViewHolder.ClickListener mClickListener;
 
@@ -38,12 +44,16 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
 
     @Override
     public MarkViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //TODO: определить тип layout-а.
+        final int layout = viewType == TYPE_SELECTED ? LAYOUT_SELECTED: LAYOUT_NON_SELECTED;
 
-        View itemView = mInflater.inflate(R.layout.list_item_mark_multi_choice, parent, false);
+        View itemView = mInflater.inflate(layout, parent, false);
         return new MarkViewHolder(itemView, mClickListener);
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return isSelectedPosition(position) ? TYPE_SELECTED : TYPE_NON_SELECTED;
+    }
 
     public static class MarkViewHolder extends RecyclerView.ViewHolder
                                         implements View.OnClickListener, View.OnLongClickListener{
