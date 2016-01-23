@@ -95,13 +95,7 @@ public class MarksListMultiFragment extends Fragment
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(mAdapter);
 
-
-
-        Toolbar toolbar = (Toolbar)activity.findViewById(R.id.toolbar);
-        ViewGroup toolbarParent = (ViewGroup) toolbar.getParent();
-//        ViewGroup toolbarParent = ((ViewGroup) toolbar.getParent()).removeView(toolbar);
-        actionModeCallback = new ActionModeCallback(toolbar, toolbarParent);
-
+        actionModeCallback = new ActionModeCallback();
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -115,8 +109,8 @@ public class MarksListMultiFragment extends Fragment
     @Override
     public boolean onItemLongClicked(int position) {
         if (actionMode == null){
+//            Toolbar toolbar = (Toolbar)activity.findViewById(R.id.toolbar);
             actionMode = ((AppCompatActivity)activity).startSupportActionMode(actionModeCallback);
-            actionMode.setCustomView(actionModeCallback.toolbar);
         }
         toggleSelection(position);
         return true;
@@ -190,27 +184,9 @@ public class MarksListMultiFragment extends Fragment
 
     private class ActionModeCallback implements ActionMode.Callback {
 
-        private final Toolbar toolbar;
-        private final ViewGroup toolbarParent;
-
-        public ActionModeCallback(Toolbar toolbar, ViewGroup toolbarParent) {
-
-            this.toolbar = toolbar;
-            this.toolbarParent = toolbarParent;
-        }
-
-        private void removeToolbar(){
-            toolbarParent.removeView(toolbar);
-        }
-
-        private void addToolbar(){
-            toolbarParent.addView(toolbar);
-        }
-
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.toolbar_marks_selected, menu);
-            removeToolbar();
             return true;
         }
 
@@ -236,9 +212,7 @@ public class MarksListMultiFragment extends Fragment
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mAdapter.clearSelection();
-            ((ViewGroup)actionMode.getCustomView().getParent()).removeView(toolbar);
             actionMode = null;
-            addToolbar();
         }
     }
 }
