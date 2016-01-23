@@ -2,6 +2,7 @@ package com.polant.touristapp.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -194,11 +194,14 @@ public class MarksListMultiFragment extends Fragment
             int id = item.getItemId();
             switch (id) {
                 case R.id.item_check_confirm:
-                    Log.d(Constants.APP_LOG_TAG, "CLICKED_ACTION");
-                    List<Long> selectedIds = mAdapter.getSelectedItemsIds();
-                    for (long l : selectedIds){
-                        Log.d(Constants.APP_LOG_TAG, String.valueOf(l));
-                    }
+                    //Получаю массив выбранных Id элементов списка.
+                    long[] markIds = getSelectedItemsIdsArray();
+
+                    Intent backIntent = new Intent();
+                    backIntent.putExtra(MarksMultiChoiceActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
+                    activity.setResult(Activity.RESULT_OK, backIntent);
+                    activity.finish();
+                    return true;
             }
             return false;
         }

@@ -22,4 +22,8 @@
     <string name="alertResultNegative">Отмена</string>
     <string name="snackbar_close_text">Закрыть</string>
     <string name="overlay_text">Выбрано:</string>
+    <string name="mark_was_added">Метка добавлена</string>
+    <string name="menu_toolbar_reset_filter">Сбросить фитльтр</string>
+    <string name="reset_filter_text">Сброшен фильтр</string>
+    <string name="add_photo_text">Добавлено фото</string>
 </resources>

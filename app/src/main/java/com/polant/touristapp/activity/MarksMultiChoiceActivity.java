@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -87,26 +85,6 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_activity_marks_multi_choice);
 
-//        toolbar.inflateMenu(R.menu.toolbar_marks_selected);
-//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                int id = item.getItemId();
-//                switch (id) {
-//                    case R.id.item_check_confirm:
-//                        //Получаю из фрагмента массив выбранных Id элементов списка.
-//                        MarksListMultiFragment mlf = findMarksListMultiFragmentByTag();
-//                        long[] markIds = mlf.getSelectedItemsIdsArray();
-//
-//                        Intent backIntent = new Intent();
-//                        backIntent.putExtra(OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
-//                        setResult(RESULT_OK, backIntent);
-//                        finish();
-//                        return true;
-//                }
-//                return false;
-//            }
-//        });
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +93,6 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
                 finish();
             }
         });
-        //TODO: проверить необходимость этого.
-        //setSupportActionBar(toolbar);
     }
 
     public void initFAB() {
@@ -170,7 +146,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         MarksListMultiFragment fragment = findMarksListMultiFragmentByTag();
         fragment.notifyList();
 
-        Snackbar.make(fab, "Метка добавлена", Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(fab, R.string.mark_was_added, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_close_text, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

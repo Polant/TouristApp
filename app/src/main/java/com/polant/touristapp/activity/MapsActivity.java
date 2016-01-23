@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -144,6 +145,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         intent.putExtra(MarksMultiChoiceActivity.INPUT_CHECKED_LIST_ITEMS_IDS, filterMarks);
                         startActivityForResult(intent, Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY);
                         return true;
+                    case R.id.item_reset_filter:
+                        //Сбрасываю фильтр.
+                        filterMarks = null;
+                        updateClustersByFilter(null);
+                        showSnackbar(getString(R.string.reset_filter_text));
+                        return true;
                 }
                 return false;
             }
@@ -175,6 +182,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    private void showSnackbar(String message){
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        Snackbar.make(fab, message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.snackbar_close_text, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                })
+                .show();
+    }
+
     //--------------------------------------------------------------------------//
 
     @Override
@@ -191,6 +209,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             openDatabase();
             //Обновляю кластеры после добавления нового фото.
             updateClustersByFilter(filterMarks);
+            showSnackbar(getString(R.string.add_photo_text));
         }
         else if (requestCode == Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
