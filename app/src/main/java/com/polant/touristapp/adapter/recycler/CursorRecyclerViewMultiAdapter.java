@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Адаптер для множественного выбора элементов RecyclerView.
+ * Базовый Адаптер для множественного выбора элементов RecyclerView,
+ * работающий с Cursor-ами.
  */
 public abstract class CursorRecyclerViewMultiAdapter<VH extends RecyclerView.ViewHolder> extends CursorRecyclerViewAdapter<VH> {
 

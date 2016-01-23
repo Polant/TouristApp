@@ -27,9 +27,13 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
     }
 
     @Override
-    public void onBindViewHolder(MarkViewHolder holder, Cursor c) {
+    public synchronized void onBindViewHolder(MarkViewHolder holder, Cursor c) {
         long id = c.getLong(c.getColumnIndex("_id"));
-        holder.bindData(c, isSelectedId(id));
+        int pos = c.getPosition();
+        /*Не знаю почему, но курсор будет иметь не ту позицию, если просто его передать
+        * в bindData(), несмотря на то, что в данный момент от имеет верную позицию. Передача
+        * текущей позиции рещает проблему. Не могу понять почему так?!*/
+        holder.bindData(c, pos, isSelectedId(id));
     }
 
     @Override
@@ -44,16 +48,20 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
     public static class MarkViewHolder extends RecyclerView.ViewHolder
                                         implements View.OnClickListener, View.OnLongClickListener{
 
+        public interface ClickListener {
+            void onItemClicked(int position);
+            boolean onItemLongClicked(int position);
+        }
+
+        private ClickListener mListener;
+
         private CircularImageView imageView;
         private TextView textName;
         private TextView textPhotosCount;
         private View selectedOverlay;
 
-        private ClickListener mListener;
-
         public MarkViewHolder(View itemView, ClickListener mClickListener) {
             super(itemView);
-
             mListener = mClickListener;
 
             imageView = (CircularImageView) itemView.findViewById(R.id.imageViewMark);
@@ -65,10 +73,11 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
             itemView.setOnLongClickListener(this);
         }
 
-        public void bindData(Cursor c, boolean isSelected){
+        public void bindData(Cursor c, int pos, boolean isSelected){
             if (c == null){
                 return;
             }
+            c.moveToPosition(pos);
             imageView.setImageResource(R.drawable.mark);
             textName.setText(c.getString(c.getColumnIndex(Database.MARK_NAME)));
             textPhotosCount.setText(String.format("%d фото", c.getInt(c.getColumnIndex(Database.COUNT_PHOTOS_BY_MARK))));
@@ -85,11 +94,6 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
         @Override
         public boolean onLongClick(View v) {
             return mListener != null && mListener.onItemLongClicked(getLayoutPosition());
-        }
-
-        public interface ClickListener {
-            void onItemClicked(int position);
-            boolean onItemLongClicked(int position);
         }
     }
 
