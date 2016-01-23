@@ -2,7 +2,6 @@ package com.polant.touristapp.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,17 +9,16 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
@@ -34,11 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A placeholder fragment containing a simple view.
+ * Фрагмент, содержащий RecyclerView для вывода меток.
  */
 public class MarksListMultiFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceListFragment,
-        MarksCursorMultiAdapter.MarkViewHolder.ClickListener {
+                   MarksCursorMultiAdapter.MarkViewHolder.ClickListener {
 
     private static final int LAYOUT = R.layout.fragment_marks_list_multi_choice;
 
@@ -109,8 +107,8 @@ public class MarksListMultiFragment extends Fragment
     @Override
     public boolean onItemLongClicked(int position) {
         if (actionMode == null){
-//            Toolbar toolbar = (Toolbar)activity.findViewById(R.id.toolbar);
-            actionMode = ((AppCompatActivity)activity).startSupportActionMode(actionModeCallback);
+            Toolbar toolbar = (Toolbar)activity.findViewById(R.id.toolbar);
+            actionMode = toolbar.startActionMode(actionModeCallback);
         }
         toggleSelection(position);
         return true;
@@ -123,7 +121,7 @@ public class MarksListMultiFragment extends Fragment
         if (count == 0) {
             actionMode.finish();
         } else {
-            actionMode.setTitle(String.valueOf(count));
+            actionMode.setTitle(String.valueOf(getString(R.string.overlay_text) + " " + count));
             actionMode.invalidate();
         }
     }
@@ -141,17 +139,13 @@ public class MarksListMultiFragment extends Fragment
 //        }
 //    }
 
-    //Реализация IListFragment.
     @Override
     public void notifyList() {
         getLoaderManager().restartLoader(0, null, this);
     }
 
-    //Получаю список Id выбранных элементов списка.
     @Override
     public long[] getSelectedItemsIdsArray() {
-//        ListView listViewMarks = (ListView) view.findViewById(R.id.listViewMarks);
-//        return listViewMarks.getCheckedItemIds();
         long[] result = new long[mAdapter.getSelectedItemCount()];
         List<Long> list = mAdapter.getSelectedItemsIds();
         for (int i = 0; i < list.size(); i++) {
