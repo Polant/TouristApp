@@ -87,7 +87,7 @@ public class MarksListMultiFragment extends Fragment
         }
         db = ((IWorkWithDatabaseActivity) activity).getDatabase();
 
-        mAdapter = new MarksCursorMultiAdapter(activity, null, this);
+        mAdapter = new MarksCursorMultiAdapter(activity, null, this, inputMarks);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewMarks);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
@@ -126,18 +126,6 @@ public class MarksListMultiFragment extends Fragment
         }
     }
 
-//    //Устанавливаю уже заранее выбранные элементы списка.
-//    private void setCheckedIds(){
-//        if (inputMarks == null)
-//            return;
-//        ListView listViewMarks = (ListView) view.findViewById(R.id.listViewMarks);
-//        for (int pos = 0; pos < listViewMarks.getCount(); pos++){
-//            long id = listViewMarks.getItemIdAtPosition(pos);
-//            if (inputMarks.contains(id)){
-//                listViewMarks.setItemChecked(pos, true);
-//            }
-//        }
-//    }
 
     @Override
     public void notifyList() {
@@ -167,7 +155,6 @@ public class MarksListMultiFragment extends Fragment
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
-        //setCheckedIds();
     }
 
     @Override
@@ -196,7 +183,7 @@ public class MarksListMultiFragment extends Fragment
                 case R.id.item_check_confirm:
                     //Получаю массив выбранных Id элементов списка.
                     long[] markIds = getSelectedItemsIdsArray();
-
+                    //Возвращаю массив обратно в вызвавшую Активити.
                     Intent backIntent = new Intent();
                     backIntent.putExtra(MarksMultiChoiceActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
                     activity.setResult(Activity.RESULT_OK, backIntent);

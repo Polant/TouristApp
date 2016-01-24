@@ -2,6 +2,7 @@ package com.polant.touristapp.adapter.recycler;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
 import com.polant.touristapp.data.Database;
+
+import java.util.List;
 
 /**
  * Created by Антон on 23.01.2016.
@@ -28,21 +31,26 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
     private LayoutInflater mInflater;
     private MarkViewHolder.ClickListener mClickListener;
 
-    public MarksCursorMultiAdapter(Context context, Cursor cursor, MarkViewHolder.ClickListener clickListener) {
+    //Начальное выделение.
+    private List<Long> mInputData;
+
+    public MarksCursorMultiAdapter(Context context, @Nullable Cursor cursor,
+                                   MarkViewHolder.ClickListener clickListener, @Nullable List<Long> inputData) {
         super(context, cursor);
         mContext = context;
         mClickListener = clickListener;
+        mInputData = inputData;
         mInflater = LayoutInflater.from(context);
     }
 
     @Override
-    public void onBindViewHolder(MarkViewHolder holder, Cursor c) {
-        long id = c.getLong(c.getColumnIndex("_id"));
-        int pos = c.getPosition();
-        /*Не знаю почему, но курсор будет иметь не ту позицию, если просто его передать
-        * в bindData(), несмотря на то, что в данный момент от имеет верную позицию. Передача
-        * текущей позиции рещает проблему. Не могу понять почему так?!*/
-        holder.bindData(c, pos, isSelectedId(id));
+    public int getItemViewType(int position) {
+        long id = getItemId(position);
+        if (mInputData != null && mInputData.contains(id)){
+            mInputData.remove(id);
+            addSelection(position);
+        }
+        return isSelectedPosition(position) ? TYPE_SELECTED : TYPE_NON_SELECTED;
     }
 
     @Override
@@ -54,8 +62,13 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return isSelectedPosition(position) ? TYPE_SELECTED : TYPE_NON_SELECTED;
+    public void onBindViewHolder(MarkViewHolder holder, Cursor c) {
+        long id = c.getLong(c.getColumnIndex("_id"));
+        int pos = c.getPosition();
+        /*Не знаю почему, но курсор будет иметь не ту позицию, если просто его передать
+        * в bindData(), несмотря на то, что в данный момент от имеет верную позицию. Передача
+        * текущей позиции рещает проблему. Не могу понять почему так?!*/
+        holder.bindData(c, pos, isSelectedId(id));
     }
 
     public static class MarkViewHolder extends RecyclerView.ViewHolder

@@ -41,6 +41,15 @@ public abstract class CursorRecyclerViewMultiAdapter<VH extends RecyclerView.Vie
         notifyItemChanged(position);
     }
 
+    /**
+     * Используется для передачи начальных данных в коллекцию selectedItems.
+     * В отличие от toggleSelection не обновляет визуальное представление,
+     * к которому привязан адаптер.
+     */
+    protected void addSelection(int position){
+        selectedItems.put(position, true);
+    }
+
     public void clearSelection() {
         List<Integer> selectedPositions = getSelectedItemsPositions();
         selectedItems.clear();
