@@ -75,16 +75,7 @@ public class MarksListMultiFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Bundle args = getArguments();
-        if (args != null) {
-            userId = args.getInt(Constants.USER_ID);
-            long[] checkedIds = args.getLongArray(MarksMultiChoiceActivity.INPUT_CHECKED_LIST_ITEMS_IDS);
-            if (checkedIds != null) {
-                inputMarks = new ArrayList<>(checkedIds.length);
-                for (long id : checkedIds)
-                    inputMarks.add(id);
-            }
-        }
+        getDataFromArguments(getArguments());
         db = ((IWorkWithDatabaseActivity) activity).getDatabase();
 
         mAdapter = new MarksCursorMultiAdapter(activity, null, this, inputMarks);
@@ -95,6 +86,33 @@ public class MarksListMultiFragment extends Fragment
 
         actionModeCallback = new ActionModeCallback();
         getLoaderManager().initLoader(0, null, this);
+
+        initActionMode();
+    }
+
+    private void getDataFromArguments(Bundle args) {
+        if (args != null) {
+            userId = args.getInt(Constants.USER_ID);
+            long[] checkedIds = args.getLongArray(MarksMultiChoiceActivity.INPUT_CHECKED_LIST_ITEMS_IDS);
+            if (checkedIds != null) {
+                inputMarks = new ArrayList<>(checkedIds.length);
+                for (long id : checkedIds)
+                    inputMarks.add(id);
+            }
+        }
+    }
+
+    private void initActionMode() {
+        //Если переданы начальные выделенные элементы для RecyclerView.
+        if (actionMode == null && inputMarks != null){
+            startActionMode();
+            refreshActionMode(inputMarks.size());
+        }
+    }
+
+    private void startActionMode() {
+        Toolbar toolbar = (Toolbar)activity.findViewById(R.id.toolbar);
+        actionMode = toolbar.startActionMode(actionModeCallback);
     }
 
     @Override
@@ -107,8 +125,7 @@ public class MarksListMultiFragment extends Fragment
     @Override
     public boolean onItemLongClicked(int position) {
         if (actionMode == null){
-            Toolbar toolbar = (Toolbar)activity.findViewById(R.id.toolbar);
-            actionMode = toolbar.startActionMode(actionModeCallback);
+            startActionMode();
         }
         toggleSelection(position);
         return true;
@@ -118,10 +135,14 @@ public class MarksListMultiFragment extends Fragment
         mAdapter.toggleSelection(position);
         int count = mAdapter.getSelectedItemCount();
 
-        if (count == 0) {
+        refreshActionMode(count);
+    }
+
+    private void refreshActionMode(int selectedCount) {
+        if (selectedCount == 0) {
             actionMode.finish();
         } else {
-            actionMode.setTitle(String.valueOf(getString(R.string.overlay_text) + " " + count));
+            actionMode.setTitle(String.valueOf(getString(R.string.overlay_text) + " " + selectedCount));
             actionMode.invalidate();
         }
     }
