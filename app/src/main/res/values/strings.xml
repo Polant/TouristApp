@@ -23,8 +23,9 @@
     <string name="snackbar_close_text">Закрыть</string>
     <string name="overlay_text">Выбрано:</string>
     <string name="mark_was_added">Метка добавлена</string>
-    <string name="menu_toolbar_reset_filter">Сбросить фитльтр</string>
+    <string name="menu_toolbar_reset_filter">Отобразить все</string>
     <string name="reset_filter_text">Сброшен фильтр</string>
     <string name="add_photo_text">Добавлено фото</string>
     <string name="photo_text">фото</string>
+    <string name="toolbar_remove_filter_text">Сбросить фильтр</string>
 </resources>

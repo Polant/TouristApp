@@ -1,5 +1,6 @@
 package com.polant.touristapp.activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -85,6 +87,23 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_activity_marks_multi_choice);
 
+        toolbar.inflateMenu(R.menu.toobar_marks_clear_filter);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                switch (id){
+                    case R.id.item_filter_remove:
+                        //Возвращаю ПУСТОЙ массив обратно в вызвавшую Активити.
+                        Intent backIntent = new Intent();
+//                        backIntent.putExtra(OUTPUT_CHECKED_LIST_ITEMS_IDS, (long[])null);
+                        setResult(RESULT_OK, backIntent);
+                        finish();
+                        return true;
+                }
+                return false;
+            }
+        });
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

@@ -213,7 +213,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         else if (requestCode == Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
-            if (data != null && data.getExtras() != null){//Обновляю метки на карте.
+            if (data != null){//Обновляю метки на карте.
                 long[] marksIds = data.getLongArrayExtra(MarksMultiChoiceActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS);
                 filterMarks = marksIds;
                 updateClustersByFilter(marksIds);
