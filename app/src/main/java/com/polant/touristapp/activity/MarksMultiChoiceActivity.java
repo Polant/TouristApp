@@ -60,29 +60,6 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         }
     }
 
-    private void initMarksListFragment() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        MarksListMultiFragment fragment = new MarksListMultiFragment();
-        //Передаю Id пользователя и массив выбранных Id меток во фрагмент.
-        Bundle args = new Bundle();
-        args.putInt(Constants.USER_ID, userId);
-        if (inputMarks != null && inputMarks.length > 0){
-            args.putLongArray(INPUT_CHECKED_LIST_ITEMS_IDS, inputMarks);
-        }
-
-        fragment.setArguments(args);
-        transaction.add(R.id.container_marks,
-                fragment,
-                MARK_LIST_FRAGMENT_TAG);
-        transaction.commit();
-    }
-
-    private MarksListMultiFragment findMarksListMultiFragmentByTag(){
-        return (MarksListMultiFragment)getSupportFragmentManager()
-                .findFragmentByTag(MARK_LIST_FRAGMENT_TAG);
-    }
-
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_activity_marks_multi_choice);
@@ -92,7 +69,7 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
-                switch (id){
+                switch (id) {
                     case R.id.item_filter_remove:
                         //Возвращаю ПУСТОЙ массив обратно в вызвавшую Активити.
                         Intent backIntent = new Intent();
@@ -114,14 +91,43 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         });
     }
 
+    private void initMarksListFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        MarksListMultiFragment fragment = new MarksListMultiFragment();
+        //Передаю Id пользователя и массив выбранных Id меток во фрагмент.
+        Bundle args = new Bundle();
+        args.putInt(Constants.USER_ID, userId);
+        if (inputMarks != null && inputMarks.length > 0){
+            args.putLongArray(INPUT_CHECKED_LIST_ITEMS_IDS, inputMarks);
+        }
+
+        fragment.setArguments(args);
+        transaction.add(R.id.container_marks,
+                fragment,
+                MARK_LIST_FRAGMENT_TAG);
+        transaction.commit();
+    }
+
     public void initFAB() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        setMarksFABClickListener(fab);
+    }
+
+    //-----------------------------Marks------------------------------//
+
+    private void setMarksFABClickListener(FloatingActionButton fab){
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 buildNewMarkDialog(v);
             }
         });
+    }
+
+    private MarksListMultiFragment findMarksListMultiFragmentByTag(){
+        return (MarksListMultiFragment)getSupportFragmentManager()
+                .findFragmentByTag(MARK_LIST_FRAGMENT_TAG);
     }
 
     private void buildNewMarkDialog(final View fab){
@@ -165,7 +171,11 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
         MarksListMultiFragment fragment = findMarksListMultiFragmentByTag();
         fragment.notifyList();
 
-        Snackbar.make(fab, R.string.mark_was_added, Snackbar.LENGTH_INDEFINITE)
+        showSnackbar(fab, R.string.mark_was_added);
+    }
+
+    private void showSnackbar(View view, int stringResource) {
+        Snackbar.make(view, stringResource, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_close_text, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -173,6 +183,8 @@ public class MarksMultiChoiceActivity extends AppCompatActivity implements IWork
                 })
                 .show();
     }
+
+    //-------------------------------------------------------------------//
 
     @Override
     protected void onStart() {
