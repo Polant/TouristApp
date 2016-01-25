@@ -48,9 +48,6 @@
         </activity>
         <activity android:name=".activity.SelectedPhotoActivity" />
         <activity android:name=".activity.MarksActivity" />
-        <activity
-            android:name=".activity.TempMarksActivity"
-            android:label="@string/title_activity_marks"/>
     </application>
 
 </manifest>
