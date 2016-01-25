@@ -131,6 +131,8 @@ public class Database {
         }
     }
 
+    //--------------------------Фильтрация фото по меткам---------------------------------//
+
     private ArrayList<Long> selectUserMediaIdsByMarkFilter(@NonNull long[] markIds){
         ArrayList<Long> mediaIds = new ArrayList<>();
 
@@ -148,6 +150,29 @@ public class Database {
         return mediaIds;
     }
 
+    private String createUserMediaFilterQueryByMark(int userId, ArrayList<Long> medias, String colMediaIdAlias){
+        String query = "SELECT " +
+                MEDIA_ID + " AS " + colMediaIdAlias + ", " +
+                MEDIA_NAME + ", " +
+                MEDIA_DESCRIPTION + ", " +
+                MEDIA_USER_ID + ", " +
+                MEDIA_LATITUDE + ", " +
+                MEDIA_LONGITUDE + ", " +
+                MEDIA_EXTERNAL_PATH + ", " +
+                MEDIA_IS_IN_GALLERY + ", " +
+                MEDIA_CREATED_DATE +
+                " FROM " + TABLE_USERS_MEDIA + " WHERE " + MEDIA_USER_ID + "=" + userId + " AND " +
+                colMediaIdAlias + " IN (";
+        StringBuilder whereBuilder = new StringBuilder(query);
+        for (long id : medias){
+            whereBuilder.append(id).append(", ");
+        }
+        whereBuilder.delete(whereBuilder.length() - 2, whereBuilder.length());//Убираю последнюю запятую.
+        whereBuilder.append(");");
+
+        return whereBuilder.toString();
+    }
+
     public ArrayList<UserMedia> selectUserMediaByFilter(int userId, @NonNull long[] markIds){
         ArrayList<Long> medias = selectUserMediaIdsByMarkFilter(markIds);   //Получил все Id медиа.
         ArrayList<UserMedia> result = new ArrayList<>(medias.size());
@@ -155,20 +180,23 @@ public class Database {
         if (medias.size() == 0){//Если не нашлось результатов.
             return result;
         }
-
-        String query = "SELECT * FROM " + TABLE_USERS_MEDIA + " WHERE " + MEDIA_USER_ID + "=" + userId + " AND " +
-                MEDIA_ID + " IN (";
-        StringBuilder whereBuilder = new StringBuilder(query);
-        for (long id : medias){
-            whereBuilder.append(id).append(", ");
-        }
-        whereBuilder.delete(whereBuilder.length() - 2, whereBuilder.length());//Убираю последнюю запятую.
-        whereBuilder.append(");");
-        Cursor c = sqLiteDatabase.rawQuery(whereBuilder.toString(), null);
+        String query = createUserMediaFilterQueryByMark(userId, medias, MEDIA_ID);
+        Cursor c = sqLiteDatabase.rawQuery(query, null);
 
         parseUserMediaCursor(c, result);
         return result;
     }
+
+    public Cursor selectCursorUserMediaByFilter(int userId, @NonNull long[] markIds){
+        ArrayList<Long> medias = selectUserMediaIdsByMarkFilter(markIds);   //Получил все Id медиа.
+        if (medias.size() == 0){//Если не нашлось результатов.
+            return null;
+        }
+        String query = createUserMediaFilterQueryByMark(userId, medias, "_id");
+        return sqLiteDatabase.rawQuery(query, null);
+    }
+
+    //-------------------------------------------------------------------------//
 
     //Создание ContentValues для талбицы TABLE_MARK_RECORDS.
     private ContentValues putMarkRecordContentValues(MarkRecord record){

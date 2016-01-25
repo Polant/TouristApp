@@ -1,8 +1,12 @@
 package com.polant.touristapp.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,15 +33,27 @@ import java.util.List;
  */
 public class MarksFragment extends BaseRecyclerFragment {
 
+    public interface PhotosFragmentListener{
+        void showPhotosByMark(long markId);
+    }
+
     private static final int LAYOUT = R.layout.fragment_marks_recycler;
 
     private View view;
 
-    private List<Long> inputMarks;
+    private List<Long> mInputMarks;
 
     //true - если Активити вызвана для фильтрования фото по меткам на карте
     //или добавления меток для нового фото.
     private boolean isCallToFilterOrAddMarksToPhoto;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (!(context instanceof PhotosFragmentListener)) {
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT PhotosFragmentListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,7 +66,7 @@ public class MarksFragment extends BaseRecyclerFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new MarksCursorMultiAdapter(mActivity, null, this, inputMarks);
+        mAdapter = new MarksCursorMultiAdapter(mActivity, null, this, mInputMarks);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewMarks);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -68,9 +84,9 @@ public class MarksFragment extends BaseRecyclerFragment {
         if (args != null) {
             long[] checkedIds = args.getLongArray(MarksActivity.INPUT_CHECKED_LIST_ITEMS_IDS);
             if (checkedIds != null) {
-                inputMarks = new ArrayList<>(checkedIds.length);
+                mInputMarks = new ArrayList<>(checkedIds.length);
                 for (long id : checkedIds)
-                    inputMarks.add(id);
+                    mInputMarks.add(id);
             }
             isCallToFilterOrAddMarksToPhoto = args.getBoolean(MarksActivity.CALL_FILTER_OR_ADD_MARKS);
         }
@@ -78,9 +94,9 @@ public class MarksFragment extends BaseRecyclerFragment {
 
     private void initActionMode() {
         //Если переданы начальные выделенные элементы для RecyclerView.
-        if (mActionMode == null && inputMarks != null){
+        if (mActionMode == null && mInputMarks != null){
             startActionMode();
-            refreshActionMode(inputMarks.size());
+            refreshActionMode(mInputMarks.size());
         }
     }
 
@@ -90,13 +106,17 @@ public class MarksFragment extends BaseRecyclerFragment {
         mActionMode = toolbar.startActionMode(mActionModeCallback);
     }
 
+    //------------------------RecyclerClickListener--------------------------//
+
     @Override
     public void onItemClicked(int position) {
         if (mActionMode != null) {
             toggleSelection(position);
         }
         else if (!isCallToFilterOrAddMarksToPhoto){
-            Log.d(Constants.APP_LOG_TAG, "Транзакция фрагментов");
+            //Выполняю замену данного фрагмента.
+            long markId = mAdapter.getItemId(position);
+            ((PhotosFragmentListener)mActivity).showPhotosByMark(markId);
         }
     }
 
@@ -107,6 +127,18 @@ public class MarksFragment extends BaseRecyclerFragment {
         }
         toggleSelection(position);
         return true;
+    }
+
+    //--------------------------LoaderCallback-----------------------------//
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(mActivity, null, null, null, null, null){
+            @Override
+            public Cursor loadInBackground() {
+                return db.selectMarksAndPhotosCountCursor(mUserId);
+            }
+        };
     }
 
     //------------------Обработка пунктов меню ActionMode------------------//
@@ -123,6 +155,7 @@ public class MarksFragment extends BaseRecyclerFragment {
 
     private void removeMarks() {
         //TODO: сделать удаление.
+        Log.d(Constants.APP_LOG_TAG, "Удаление меток");
     }
 
     //---------------------------------------------------------------------//

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -17,13 +18,17 @@ import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.MarksFragment;
+import com.polant.touristapp.fragment.PhotosFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 
-public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity {
+public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
+        MarksFragment.PhotosFragmentListener{
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
-    private static final String MARK_LIST_FRAGMENT_TAG = MarksFragment.class.toString();
+
+    private static final String MARKS_FRAGMENT_TAG = MarksFragment.class.toString();
+    private static final String PHOTOS_FRAGMENT_TAG = PhotosFragment.class.toString();
 
     public static final String OUTPUT_CHECKED_LIST_ITEMS_IDS = "OUTPUT_CHECKED_LIST_ITEMS_IDS";
     public static final String INPUT_CHECKED_LIST_ITEMS_IDS = "INPUT_CHECKED_LIST_ITEMS_IDS";
@@ -38,6 +43,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
     //true - если Активити вызвана для фильтрования фото по меткам на карте
     //или добавления меток для нового фото.
     private boolean isCallToFilterOrAddMarksToPhoto;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +121,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         fragment.setArguments(args);
         transaction.add(R.id.container_marks,
                 fragment,
-                MARK_LIST_FRAGMENT_TAG);
+                MARKS_FRAGMENT_TAG);
         transaction.commit();
     }
 
@@ -137,7 +143,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
 
     private MarksFragment findMarksListMultiFragmentByTag(){
         return (MarksFragment)getSupportFragmentManager()
-                .findFragmentByTag(MARK_LIST_FRAGMENT_TAG);
+                .findFragmentByTag(MARKS_FRAGMENT_TAG);
     }
 
     private void buildNewMarkDialog(final View fab){
@@ -194,7 +200,28 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                 .show();
     }
 
-    //-------------------------------------------------------------------//
+    //-------------------------------Photos------------------------------------//
+
+
+    @Override
+    public void showPhotosByMark(long markId) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        PhotosFragment fragment = new PhotosFragment();
+        //Передаю Id пользователя и метку во фрагмент.
+        Bundle args = new Bundle();
+        args.putInt(Constants.USER_ID, userId);
+        args.putLong(PhotosFragment.INPUT_MARK_ID, markId);
+
+        fragment.setArguments(args);
+        transaction.replace(R.id.container_marks,
+                fragment,
+                PHOTOS_FRAGMENT_TAG);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    //------------------------------------------------------------------------//
 
     @Override
     protected void onStart() {

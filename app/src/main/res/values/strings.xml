@@ -29,4 +29,6 @@
     <string name="photo_text">фото</string>
     <string name="toolbar_remove_filter_text">Сбросить фильтр</string>
     <string name="menu_toolbar_remove_marks">Удалить метки</string>
+    <string name="photo_taken">Снято:</string>
+    <string name="menu_toolbar_remove_photos">Удалить фото</string>
 </resources>

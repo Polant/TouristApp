@@ -31,7 +31,7 @@
                 android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/selected_mark_title_color"
+                android:textColor="@color/selected_recycle_item_title_color"
                 style="@style/Base.TextAppearance.AppCompat.Headline"/>
             <TextView
                 android:id="@+id/textMarkPhotosCount"
