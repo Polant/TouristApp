@@ -59,6 +59,7 @@ public class NavigationDrawer {
                             case 3://Метки.
                                 Intent marks = new Intent(activity, MarksActivity.class);
                                 marks.putExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
+                                marks.putExtra(MarksActivity.CALL_FILTER_OR_ADD_MARKS, false);
                                 activity.startActivityForResult(marks, Constants.SHOW_MARKS_ACTIVITY);
                                 break;
                         }

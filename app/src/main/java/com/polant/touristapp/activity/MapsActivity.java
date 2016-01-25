@@ -143,6 +143,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Intent intent = new Intent(MapsActivity.this, MarksActivity.class);
                         intent.putExtra(Constants.USER_ID, userId);
                         intent.putExtra(MarksActivity.INPUT_CHECKED_LIST_ITEMS_IDS, filterMarks);
+                        intent.putExtra(MarksActivity.CALL_FILTER_OR_ADD_MARKS, true);
                         startActivityForResult(intent, Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY);
                         return true;
                     case R.id.item_reset_filter:

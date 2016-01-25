@@ -28,4 +28,5 @@
     <string name="add_photo_text">Добавлено фото</string>
     <string name="photo_text">фото</string>
     <string name="toolbar_remove_filter_text">Сбросить фильтр</string>
+    <string name="menu_toolbar_remove_marks">Удалить метки</string>
 </resources>

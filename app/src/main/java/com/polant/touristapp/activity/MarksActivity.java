@@ -23,15 +23,21 @@ import com.polant.touristapp.model.Mark;
 public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity {
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
+    private static final String MARK_LIST_FRAGMENT_TAG = MarksRecyclerMultiFragment.class.toString();
 
     public static final String OUTPUT_CHECKED_LIST_ITEMS_IDS = "OUTPUT_CHECKED_LIST_ITEMS_IDS";
     public static final String INPUT_CHECKED_LIST_ITEMS_IDS = "INPUT_CHECKED_LIST_ITEMS_IDS";
-    private static final String MARK_LIST_FRAGMENT_TAG = MarksRecyclerMultiFragment.class.toString();
+
+    public static final String CALL_FILTER_OR_ADD_MARKS = "CALL_FILTER_OR_ADD_MARKS";
 
     private Database db;
 
     private int userId;
     private long[] inputMarks;
+
+    //true - если Активити вызвана для фильтрования фото по меткам на карте
+    //или добавления меток для нового фото.
+    private boolean isCallToFilterOrAddMarksToPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +48,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         openDatabase();
         getDataFromIntent();
         initToolbar();
-        initMarksListFragment();
+        initMarksRecyclerFragment();
         initFAB();
     }
 
@@ -56,6 +62,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         if (responseIntent != null && responseIntent.getExtras() != null){
             userId = responseIntent.getIntExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
             inputMarks = responseIntent.getLongArrayExtra(INPUT_CHECKED_LIST_ITEMS_IDS);
+            isCallToFilterOrAddMarksToPhoto = responseIntent.getBooleanExtra(CALL_FILTER_OR_ADD_MARKS, false);
         }
     }
 
@@ -63,23 +70,25 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_activity_marks_multi_choice);
 
-        toolbar.inflateMenu(R.menu.toobar_marks_clear_filter);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.item_filter_remove:
-                        //Возвращаю ПУСТОЙ массив обратно в вызвавшую Активити.
-                        Intent backIntent = new Intent();
+        if (isCallToFilterOrAddMarksToPhoto) {
+            toolbar.inflateMenu(R.menu.toobar_marks_clear_filter);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    int id = item.getItemId();
+                    switch (id) {
+                        case R.id.item_filter_remove:
+                            //Возвращаю ПУСТОЙ массив обратно в вызвавшую Активити.
+                            Intent backIntent = new Intent();
 //                        backIntent.putExtra(OUTPUT_CHECKED_LIST_ITEMS_IDS, (long[])null);
-                        setResult(RESULT_OK, backIntent);
-                        finish();
-                        return true;
+                            setResult(RESULT_OK, backIntent);
+                            finish();
+                            return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        }
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +99,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         });
     }
 
-    private void initMarksListFragment() {
+    private void initMarksRecyclerFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         MarksRecyclerMultiFragment fragment = new MarksRecyclerMultiFragment();
@@ -100,6 +109,8 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         if (inputMarks != null && inputMarks.length > 0){
             args.putLongArray(INPUT_CHECKED_LIST_ITEMS_IDS, inputMarks);
         }
+        //Передаю тип вызова Активити.
+        args.putBoolean(CALL_FILTER_OR_ADD_MARKS, isCallToFilterOrAddMarksToPhoto);
 
         fragment.setArguments(args);
         transaction.add(R.id.container_marks,

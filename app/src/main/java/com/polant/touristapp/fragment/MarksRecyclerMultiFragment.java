@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,10 @@ public class MarksRecyclerMultiFragment extends Fragment
 
     private ActionMode actionMode;
     private ActionModeCallback actionModeCallback;
+
+    //true - если Активити вызвана для фильтрования фото по меткам на карте
+    //или добавления меток для нового фото.
+    private boolean isCallToFilterOrAddMarksToPhoto;
 
 
     @Override
@@ -100,6 +105,7 @@ public class MarksRecyclerMultiFragment extends Fragment
                 for (long id : checkedIds)
                     inputMarks.add(id);
             }
+            isCallToFilterOrAddMarksToPhoto = args.getBoolean(MarksActivity.CALL_FILTER_OR_ADD_MARKS);
         }
     }
 
@@ -116,9 +122,18 @@ public class MarksRecyclerMultiFragment extends Fragment
         actionMode = toolbar.startActionMode(actionModeCallback);
     }
 
+    private void refreshActionMode(int selectedCount) {
+        if (selectedCount == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(String.valueOf(getString(R.string.overlay_text) + " " + selectedCount));
+            actionMode.invalidate();
+        }
+    }
+
     @Override
     public void onItemClicked(int position) {
-        if (actionMode != null){
+        if (actionMode != null) {
             toggleSelection(position);
         }
     }
@@ -135,17 +150,7 @@ public class MarksRecyclerMultiFragment extends Fragment
     private void toggleSelection(int position) {
         mAdapter.toggleSelection(position);
         int count = mAdapter.getSelectedItemCount();
-
         refreshActionMode(count);
-    }
-
-    private void refreshActionMode(int selectedCount) {
-        if (selectedCount == 0) {
-            actionMode.finish();
-        } else {
-            actionMode.setTitle(String.valueOf(getString(R.string.overlay_text) + " " + selectedCount));
-            actionMode.invalidate();
-        }
     }
 
 
@@ -189,7 +194,13 @@ public class MarksRecyclerMultiFragment extends Fragment
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.toolbar_marks_selected, menu);
+            MenuInflater inflater = mode.getMenuInflater();
+            if (isCallToFilterOrAddMarksToPhoto){
+                inflater.inflate(R.menu.toolbar_marks_selected, menu);
+            }
+            else{
+                inflater.inflate(R.menu.toolbar_marks_remove, menu);
+            }
             return true;
         }
 
@@ -203,16 +214,23 @@ public class MarksRecyclerMultiFragment extends Fragment
             int id = item.getItemId();
             switch (id) {
                 case R.id.item_check_confirm:
-                    //Получаю массив выбранных Id элементов списка.
-                    long[] markIds = getSelectedItemsIdsArray();
-                    //Возвращаю массив обратно в вызвавшую Активити.
-                    Intent backIntent = new Intent();
-                    backIntent.putExtra(MarksActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
-                    activity.setResult(Activity.RESULT_OK, backIntent);
-                    activity.finish();
+                    finishFiltration();
+                    return true;
+                case R.id.item_remove_mark:
+                    //TODO: сделать удаление.
                     return true;
             }
             return false;
+        }
+
+        private void finishFiltration() {
+            //Получаю массив выбранных Id элементов списка.
+            long[] markIds = getSelectedItemsIdsArray();
+            //Возвращаю массив обратно в вызвавшую Активити.
+            Intent backIntent = new Intent();
+            backIntent.putExtra(MarksActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
+            activity.setResult(Activity.RESULT_OK, backIntent);
+            activity.finish();
         }
 
         @Override
