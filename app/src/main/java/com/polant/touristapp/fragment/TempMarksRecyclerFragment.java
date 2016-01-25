@@ -19,14 +19,14 @@ import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.MarksCursorAdapter;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.interfaces.IListFragment;
+import com.polant.touristapp.interfaces.IRecyclerFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 
 /**
  * Created by Антон on 21.01.2016.
  */
-public class MarksRecyclerFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, IListFragment {
+public class TempMarksRecyclerFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>, IRecyclerFragment {
 
     private static int LAYOUT = R.layout.fragment_marks_recycler;
 
@@ -74,7 +74,7 @@ public class MarksRecyclerFragment extends Fragment
     }
 
     @Override
-    public void notifyList() {
+    public void notifyRecyclerView() {
         getLoaderManager().restartLoader(0, null, this);
     }
 

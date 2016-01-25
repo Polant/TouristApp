@@ -140,9 +140,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 switch (id) {
                     case R.id.item_filter:
                         //Фильтрация меток на карте.
-                        Intent intent = new Intent(MapsActivity.this, MarksMultiChoiceActivity.class);
+                        Intent intent = new Intent(MapsActivity.this, MarksActivity.class);
                         intent.putExtra(Constants.USER_ID, userId);
-                        intent.putExtra(MarksMultiChoiceActivity.INPUT_CHECKED_LIST_ITEMS_IDS, filterMarks);
+                        intent.putExtra(MarksActivity.INPUT_CHECKED_LIST_ITEMS_IDS, filterMarks);
                         startActivityForResult(intent, Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY);
                         return true;
                     case R.id.item_reset_filter:
@@ -214,7 +214,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         else if (requestCode == Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
             if (data != null){//Обновляю метки на карте.
-                long[] marksIds = data.getLongArrayExtra(MarksMultiChoiceActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS);
+                long[] marksIds = data.getLongArrayExtra(MarksActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS);
                 filterMarks = marksIds;
                 updateClustersByFilter(marksIds);
             }

@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,10 +22,10 @@ import android.view.ViewGroup;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
-import com.polant.touristapp.activity.MarksMultiChoiceActivity;
+import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.interfaces.IMultiChoiceListFragment;
+import com.polant.touristapp.interfaces.IMultiChoiceRecyclerFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 
 import java.util.ArrayList;
@@ -34,9 +33,10 @@ import java.util.List;
 
 /**
  * Фрагмент, содержащий RecyclerView для вывода меток.
+ * Используется как для множественного выбора, так и для одиночного.
  */
-public class MarksListMultiFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceListFragment,
+public class MarksRecyclerMultiFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceRecyclerFragment,
                    MarksCursorMultiAdapter.MarkViewHolder.ClickListener {
 
     private static final int LAYOUT = R.layout.fragment_marks_recycler_multi_choice;
@@ -94,7 +94,7 @@ public class MarksListMultiFragment extends Fragment
     private void getDataFromArguments(Bundle args) {
         if (args != null) {
             userId = args.getInt(Constants.USER_ID);
-            long[] checkedIds = args.getLongArray(MarksMultiChoiceActivity.INPUT_CHECKED_LIST_ITEMS_IDS);
+            long[] checkedIds = args.getLongArray(MarksActivity.INPUT_CHECKED_LIST_ITEMS_IDS);
             if (checkedIds != null) {
                 inputMarks = new ArrayList<>(checkedIds.length);
                 for (long id : checkedIds)
@@ -150,7 +150,7 @@ public class MarksListMultiFragment extends Fragment
 
 
     @Override
-    public void notifyList() {
+    public void notifyRecyclerView() {
         getLoaderManager().restartLoader(0, null, this);
     }
 
@@ -207,7 +207,7 @@ public class MarksListMultiFragment extends Fragment
                     long[] markIds = getSelectedItemsIdsArray();
                     //Возвращаю массив обратно в вызвавшую Активити.
                     Intent backIntent = new Intent();
-                    backIntent.putExtra(MarksMultiChoiceActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
+                    backIntent.putExtra(MarksActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
                     activity.setResult(Activity.RESULT_OK, backIntent);
                     activity.finish();
                     return true;
