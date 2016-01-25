@@ -16,14 +16,14 @@ import android.widget.EditText;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.fragment.MarksRecyclerMultiFragment;
+import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 
 public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity {
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
-    private static final String MARK_LIST_FRAGMENT_TAG = MarksRecyclerMultiFragment.class.toString();
+    private static final String MARK_LIST_FRAGMENT_TAG = MarksFragment.class.toString();
 
     public static final String OUTPUT_CHECKED_LIST_ITEMS_IDS = "OUTPUT_CHECKED_LIST_ITEMS_IDS";
     public static final String INPUT_CHECKED_LIST_ITEMS_IDS = "INPUT_CHECKED_LIST_ITEMS_IDS";
@@ -102,7 +102,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
     private void initMarksRecyclerFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        MarksRecyclerMultiFragment fragment = new MarksRecyclerMultiFragment();
+        MarksFragment fragment = new MarksFragment();
         //Передаю Id пользователя и массив выбранных Id меток во фрагмент.
         Bundle args = new Bundle();
         args.putInt(Constants.USER_ID, userId);
@@ -135,8 +135,8 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         });
     }
 
-    private MarksRecyclerMultiFragment findMarksListMultiFragmentByTag(){
-        return (MarksRecyclerMultiFragment)getSupportFragmentManager()
+    private MarksFragment findMarksListMultiFragmentByTag(){
+        return (MarksFragment)getSupportFragmentManager()
                 .findFragmentByTag(MARK_LIST_FRAGMENT_TAG);
     }
 
@@ -178,7 +178,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         db.insertMark(mark);    //Вставляю метку в БД.
 
         //Обновляю ListView во фрагменте.
-        MarksRecyclerMultiFragment fragment = findMarksListMultiFragmentByTag();
+        MarksFragment fragment = findMarksListMultiFragmentByTag();
         fragment.notifyRecyclerView();
 
         showSnackbar(fab, R.string.mark_was_added);
