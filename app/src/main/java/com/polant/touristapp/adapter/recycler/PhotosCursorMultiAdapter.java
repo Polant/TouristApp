@@ -112,7 +112,7 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
             String photoDesc = c.getString(c.getColumnIndex(Database.MEDIA_DESCRIPTION));
 
             long phoneCreated = c.getLong(c.getColumnIndex(Database.MEDIA_CREATED_DATE));
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", dateFormatSymbols);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", getDateFormatSymbols(context));
 
             //Использую 1 и 200, т.к. мах высота = 200, и если передать ширину 1,
             //то изображение "подгонится" по высоту. (см. ImageUtils.createBitmap).
@@ -123,14 +123,14 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
                     String.format("%s %s", context.getString(R.string.photo_taken),sdf.format(new Date(phoneCreated))));
         }
 
-        //TODO:заменить массив xml-ресурсом.
-        private static DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(){
-            @Override
-            public String[] getMonths() {
-                return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
-                        "июля", "августа", "сентября", "октября", "ноября", "декабря"};
-            }
-        };
+        private static DateFormatSymbols getDateFormatSymbols(final Context context) {
+            return new DateFormatSymbols(){
+                @Override
+                public String[] getMonths() {
+                    return context.getResources().getStringArray(R.array.date_format_symbols);
+                }
+            };
+        }
 
         @Override
         public void onClick(View v) {
