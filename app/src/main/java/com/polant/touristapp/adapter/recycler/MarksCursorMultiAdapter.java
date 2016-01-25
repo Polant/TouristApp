@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
+import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.data.Database;
 
 import java.util.List;
@@ -27,15 +28,15 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
     private static final int LAYOUT_SELECTED = R.layout.recycler_item_mark_multi_choice_selected;
     private static final int LAYOUT_NON_SELECTED = R.layout.recycler_item_mark_multi_choice;
 
-    private static Context mContext;
+    private Context mContext;
     private LayoutInflater mInflater;
-    private MarkViewHolder.ClickListener mClickListener;
+    private RecyclerClickListener mClickListener;
 
     //Начальное выделение.
     private List<Long> mInputData;
 
     public MarksCursorMultiAdapter(Context context, @Nullable Cursor cursor,
-                                   MarkViewHolder.ClickListener clickListener, @Nullable List<Long> inputData) {
+                                   RecyclerClickListener clickListener, @Nullable List<Long> inputData) {
         super(context, cursor);
         mContext = context;
         mClickListener = clickListener;
@@ -68,25 +69,20 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
         /*Не знаю почему, но курсор будет иметь не ту позицию, если просто его передать
         * в bindData(), несмотря на то, что в данный момент от имеет верную позицию. Передача
         * текущей позиции рещает проблему. Не могу понять почему так?!*/
-        holder.bindData(c, pos, isSelectedId(id));
+        holder.bindData(mContext, c, pos, isSelectedId(id));
     }
 
     public static class MarkViewHolder extends RecyclerView.ViewHolder
                                         implements View.OnClickListener, View.OnLongClickListener{
 
-        public interface ClickListener {
-            void onItemClicked(int position);
-            boolean onItemLongClicked(int position);
-        }
-
-        private ClickListener mListener;
+        private RecyclerClickListener mListener;
 
         private CircularImageView imageView;
         private TextView textName;
         private TextView textPhotosCount;
         private View selectedOverlay;
 
-        public MarkViewHolder(View itemView, ClickListener mClickListener) {
+        public MarkViewHolder(View itemView, RecyclerClickListener mClickListener) {
             super(itemView);
             mListener = mClickListener;
 
@@ -99,7 +95,7 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
             itemView.setOnLongClickListener(this);
         }
 
-        public void bindData(Cursor c, int pos, boolean isSelected){
+        public void bindData(Context context, Cursor c, int pos, boolean isSelected){
             if (c == null){
                 return;
             }
@@ -108,7 +104,7 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
             textName.setText(c.getString(c.getColumnIndex(Database.MARK_NAME)));
             textPhotosCount.setText(String.format("%d %s",
                     c.getInt(c.getColumnIndex(Database.COUNT_PHOTOS_BY_MARK)),
-                    mContext.getString(R.string.photo_text)));
+                    context.getString(R.string.photo_text)));
             selectedOverlay.setVisibility(isSelected ? View.VISIBLE : View.INVISIBLE);
         }
 

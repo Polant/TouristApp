@@ -2,7 +2,6 @@ package com.polant.touristapp.fragment.base;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,16 +9,12 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
-import com.polant.touristapp.activity.MarksActivity;
-import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
+import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
+import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.interfaces.IMultiChoiceRecyclerFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
@@ -27,15 +22,14 @@ import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import java.util.List;
 
 /**
- * Базовый фрагмент, содержащий RecyclerView для вывода меток.
+ * Базовый фрагмент для всех фрагментов, содержащих RecyclerView.
  */
-public abstract class BaseMarksFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceRecyclerFragment,
-                   MarksCursorMultiAdapter.MarkViewHolder.ClickListener {
+public abstract class BaseRecyclerFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceRecyclerFragment, RecyclerClickListener {
 
     protected Activity mActivity;
 
-    protected MarksCursorMultiAdapter mAdapter;
+    protected CursorRecyclerViewMultiAdapter mAdapter;
 
     protected Database db;
 

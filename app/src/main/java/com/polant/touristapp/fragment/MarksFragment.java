@@ -19,7 +19,7 @@ import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
-import com.polant.touristapp.fragment.base.BaseMarksFragment;
+import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by Антон on 25.01.2016.
  */
-public class MarksFragment extends BaseMarksFragment {
+public class MarksFragment extends BaseRecyclerFragment {
 
     private static final int LAYOUT = R.layout.fragment_marks_recycler_multi_choice;
 
