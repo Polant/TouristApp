@@ -5,12 +5,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.polant.touristapp.Constants;
+import com.polant.touristapp.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
 import com.polant.touristapp.adapter.base.RecyclerClickListener;
@@ -104,14 +107,16 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
             }
             c.moveToPosition(pos);
 
-            Uri photoPath = Uri.parse(c.getString(c.getColumnIndex(Database.MEDIA_EXTERNAL_PATH)));
+            String photoPath = c.getString(c.getColumnIndex(Database.MEDIA_EXTERNAL_PATH));
             String photoName = c.getString(c.getColumnIndex(Database.MEDIA_NAME));
             String photoDesc = c.getString(c.getColumnIndex(Database.MEDIA_DESCRIPTION));
 
             long phoneCreated = c.getLong(c.getColumnIndex(Database.MEDIA_CREATED_DATE));
-            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd yyyy", dateFormatSymbols);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", dateFormatSymbols);
 
-            imageView.setImageURI(photoPath);
+            //Использую 1 и 200, т.к. мах высота = 200, и если передать ширину 1,
+            //то изображение "подгонится" по высоту. (см. ImageUtils.createBitmap).
+            imageView.setImageBitmap(ImageUtils.createBitmap(photoPath, 1, 200));
             textName.setText(photoName);
             textDescription.setText(photoDesc);
             textCreatedDate.setText(
