@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class MarksFragment extends BaseRecyclerFragment {
 
-    private static final int LAYOUT = R.layout.fragment_marks_recycler_multi_choice;
+    private static final int LAYOUT = R.layout.fragment_marks_recycler;
 
     private View view;
 

@@ -71,7 +71,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         toolbar.setTitle(R.string.title_activity_marks_multi_choice);
 
         if (isCallToFilterOrAddMarksToPhoto) {
-            toolbar.inflateMenu(R.menu.toobar_marks_clear_filter);
+            toolbar.inflateMenu(R.menu.toolbar_marks_clear_filter);
             toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {

@@ -25,8 +25,8 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
     private static final int TYPE_SELECTED = 0;
     private static final int TYPE_NON_SELECTED = 1;
 
-    private static final int LAYOUT_SELECTED = R.layout.recycler_item_mark_multi_choice_selected;
-    private static final int LAYOUT_NON_SELECTED = R.layout.recycler_item_mark_multi_choice;
+    private static final int LAYOUT_SELECTED = R.layout.recycler_item_mark_selected;
+    private static final int LAYOUT_NON_SELECTED = R.layout.recycler_item_mark;
 
     private Context mContext;
     private LayoutInflater mInflater;
