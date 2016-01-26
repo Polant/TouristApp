@@ -16,9 +16,8 @@
 
         <ImageView
             android:id="@+id/imageViewPhoto"
-            android:src="@drawable/header"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="@dimen/recycler_item_image_view_height"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp" />
         <TextView

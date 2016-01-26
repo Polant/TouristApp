@@ -2,6 +2,7 @@ package com.polant.touristapp.adapter.recycler;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -11,11 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.polant.touristapp.utils.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
 import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.data.Database;
+import com.polant.touristapp.utils.ImageUtils;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -38,6 +39,7 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
     private RecyclerClickListener mClickListener;
 
     private static Handler mHandler = new Handler();
+
 
     //Начальное выделение.
     private List<Long> mInputData;
@@ -101,26 +103,35 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
             itemView.setOnLongClickListener(this);
         }
 
-        public void bindData(Context context, Cursor c, int pos){
+        public void bindData(final Context context, Cursor c, int pos){
             if (c == null){
                 return;
             }
             c.moveToPosition(pos);
 
-            String photoPath = c.getString(c.getColumnIndex(Database.MEDIA_EXTERNAL_PATH));
+            final String photoPath = c.getString(c.getColumnIndex(Database.MEDIA_EXTERNAL_PATH));
             String photoName = c.getString(c.getColumnIndex(Database.MEDIA_NAME));
             String photoDesc = c.getString(c.getColumnIndex(Database.MEDIA_DESCRIPTION));
-
             long phoneCreated = c.getLong(c.getColumnIndex(Database.MEDIA_CREATED_DATE));
+
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", getDateFormatSymbols(context));
 
-            //Использую 1 и 200, т.к. мах высота = 200, и если передать ширину 1,
-            //то изображение "подгонится" по высоту. (см. ImageUtils.createBitmap).
-            imageView.setImageBitmap(ImageUtils.createBitmap(photoPath, 1, 200));
-
-//            Bitmap photo = BitmapFactory.decodeFile(photoPath);
-//            Bitmap photoScaled = BitmapScaler.scaleToFitHeight(photo, 200);
-//            imageView.setImageBitmap(photoScaled);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //Использую 1 и максимальную высоту, т.к. мах высота = 200, и если передать ширину 1,
+                    //то изображение "подгонится" по высоту. (см. ImageUtils.createBitmap).
+                    final Bitmap photo = ImageUtils.createBitmap(photoPath,
+                            1, (int)context.getResources().getDimension(R.dimen.recycler_item_image_view_height));
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageBitmap(photo);
+                        }
+                    });
+                }
+            });
+            t.start();
 
             textName.setText(photoName);
             textDescription.setText(photoDesc);
