@@ -2,22 +2,23 @@ package com.polant.touristapp.adapter.recycler;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.polant.touristapp.Constants;
 import com.polant.touristapp.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
 import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.data.Database;
+import com.polant.touristapp.helper.BitmapScaler;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -38,6 +39,8 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
     private Context mContext;
     private LayoutInflater mInflater;
     private RecyclerClickListener mClickListener;
+
+    private static Handler mHandler = new Handler();
 
     //Начальное выделение.
     private List<Long> mInputData;
@@ -117,6 +120,11 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
             //Использую 1 и 200, т.к. мах высота = 200, и если передать ширину 1,
             //то изображение "подгонится" по высоту. (см. ImageUtils.createBitmap).
             imageView.setImageBitmap(ImageUtils.createBitmap(photoPath, 1, 200));
+
+//            Bitmap photo = BitmapFactory.decodeFile(photoPath);
+//            Bitmap photoScaled = BitmapScaler.scaleToFitHeight(photo, 200);
+//            imageView.setImageBitmap(photoScaled);
+
             textName.setText(photoName);
             textDescription.setText(photoDesc);
             textCreatedDate.setText(
