@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.polant.touristapp.Constants;
-import com.polant.touristapp.ImageUtils;
+import com.polant.touristapp.utils.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.model.MarkRecord;

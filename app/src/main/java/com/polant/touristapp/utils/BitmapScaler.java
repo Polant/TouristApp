@@ -1,4 +1,4 @@
-package com.polant.touristapp.helper;
+package com.polant.touristapp.utils;
 
 import android.graphics.Bitmap;
 

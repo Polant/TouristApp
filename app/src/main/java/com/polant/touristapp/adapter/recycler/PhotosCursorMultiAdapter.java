@@ -2,8 +2,6 @@ package com.polant.touristapp.adapter.recycler;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -13,12 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.polant.touristapp.ImageUtils;
+import com.polant.touristapp.utils.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
 import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.helper.BitmapScaler;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;

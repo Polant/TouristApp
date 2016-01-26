@@ -1,4 +1,4 @@
-package com.polant.touristapp;
+package com.polant.touristapp.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
