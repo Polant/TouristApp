@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 
 import com.polant.touristapp.Constants;
@@ -84,41 +84,33 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (isCallToFilterOrAddMarksToPhoto) {
             toolbar.inflateMenu(R.menu.toolbar_marks_clear_filter);
-            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    int id = item.getItemId();
-                    switch (id) {
-                        case R.id.item_filter_remove:
-                            //Возвращаю ПУСТОЙ массив обратно в вызвавшую Активити.
-                            Intent backIntent = new Intent();
-//                        backIntent.putExtra(OUTPUT_CHECKED_LIST_ITEMS_IDS, (long[])null);
-                            setResult(RESULT_OK, backIntent);
-                            finish();
-                            return true;
-                    }
-                    return false;
-                }
-            });
+            toolbar.setOnMenuItemClickListener(mToolbarMenuListener);
         }
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
-        toolbar.setNavigationOnClickListener(mainNavigationListener);
+        toolbar.setNavigationOnClickListener(mNavigationListener);
     }
 
-    //Возврат к вызвавшей Активити.
-    private View.OnClickListener mainNavigationListener = new View.OnClickListener() {
+    private Toolbar.OnMenuItemClickListener mToolbarMenuListener = new Toolbar.OnMenuItemClickListener() {
         @Override
-        public void onClick(View v) {
-            setResult(RESULT_CANCELED);
-            finish();
+        public boolean onMenuItemClick(MenuItem item) {
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.item_filter_remove:
+                    //Возвращаю ПУСТОЙ массив обратно в вызвавшую Активити.
+                    Intent backIntent = new Intent();
+//                        backIntent.putExtra(OUTPUT_CHECKED_LIST_ITEMS_IDS, (long[])null);
+                    setResult(RESULT_OK, backIntent);
+                    finish();
+                    return true;
+            }
+            return false;
         }
     };
 
-    //Обратная транзакция фрагментов.
-    private View.OnClickListener backToMarksNavigationListener = new View.OnClickListener() {
+    private View.OnClickListener mNavigationListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            getSupportFragmentManager().popBackStack();
+            onBackPressed();
         }
     };
 
@@ -250,9 +242,6 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                 PHOTOS_FRAGMENT_TAG);
         transaction.addToBackStack(null);
         transaction.commit();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(backToMarksNavigationListener);
     }
 
     //------------------------------------------------------------------------//
@@ -260,8 +249,9 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0){
-            getSupportFragmentManager().popBackStack();
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
         }else {
             super.onBackPressed();
         }
