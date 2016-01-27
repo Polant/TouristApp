@@ -344,7 +344,7 @@ public class Database {
 
     private static class TouristOpenHelper extends SQLiteOpenHelper{
 
-        private static final int DB_VERSION = 7;
+        private static final int DB_VERSION = 9;
         private static final String DB_NAME = "Tourist";
 
         private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + " ( " +
@@ -376,6 +376,12 @@ public class Database {
 
         TouristOpenHelper(Context context){
             super(context, DB_NAME, null, DB_VERSION);
+        }
+
+        @Override
+        public void onOpen(SQLiteDatabase db) {
+            super.onOpen(db);
+            db.execSQL("PRAGMA foreign_keys=ON");
         }
 
         @Override
