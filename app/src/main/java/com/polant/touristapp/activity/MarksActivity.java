@@ -272,6 +272,9 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
+            //Обновляю список меток на случай того, если удалил фото.
+            MarksFragment marksFragment = findMarksListMultiFragmentByTag();
+            marksFragment.notifyRecyclerView();
             //Убираю из заголовка название последней выбранной метки.
             backCollapsedToolbarTitleData();
         }else {
