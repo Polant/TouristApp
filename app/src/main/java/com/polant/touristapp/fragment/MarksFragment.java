@@ -156,8 +156,10 @@ public class MarksFragment extends BaseRecyclerFragment {
     }
 
     private void removeMarks() {
-        //TODO: сделать удаление.
-        Log.d(Constants.APP_LOG_TAG, "Удаление меток");
+        //TODO: сделать удаление через AlertDialog.
+        db.deleteMarks(mAdapter.getSelectedItemsIds());
+        mActionMode.finish();
+        notifyRecyclerView();
     }
 
     //---------------------------------------------------------------------//

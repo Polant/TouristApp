@@ -14,6 +14,7 @@ import com.polant.touristapp.model.MarkRecord;
 import com.polant.touristapp.model.UserMedia;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Антон on 08.01.2016.
@@ -98,7 +99,7 @@ public class Database {
         sqLiteDatabase.update(TABLE_USERS_MEDIA, cv, where, whereArgs);
     }
 
-    public void deleteUserMedias(long[] mediasIds){
+    public void deleteUserMedias(List<Long> mediasIds){
         String query = "DELETE FROM " + TABLE_USERS_MEDIA + " WHERE " + MEDIA_ID + " IN (";
         StringBuilder whereBuilder = new StringBuilder(query);
         for (long id : mediasIds){
@@ -107,7 +108,7 @@ public class Database {
         whereBuilder.delete(whereBuilder.length() - 2, whereBuilder.length());//Убираю последнюю запятую.
         whereBuilder.append(");");
 
-        sqLiteDatabase.execSQL(query);
+        sqLiteDatabase.execSQL(whereBuilder.toString());
     }
 
     //Создание ContentValues для талбицы TABLE_USERS_MEDIA.
@@ -255,7 +256,7 @@ public class Database {
         return (int)sqLiteDatabase.insert(TABLE_MARKS, null, cv);
     }
 
-    public void deleteMarks(long[] marksIds){
+    public void deleteMarks(List<Long> marksIds){
         String query = "DELETE FROM " + TABLE_MARKS + " WHERE " + MARK_ID + " IN (";
         StringBuilder whereBuilder = new StringBuilder(query);
         for (long id : marksIds){
@@ -264,7 +265,7 @@ public class Database {
         whereBuilder.delete(whereBuilder.length() - 2, whereBuilder.length());//Убираю последнюю запятую.
         whereBuilder.append(");");
 
-        sqLiteDatabase.execSQL(query);
+        sqLiteDatabase.execSQL(whereBuilder.toString());
     }
 
     //Создание ContentValues для талбицы TABLE_MARKS.

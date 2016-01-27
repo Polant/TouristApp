@@ -104,8 +104,10 @@ public class PhotosFragment extends BaseRecyclerFragment {
     //----------------Обработка пунктов меню ActionMode-------------------//
 
     private void removePhotos() {
-        //TODO: обработать удаление фото.
-        Log.d(Constants.APP_LOG_TAG, "Удаление фото");
+        //TODO: сделать удаление через AlertDialog.
+        db.deleteUserMedias(mAdapter.getSelectedItemsIds());
+        mActionMode.finish();
+        notifyRecyclerView();
     }
 
     //------------------------LoaderCallback--------------------------//
