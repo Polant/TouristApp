@@ -20,11 +20,12 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
+import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 
 public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
-        MarksFragment.PhotosFragmentListener{
+        MarksFragment.PhotosFragmentListener, ICollapsedToolbarActivity{
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
 
@@ -130,6 +131,16 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
     public void initFAB() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         setMarksFABClickListener(fab);
+    }
+
+    @Override
+    public void changeCollapsedToolbarLayoutBackground(boolean isStartActionMode){
+        //TODO: попробовать залесть в ActionMode, чтобы переопределить метод
+        //для того чтобы при сбросе ActionMode visibility менялось сразу же, а есть
+        //видимая разница во времени.
+        findViewById(R.id.collapsing_toolbar_background).setVisibility(
+                isStartActionMode ? View.VISIBLE : View.INVISIBLE
+        );
     }
 
     //-----------------------------Marks------------------------------//

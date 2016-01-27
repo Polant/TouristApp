@@ -1,5 +1,6 @@
 package com.polant.touristapp.fragment;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.PhotosCursorMultiAdapter;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
+import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
 
 /**
  * Created by Антон on 25.01.2016.
@@ -33,6 +35,14 @@ public class PhotosFragment extends BaseRecyclerFragment {
     private View view;
 
     private long mMarkId;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (!(context instanceof ICollapsedToolbarActivity)) {
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT ICollapsedToolbarActivity");
+        }
+    }
 
     @Nullable
     @Override
@@ -117,6 +127,7 @@ public class PhotosFragment extends BaseRecyclerFragment {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.toolbar_photos_remove, menu);
+            ((ICollapsedToolbarActivity)mActivity).changeCollapsedToolbarLayoutBackground(true);
             return true;
         }
 
@@ -137,6 +148,7 @@ public class PhotosFragment extends BaseRecyclerFragment {
         }
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            ((ICollapsedToolbarActivity)mActivity).changeCollapsedToolbarLayoutBackground(false);
             mAdapter.clearSelection();
             mActionMode = null;
         }

@@ -9,6 +9,7 @@
     tools:context=".activity.MarksActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_marks_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -37,6 +38,13 @@
                 android:layout_width="match_parent"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+            <View
+                android:id="@+id/collapsing_toolbar_background"
+                android:background="@color/colorAccent"
+                android:layout_width="match_parent"
+                android:visibility="invisible"
+                android:layout_height="match_parent"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

@@ -24,6 +24,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
+import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +51,9 @@ public class MarksFragment extends BaseRecyclerFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof PhotosFragmentListener)) {
-            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT PhotosFragmentListener");
+        if (!(context instanceof PhotosFragmentListener) || !(context instanceof ICollapsedToolbarActivity)) {
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT PhotosFragmentListener and " +
+                    "ICollapsedToolbarActivity");
         }
     }
 
@@ -171,6 +173,7 @@ public class MarksFragment extends BaseRecyclerFragment {
             else{
                 inflater.inflate(R.menu.toolbar_marks_remove, menu);
             }
+            ((ICollapsedToolbarActivity)mActivity).changeCollapsedToolbarLayoutBackground(true);
             return true;
         }
 
@@ -195,6 +198,7 @@ public class MarksFragment extends BaseRecyclerFragment {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            ((ICollapsedToolbarActivity)mActivity).changeCollapsedToolbarLayoutBackground(false);
             mAdapter.clearSelection();
             mActionMode = null;
         }
