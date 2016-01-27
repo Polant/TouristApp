@@ -314,12 +314,12 @@ public class Database {
     public static final String MARK_ID = "MARK_ID";
     public static final String MARK_NAME = "MARK_NAME";
     public static final String MARK_DESCRIPTION = "MARK_DESCRIPTION";
-    public static final String MARK_USER_ID = "MARK_USER_ID";
+    public static final String MARK_USER_ID = "MARK_USER_ID";               //Внешний ключ.
 
 
     private static class TouristOpenHelper extends SQLiteOpenHelper{
 
-        private static final int DB_VERSION = 6;
+        private static final int DB_VERSION = 7;
         private static final String DB_NAME = "Tourist";
 
         private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + " ( " +
@@ -341,7 +341,7 @@ public class Database {
         private static final String CREATE_TABLE_MARK_RECORDS = "CREATE TABLE " + TABLE_MARK_RECORDS + " ( " +
                 MARK_RECORD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 MARK_RECORD_MEDIA_ID + " INTEGER REFERENCES " + TABLE_USERS_MEDIA + "(" + MEDIA_ID + ") ON DELETE CASCADE, " +
-                MARK_RECORD_MARK_ID + " INTEGER REFERENCES " + TABLE_MARKS + "(" + MARK_ID + ") ON DELETE CASCADE);";
+                MARK_RECORD_MARK_ID + " INTEGER REFERENCES " + TABLE_MARKS + "(" + MARK_ID + ") ON DELETE SET NULL);";
 
         private static final String CREATE_TABLE_MARKS = "CREATE TABLE " + TABLE_MARKS + " ( " +
                 MARK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
