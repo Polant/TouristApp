@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 
 import com.polant.touristapp.Constants;
@@ -74,6 +75,8 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         }
     }
 
+    //--------------------------Toolbar----------------------------//
+
     private void initToolbar() {
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar_layout);
         collapsingToolbar.setTitle(getString(R.string.title_activity_marks_multi_choice));
@@ -99,14 +102,46 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
             });
         }
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(mainNavigationListener);
     }
+
+    //Возврат к вызвавшей Активити.
+    private View.OnClickListener mainNavigationListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            setResult(RESULT_CANCELED);
+            finish();
+        }
+    };
+
+    //Обратная транзакция фрагментов.
+    private View.OnClickListener backToMarksNavigationListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            getSupportFragmentManager().popBackStack();
+        }
+    };
+
+    //-----------------------------FAB----------------------------------//
+
+    public void initFAB() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        setMarksFABClickListener(fab);
+    }
+
+    //----------------------------ActionMode----------------------------//
+
+    @Override
+    public void changeCollapsedToolbarLayoutBackground(boolean isStartActionMode){
+        //TODO: попробовать залесть в ActionMode, чтобы переопределить метод
+        //для того чтобы при сбросе ActionMode visibility менялось сразу же, а есть
+        //видимая разница во времени.
+        findViewById(R.id.collapsing_toolbar_background).setVisibility(
+                isStartActionMode ? View.VISIBLE : View.INVISIBLE
+        );
+    }
+
+    //-----------------------------Marks------------------------------//
 
     private void initMarksRecyclerFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -127,23 +162,6 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                 MARKS_FRAGMENT_TAG);
         transaction.commit();
     }
-
-    public void initFAB() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        setMarksFABClickListener(fab);
-    }
-
-    @Override
-    public void changeCollapsedToolbarLayoutBackground(boolean isStartActionMode){
-        //TODO: попробовать залесть в ActionMode, чтобы переопределить метод
-        //для того чтобы при сбросе ActionMode visibility менялось сразу же, а есть
-        //видимая разница во времени.
-        findViewById(R.id.collapsing_toolbar_background).setVisibility(
-                isStartActionMode ? View.VISIBLE : View.INVISIBLE
-        );
-    }
-
-    //-----------------------------Marks------------------------------//
 
     private void setMarksFABClickListener(FloatingActionButton fab){
         fab.setOnClickListener(new View.OnClickListener() {
@@ -232,9 +250,22 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                 PHOTOS_FRAGMENT_TAG);
         transaction.addToBackStack(null);
         transaction.commit();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(backToMarksNavigationListener);
     }
 
     //------------------------------------------------------------------------//
+
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0){
+            getSupportFragmentManager().popBackStack();
+        }else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     protected void onStart() {
