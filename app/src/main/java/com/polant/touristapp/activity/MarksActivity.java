@@ -11,10 +11,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
@@ -242,16 +242,38 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                 PHOTOS_FRAGMENT_TAG);
         transaction.addToBackStack(null);
         transaction.commit();
+
+        //Устанавливаю в заголовок название последней выбранной метки.
+        setCollapsedToolbarTitleData(markId);
+    }
+
+    private void setCollapsedToolbarTitleData(long markId) {
+        Mark mark = db.findMarkById(markId);
+
+        TextView marksText = (TextView) findViewById(R.id.textViewMarksTitle);
+        marksText.setText(getString(R.string.title_activity_marks_multi_choice));
+
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar_layout);
+        collapsingToolbar.setTitle(mark.getName());
+    }
+
+    private void backCollapsedToolbarTitleData(){
+        TextView marksText = (TextView) findViewById(R.id.textViewMarksTitle);
+        marksText.setText("");
+
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar_layout);
+        collapsingToolbar.setTitle(getString(R.string.title_activity_marks_multi_choice));
     }
 
     //------------------------------------------------------------------------//
-
 
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
+            //Убираю из заголовка название последней выбранной метки.
+            backCollapsedToolbarTitleData();
         }else {
             super.onBackPressed();
         }

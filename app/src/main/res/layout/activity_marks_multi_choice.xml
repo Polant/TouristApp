@@ -22,13 +22,13 @@
             app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             app:contentScrim="?attr/colorPrimary">
 
-            <TextView android:id="@+id/textViewMarkTitle"
+            <TextView android:id="@+id/textViewMarksTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="50dp"
                 android:paddingStart="50dp"
                 android:paddingTop="15dp"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:paddingRight="20dp"
                 android:paddingEnd="20dp" />
 

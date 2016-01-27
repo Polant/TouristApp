@@ -253,6 +253,35 @@ public class Database {
         return cv;
     }
 
+    //----------------------Find by id-----------------------//
+
+    public Mark findMarkById(long markId){
+        ArrayList<Mark> result = new ArrayList<>(1);
+        String where = MARK_ID + "=" + markId;
+        Cursor c = sqLiteDatabase.query(TABLE_MARKS, null, where, null, null, null, null);
+        parseMarkCursor(c, result);
+        return result.size() > 0 ? result.get(0) : null;
+    }
+
+    private void parseMarkCursor(Cursor c, ArrayList<Mark> result) {
+        if (c != null) {
+            if (c.moveToFirst()) {
+                int colId = c.getColumnIndex(MARK_ID);
+                int colName = c.getColumnIndex(MARK_NAME);
+                int colDescription = c.getColumnIndex(MARK_DESCRIPTION);
+                int colUserId = c.getColumnIndex(MARK_USER_ID);
+                do {
+                    Mark m = new Mark(
+                            c.getInt(colId),
+                            c.getString(colName),
+                            c.getString(colDescription),
+                            c.getInt(colUserId));
+                    result.add(m);
+                } while (c.moveToNext());
+            }
+            c.close();
+        }
+    }
 
     //-------------------------Названия таблиц и их атрибуты--------------------------------//
 
