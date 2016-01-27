@@ -3,6 +3,7 @@ package com.polant.touristapp.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
@@ -73,9 +74,10 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.title_activity_marks_multi_choice);
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar_layout);
+        collapsingToolbar.setTitle(getString(R.string.title_activity_marks_multi_choice));
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (isCallToFilterOrAddMarksToPhoto) {
             toolbar.inflateMenu(R.menu.toolbar_marks_clear_filter);
             toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

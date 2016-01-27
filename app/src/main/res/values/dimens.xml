@@ -10,5 +10,6 @@
     <dimen name="default_info_window_width">175dp</dimen>
     <dimen name="default_info_window_height">250dp</dimen>
     <dimen name="recycler_item_image_view_height">200dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
     <item name="selected_overlay_alpha" type="dimen" format="float">0.4</item>
 </resources>
