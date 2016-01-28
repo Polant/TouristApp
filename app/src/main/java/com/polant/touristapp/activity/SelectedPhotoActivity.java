@@ -170,13 +170,8 @@ public class SelectedPhotoActivity extends AppCompatActivity {
             db.updateMedia(newMedia);
 
             //Добавление записи о медиа и ее метках в промежуточную сущность БД.
-            if (marksIds == null) { //Нет меток.
-                db.insertMarkRecord(new MarkRecord(mediaId, -1));
-            }
-            else {  //Есть метки.
-                for (long marksId : marksIds) {
-                    db.insertMarkRecord(new MarkRecord(mediaId, (int)marksId));
-                }
+            for (long marksId : marksIds) {
+                db.insertMarkRecord(new MarkRecord(mediaId, (int)marksId));
             }
             //Экспорт в галерею (проверка на то нужно ли экспортировать внутри метода).
             exportInGallery(renamedPath);
