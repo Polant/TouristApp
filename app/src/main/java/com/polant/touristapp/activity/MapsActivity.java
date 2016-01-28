@@ -220,6 +220,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 updateClustersByFilter(marksIds);
             }
         }
+        else if (requestCode == Constants.SHOW_MARKS_ACTIVITY){
+            updateClustersByFilter(filterMarks);
+        }
     }
 
     private void startSelectedPhotoActivity(){
