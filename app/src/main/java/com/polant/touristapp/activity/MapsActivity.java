@@ -221,6 +221,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         else if (requestCode == Constants.SHOW_MARKS_ACTIVITY){
+            openDatabase();
             updateClustersByFilter(filterMarks);
         }
     }
