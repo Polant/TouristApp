@@ -121,6 +121,21 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         setMarksFABClickListener(fab);
     }
 
+    private FloatingActionButton.OnVisibilityChangedListener mFABVisibilityListener =
+            new FloatingActionButton.OnVisibilityChangedListener() {
+                @Override
+                public void onShown(FloatingActionButton fab) {
+                    fab.setVisibility(View.VISIBLE);
+                    super.onShown(fab);
+                }
+
+                @Override
+                public void onHidden(FloatingActionButton fab) {
+                    super.onHidden(fab);
+                    fab.setVisibility(View.INVISIBLE);
+                }
+            };
+
     //----------------------------ActionMode----------------------------//
 
     @Override
@@ -245,6 +260,9 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
 
         //Устанавливаю в заголовок название последней выбранной метки.
         setCollapsedToolbarTitleData(markId);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide(mFABVisibilityListener);
     }
 
     private void setCollapsedToolbarTitleData(long markId) {
@@ -277,6 +295,9 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
             marksFragment.notifyRecyclerView();
             //Убираю из заголовка название последней выбранной метки.
             backCollapsedToolbarTitleData();
+
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.show(mFABVisibilityListener);
         }else {
             super.onBackPressed();
         }
