@@ -2,6 +2,7 @@ package com.polant.touristapp.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,12 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
+import com.polant.touristapp.utils.alert.AlertUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,25 +143,6 @@ public class MarksFragment extends BaseRecyclerFragment {
         };
     }
 
-    //------------------Обработка пунктов меню ActionMode------------------//
-
-    private void finishFiltration() {
-        //Получаю массив выбранных Id элементов списка.
-        long[] markIds = getSelectedItemsIdsArray();
-        //Возвращаю массив обратно в вызвавшую Активити.
-        Intent backIntent = new Intent();
-        backIntent.putExtra(MarksActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
-        mActivity.setResult(Activity.RESULT_OK, backIntent);
-        mActivity.finish();
-    }
-
-    private void removeMarks() {
-        //TODO: сделать удаление через AlertDialog.
-        db.deleteMarks(mAdapter.getSelectedItemsIds());
-        mActionMode.finish();
-        notifyRecyclerView();
-    }
-
     //---------------------------------------------------------------------//
 
     private class ActionModeCallback implements ActionMode.Callback {
@@ -192,7 +173,7 @@ public class MarksFragment extends BaseRecyclerFragment {
                     finishFiltration();
                     return true;
                 case R.id.item_remove_mark:
-                    removeMarks();
+                    removeMarksDialog();
                     return true;
             }
             return false;
@@ -203,6 +184,34 @@ public class MarksFragment extends BaseRecyclerFragment {
             ((ICollapsedToolbarActivity)mActivity).changeCollapsedToolbarLayoutBackground(false);
             mAdapter.clearSelection();
             mActionMode = null;
+        }
+
+        private void finishFiltration() {
+            //Получаю массив выбранных Id элементов списка.
+            long[] markIds = getSelectedItemsIdsArray();
+            //Возвращаю массив обратно в вызвавшую Активити.
+            Intent backIntent = new Intent();
+            backIntent.putExtra(MarksActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS, markIds);
+            mActivity.setResult(Activity.RESULT_OK, backIntent);
+            mActivity.finish();
+        }
+
+        private void removeMarks() {
+            db.deleteMarks(mAdapter.getSelectedItemsIds());
+            mActionMode.finish();
+            notifyRecyclerView();
+        }
+
+        private void removeMarksDialog() {
+            DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    removeMarks();
+                }
+            };
+
+            AlertUtil.showAlertDialog(mActivity, R.string.alertDeleteMarksTitle, R.string.alertDeleteConfirmMessage,
+                    null, positiveListener, null);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.polant.touristapp.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.PhotosCursorMultiAdapter;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
+import com.polant.touristapp.utils.alert.AlertUtil;
 
 /**
  * Created by Антон on 25.01.2016.
@@ -101,15 +103,6 @@ public class PhotosFragment extends BaseRecyclerFragment {
         return true;
     }
 
-    //----------------Обработка пунктов меню ActionMode-------------------//
-
-    private void removePhotos() {
-        //TODO: сделать удаление через AlertDialog.
-        db.deleteUserMedias(mAdapter.getSelectedItemsIds());
-        mActionMode.finish();
-        notifyRecyclerView();
-    }
-
     //------------------------LoaderCallback--------------------------//
 
     @Override
@@ -143,16 +136,35 @@ public class PhotosFragment extends BaseRecyclerFragment {
             int id = item.getItemId();
             switch (id){
                 case R.id.item_remove_photo:
-                    removePhotos();
+                    removePhotosDialog();
                     return true;
             }
             return false;
         }
+
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             ((ICollapsedToolbarActivity)mActivity).changeCollapsedToolbarLayoutBackground(false);
             mAdapter.clearSelection();
             mActionMode = null;
+        }
+
+        private void removePhotos() {
+            db.deleteUserMedias(mAdapter.getSelectedItemsIds());
+            mActionMode.finish();
+            notifyRecyclerView();
+        }
+
+        private void removePhotosDialog() {
+            DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    removePhotos();
+                }
+            };
+
+            AlertUtil.showAlertDialog(mActivity, R.string.alertDeletePhotoTitle, R.string.alertDeleteConfirmMessage,
+                    null, positiveListener, null);
         }
     }
 }

@@ -205,7 +205,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY && resultCode == RESULT_OK){
-            if (data != null && data.getExtras() != null) {
+            if (data != null) {
                 //Просто сохраняю массив Id выбранных из списка меток.
                 marksIds = data.getLongArrayExtra(MarksActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS);
             }

@@ -31,4 +31,7 @@
     <string name="menu_toolbar_remove_marks">Удалить метки</string>
     <string name="photo_taken">Снято:</string>
     <string name="menu_toolbar_remove_photos">Удалить фото</string>
+    <string name="alertDeleteMarksTitle">Удаление меток</string>
+    <string name="alertDeleteConfirmMessage">Вы уверены, что хотите удалить?</string>
+    <string name="alertDeletePhotoTitle">Удаление фото</string>
 </resources>
