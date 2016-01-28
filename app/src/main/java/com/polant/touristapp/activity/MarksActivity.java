@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.utils.alert.AlertUtil;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
@@ -185,29 +185,16 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
     }
 
     private void buildNewMarkDialog(final View fab){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //Передаю не id лайаута, а ссылку View, чтобы потом получить доступ к нему.
         final View alertView = getLayoutInflater().inflate(R.layout.alert_new_mark, null);
+        DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                addMark(fab, alertView);
+            }
+        };
 
-        builder.setTitle(R.string.alertNewMarkTilte)
-                .setMessage(R.string.alertNewMarkMessage)
-                .setCancelable(true)
-                .setIcon(R.drawable.ic_bookmark)
-                .setView(alertView)
-                .setPositiveButton(getString(R.string.alertResultPositive), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        addMark(fab, alertView);
-                    }
-                })
-                .setNegativeButton(getString(R.string.alertResultNegative), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        AlertUtil.showAlertDialog(this, R.string.alertNewMarkTilte, R.string.alertNewMarkMessage,
+                R.drawable.ic_bookmark, alertView, positiveListener, null);
     }
 
     private void addMark(View fab, View alertView) {

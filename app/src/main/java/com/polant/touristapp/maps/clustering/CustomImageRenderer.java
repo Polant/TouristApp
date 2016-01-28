@@ -18,7 +18,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.polant.touristapp.utils.ImageUtils;
+import com.polant.touristapp.utils.image.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.maps.drawable.MultiDrawable;
 import com.polant.touristapp.model.UserMedia;

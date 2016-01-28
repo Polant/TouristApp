@@ -16,7 +16,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
 import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.utils.ImageUtils;
+import com.polant.touristapp.utils.image.ImageUtils;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
