@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.polant.touristapp.Constants;
+import com.polant.touristapp.utils.alert.AlertUtil;
 import com.polant.touristapp.utils.image.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
@@ -128,6 +129,12 @@ public class SelectedPhotoActivity extends AppCompatActivity {
 
     private void savePhoto() {
         try {
+            if (marksIds == null){ //Фото должно иметь хотя бы 1 метку.
+                AlertUtil.showAlertDialog(this, R.string.alertSelectedPhotoHasNotMarksTitle,
+                        R.string.alertSelectedPhotoHasNotMarksMessage, R.drawable.warning_orange,
+                        null, true, getString(R.string.alertResultPositive), null, null, null);
+                return;
+            }
             //TODO: проверить на корректность введенных данных (пустые строки и т.д.).
             //Получаю название фото и его описание.
             EditText nameText = (EditText) findViewById(R.id.editTextPhotoName);

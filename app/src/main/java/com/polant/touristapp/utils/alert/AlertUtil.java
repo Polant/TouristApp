@@ -13,10 +13,12 @@ import com.polant.touristapp.R;
 public class AlertUtil {
 
     public static void showAlertDialog(Context context, int titleRes, int messageRes, int iconRes, View view,
+                                       boolean cancelable, String positiveText, String negativeText,
                                        DialogInterface.OnClickListener positiveListener,
                                        DialogInterface.OnClickListener negativeListener){
 
         AlertDialog.Builder builder = buildSimpleAlert(context, titleRes, messageRes, view,
+                cancelable, positiveText, negativeText,
                 positiveListener, negativeListener);
 
         builder.setIcon(iconRes);
@@ -25,11 +27,25 @@ public class AlertUtil {
         result.show();
     }
 
+    public static void showAlertDialog(Context context, int titleRes, int messageRes, int iconRes, View view,
+                                       boolean cancelable,
+                                       DialogInterface.OnClickListener positiveListener,
+                                       DialogInterface.OnClickListener negativeListener){
+
+        showAlertDialog(context, titleRes, messageRes, iconRes, view, cancelable,
+                context.getString(R.string.alertResultPositive), context.getString(R.string.alertResultNegative),
+                positiveListener, negativeListener);
+    }
+
+    //Без иконки.
     public static void showAlertDialog(Context context, int titleRes, int messageRes, View view,
+                                       boolean cancelable,
                                        DialogInterface.OnClickListener positiveListener,
                                        DialogInterface.OnClickListener negativeListener){
 
         AlertDialog.Builder builder = buildSimpleAlert(context, titleRes, messageRes, view,
+                cancelable,
+                context.getString(R.string.alertResultPositive), context.getString(R.string.alertResultNegative),
                 positiveListener, negativeListener);
 
         AlertDialog result = builder.create();
@@ -37,16 +53,17 @@ public class AlertUtil {
     }
 
     private static AlertDialog.Builder buildSimpleAlert(Context context, int titleRes, int messageRes, View view,
+                                                        boolean cancelable, String positiveText, String negativeText,
                                                         DialogInterface.OnClickListener positiveListener,
                                                         DialogInterface.OnClickListener negativeListener){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(titleRes)
                 .setMessage(messageRes)
-                .setCancelable(true)
+                .setCancelable(cancelable)
                 .setView(view)
-                .setPositiveButton(context.getString(R.string.alertResultPositive), positiveListener)
-                .setNegativeButton(context.getString(R.string.alertResultNegative), negativeListener);
+                .setPositiveButton(positiveText, positiveListener)
+                .setNegativeButton(negativeText, negativeListener);
 
         return builder;
     }

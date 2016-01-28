@@ -194,7 +194,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         };
 
         AlertUtil.showAlertDialog(this, R.string.alertNewMarkTilte, R.string.alertNewMarkMessage,
-                R.drawable.ic_bookmark, alertView, positiveListener, null);
+                R.drawable.ic_bookmark, alertView, true, positiveListener, null);
     }
 
     private void addMark(View fab, View alertView) {

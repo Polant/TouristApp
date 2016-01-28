@@ -34,4 +34,6 @@
     <string name="alertDeleteMarksTitle">Удаление меток</string>
     <string name="alertDeleteConfirmMessage">Вы уверены, что хотите удалить?</string>
     <string name="alertDeletePhotoTitle">Удаление фото</string>
+    <string name="alertSelectedPhotoHasNotMarksTitle">Внимание!</string>
+    <string name="alertSelectedPhotoHasNotMarksMessage">Пожалуйста, прикрепите хотя бы одну метку к фото, чтобы сохранить его.</string>
 </resources>

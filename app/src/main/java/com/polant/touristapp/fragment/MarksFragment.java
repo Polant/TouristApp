@@ -211,7 +211,7 @@ public class MarksFragment extends BaseRecyclerFragment {
             };
 
             AlertUtil.showAlertDialog(mActivity, R.string.alertDeleteMarksTitle, R.string.alertDeleteConfirmMessage,
-                    null, positiveListener, null);
+                    null, true, positiveListener, null);
         }
     }
 }

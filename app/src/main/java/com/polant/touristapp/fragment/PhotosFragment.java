@@ -164,7 +164,7 @@ public class PhotosFragment extends BaseRecyclerFragment {
             };
 
             AlertUtil.showAlertDialog(mActivity, R.string.alertDeletePhotoTitle, R.string.alertDeleteConfirmMessage,
-                    null, positiveListener, null);
+                    null, true, positiveListener, null);
         }
     }
 }
