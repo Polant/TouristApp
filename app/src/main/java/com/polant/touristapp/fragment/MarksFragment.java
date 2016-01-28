@@ -24,6 +24,7 @@ import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
+import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
 
 import java.util.ArrayList;
@@ -196,8 +197,16 @@ public class MarksFragment extends BaseRecyclerFragment {
             mActivity.finish();
         }
 
-        private void removeMarks() {
+        private void removeMarksWithTheirPhotos() {
+            List<UserMedia> medias = db.selectUserMediaByFilter(mUserId, getSelectedItemsIdsArray());
+            List<Long> mediasIds = new ArrayList<>(medias.size());
+            for (UserMedia m : medias){
+                mediasIds.add((long)m.getId());
+            }
+
+            db.deleteUserMedias(mediasIds);
             db.deleteMarks(mAdapter.getSelectedItemsIds());
+
             mActionMode.finish();
             notifyRecyclerView();
         }
@@ -206,12 +215,12 @@ public class MarksFragment extends BaseRecyclerFragment {
             DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    removeMarks();
+                    removeMarksWithTheirPhotos();
                 }
             };
 
-            AlertUtil.showAlertDialog(mActivity, R.string.alertDeleteMarksTitle, R.string.alertDeleteConfirmMessage,
-                    null, true, positiveListener, null);
+            AlertUtil.showAlertDialog(mActivity, R.string.alertDeleteMarksTitle, R.string.alertDeleteMarksConfirmMessage,
+                    R.drawable.warning_orange, null, true, positiveListener, null);
         }
     }
 }

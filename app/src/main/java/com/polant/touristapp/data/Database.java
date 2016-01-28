@@ -221,6 +221,7 @@ public class Database {
         return cv;
     }
 
+    //----------------------------------Marks---------------------------------//
 
     public Cursor selectAllMarksCursorByUserId(int userId){
         //Обязательно надо указать псевдоним '_id' для поля id, чтоб он смог обработаться адаптером.
@@ -344,7 +345,7 @@ public class Database {
 
     private static class TouristOpenHelper extends SQLiteOpenHelper{
 
-        private static final int DB_VERSION = 9;
+        private static final int DB_VERSION = 10;
         private static final String DB_NAME = "Tourist";
 
         private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + " ( " +
@@ -366,11 +367,11 @@ public class Database {
         private static final String CREATE_TABLE_MARK_RECORDS = "CREATE TABLE " + TABLE_MARK_RECORDS + " ( " +
                 MARK_RECORD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 MARK_RECORD_MEDIA_ID + " INTEGER REFERENCES " + TABLE_USERS_MEDIA + "(" + MEDIA_ID + ") ON DELETE CASCADE, " +
-                MARK_RECORD_MARK_ID + " INTEGER REFERENCES " + TABLE_MARKS + "(" + MARK_ID + ") ON DELETE SET NULL);";
+                MARK_RECORD_MARK_ID + " INTEGER REFERENCES " + TABLE_MARKS + "(" + MARK_ID + ") ON DELETE CASCADE);";
 
         private static final String CREATE_TABLE_MARKS = "CREATE TABLE " + TABLE_MARKS + " ( " +
                 MARK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                MARK_NAME + " TEXT, " +
+                MARK_NAME + " TEXT UNIQUE, " +
                 MARK_DESCRIPTION + " TEXT, " +
                 MARK_USER_ID + " INTEGER REFERENCES " + TABLE_USERS + "(" + USER_ID + ") ON DELETE CASCADE);";
 
