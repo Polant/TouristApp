@@ -199,12 +199,13 @@ public class MarksFragment extends BaseRecyclerFragment {
 
         private void removeMarksWithTheirPhotos() {
             List<UserMedia> medias = db.selectUserMediaByFilter(mUserId, getSelectedItemsIdsArray());
-            List<Long> mediasIds = new ArrayList<>(medias.size());
-            for (UserMedia m : medias){
-                mediasIds.add((long)m.getId());
+            if (medias.size() > 0) {
+                List<Long> mediasIds = new ArrayList<>(medias.size());
+                for (UserMedia m : medias) {
+                    mediasIds.add((long) m.getId());
+                }
+                db.deleteUserMedias(mediasIds);
             }
-
-            db.deleteUserMedias(mediasIds);
             db.deleteMarks(mAdapter.getSelectedItemsIds());
 
             mActionMode.finish();
