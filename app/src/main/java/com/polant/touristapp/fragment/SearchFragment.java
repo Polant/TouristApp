@@ -34,7 +34,7 @@ import java.util.List;
 public class SearchFragment extends Fragment implements IRecyclerFragment, ISearchableFragment {
 
     public interface SearchFragmentListener {
-        void showPhotosByMark(long markId);
+        void showPhotosByMark(Mark mark);
         void showSelectedPhoto(UserMedia photo);
     }
 
@@ -98,7 +98,7 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
             public void onItemClicked(int position) {
                 SearchComplexItem clicked = mAdapter.getItem(position);
                 if (clicked.isMark()) {
-                    ((SearchFragment.SearchFragmentListener) mActivity).showPhotosByMark(clicked.getMark().getId());
+                    ((SearchFragment.SearchFragmentListener) mActivity).showPhotosByMark(clicked.getMark());
                 }
                 else if(clicked.isUserMedia()){
                     ((SearchFragment.SearchFragmentListener) mActivity).showSelectedPhoto(clicked.getMedia());
