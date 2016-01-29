@@ -112,7 +112,7 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
             final String photoPath = c.getString(c.getColumnIndex(Database.MEDIA_EXTERNAL_PATH));
             String photoName = c.getString(c.getColumnIndex(Database.MEDIA_NAME));
             String photoDesc = c.getString(c.getColumnIndex(Database.MEDIA_DESCRIPTION));
-            long phoneCreated = c.getLong(c.getColumnIndex(Database.MEDIA_CREATED_DATE));
+            long photoCreated = c.getLong(c.getColumnIndex(Database.MEDIA_CREATED_DATE));
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", getDateFormatSymbols(context));
 
@@ -121,8 +121,7 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
                 public void run() {
                     //Использую 1 и максимальную высоту, т.к. мах высота = 200, и если передать ширину 1,
                     //то изображение "подгонится" по высоту. (см. ImageUtils.createBitmap).
-                    final Bitmap photo = ImageUtils.createBitmap(photoPath,
-                            1, (int)context.getResources().getDimension(R.dimen.recycler_item_image_view_height));
+                    final Bitmap photo = ImageUtils.createBitmap(photoPath, 1, (int)context.getResources().getDimension(R.dimen.recycler_item_image_view_height));
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -136,7 +135,7 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
             textName.setText(photoName);
             textDescription.setText(photoDesc);
             textCreatedDate.setText(
-                    String.format("%s %s", context.getString(R.string.photo_taken),sdf.format(new Date(phoneCreated))));
+                    String.format("%s %s", context.getString(R.string.photo_taken),sdf.format(new Date(photoCreated))));
         }
 
         private static DateFormatSymbols getDateFormatSymbols(final Context context) {
