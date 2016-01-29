@@ -1,24 +1,30 @@
 package com.polant.touristapp.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
+import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
 import com.polant.touristapp.fragment.SearchFragment;
 import com.polant.touristapp.interfaces.ISearchableFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
+import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.utils.alert.AlertUtil;
 
 public class SearchActivity extends AppCompatActivity
         implements IWorkWithDatabaseActivity, SearchFragment.SearchFragmentListener {
@@ -33,6 +39,8 @@ public class SearchActivity extends AppCompatActivity
     private ISearchableFragment mSearchableFragment;
 
     private int mUserId;
+
+    private String lastSearchFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +91,7 @@ public class SearchActivity extends AppCompatActivity
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(RESULT_CANCELED);
-                finish();
+                onBackPressed();
             }
         });
 
@@ -100,13 +107,12 @@ public class SearchActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d(Constants.APP_LOG_TAG + " submit: ", query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d(Constants.APP_LOG_TAG + " change: ", newText);
+                lastSearchFilter = newText;
                 mSearchableFragment.search(newText);
                 return false;
             }
@@ -114,14 +120,14 @@ public class SearchActivity extends AppCompatActivity
     }
 
     @Override
-    public void showPhotosByMark(long markId) {
+    public void showPhotosByMark(Mark mark) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         PhotosFragment fragment = new PhotosFragment();
         //Передаю Id пользователя и метку во фрагмент.
         Bundle args = new Bundle();
         args.putInt(Constants.USER_ID, mUserId);
-        args.putLong(PhotosFragment.INPUT_MARK_ID, markId);
+        args.putLong(PhotosFragment.INPUT_MARK_ID, mark.getId());
 
         fragment.setArguments(args);
         transaction.replace(R.id.container_search_info,
@@ -129,11 +135,38 @@ public class SearchActivity extends AppCompatActivity
                 PHOTOS_FRAGMENT_TAG);
         transaction.addToBackStack(null);
         transaction.commit();
+
+        //Заголовком делаю название метки.
+        setToolbarMarkTitle(mark);
     }
 
     @Override
     public void showSelectedPhoto(UserMedia photo) {
         //TODO: перейти к выбранному фото.
+    }
+
+    private void setToolbarMarkTitle(Mark mark){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(mark.getName());
+    }
+
+    private void setToolbarTitleSearch(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.activity_search);
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+            //Обновляю список на случай того, если удалил фото.
+            mSearchableFragment.search(lastSearchFilter);
+
+            setToolbarTitleSearch();
+        }else {
+            super.onBackPressed();
+        }
     }
 
     @Override
