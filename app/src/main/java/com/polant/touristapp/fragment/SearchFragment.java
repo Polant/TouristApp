@@ -73,7 +73,7 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
         initRecycledView();
 
         //Сначала вывожу все данные.
-        search(null);
+        search("");
     }
 
     protected void getDatabase() {

@@ -315,16 +315,9 @@ public class Database {
     public ArrayList<UserMedia> searchUserMedia(int userId, String filter){
         ArrayList<UserMedia> result = new ArrayList<>();
 
-        String where;
-        String[] whereArgs;
-        if (filter != null && !filter.equals("")) {
-            where = MEDIA_USER_ID + "=? AND (" + MEDIA_NAME + " LIKE '%?%' OR " +
-                    MEDIA_DESCRIPTION + " LIKE '%?%')";
-            whereArgs = new String[]{ String.valueOf(userId), filter, filter };
-        }else {
-            where = MEDIA_USER_ID + "=?";
-            whereArgs = new String[]{ String.valueOf(userId) };
-        }
+        String where = MEDIA_USER_ID + "=? AND (" + MEDIA_NAME + " LIKE ? OR " +
+                    MEDIA_DESCRIPTION + " LIKE ?)";
+        String[] whereArgs = new String[]{ String.valueOf(userId), "%" +filter + "%","%" + filter + "%" };
         Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, whereArgs, null, null, MEDIA_NAME);
 
         parseUserMediaCursor(c, result);
@@ -334,16 +327,9 @@ public class Database {
     public ArrayList<Mark> searchMarks(int userId, String filter){
         ArrayList<Mark> result = new ArrayList<>();
 
-        String where;
-        String[] whereArgs;
-        if (filter != null && !filter.equals("")) {
-            where = MARK_USER_ID + "=? AND (" + MARK_NAME + " LIKE '%?%' OR " +
-                    MARK_DESCRIPTION + " LIKE '%?%')";
-            whereArgs = new String[]{ String.valueOf(userId), filter, filter };
-        }else {
-            where = MARK_USER_ID + "=?";
-            whereArgs = new String[]{ String.valueOf(userId) };
-        }
+        String where = MARK_USER_ID + "=? AND (" + MARK_NAME + " LIKE ? OR " +
+                    MARK_DESCRIPTION + " LIKE ?)";
+        String[] whereArgs = new String[]{ String.valueOf(userId), "%" +filter + "%","%" + filter + "%" };
         Cursor c = sqLiteDatabase.query(TABLE_MARKS, null, where, whereArgs, null, null, MARK_NAME);
 
         parseMarkCursor(c, result);
