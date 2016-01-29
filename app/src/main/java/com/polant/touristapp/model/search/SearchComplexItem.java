@@ -1,4 +1,4 @@
-package com.polant.touristapp.model.recycler;
+package com.polant.touristapp.model.search;
 
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
@@ -6,18 +6,18 @@ import com.polant.touristapp.model.UserMedia;
 /**
  * Created by Антон on 29.01.2016.
  */
-public class RecyclerItem {
+public class SearchComplexItem {
 
     private int id;
     private Mark mark;
     private UserMedia media;
 
-    public RecyclerItem(int id, Mark mark) {
+    public SearchComplexItem(int id, Mark mark) {
         this.id = id;
         this.mark = mark;
     }
 
-    public RecyclerItem(int id, UserMedia media) {
+    public SearchComplexItem(int id, UserMedia media) {
         this.id = id;
         this.media = media;
     }

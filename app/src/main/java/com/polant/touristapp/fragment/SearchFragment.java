@@ -22,7 +22,7 @@ import com.polant.touristapp.interfaces.ISearchableFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
-import com.polant.touristapp.model.recycler.RecyclerItem;
+import com.polant.touristapp.model.search.SearchComplexItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +96,7 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
         mAdapter = new SearchMultiTypesAdapter(mActivity, null, new RecyclerClickListener() {
             @Override
             public void onItemClicked(int position) {
-                RecyclerItem clicked = mAdapter.getItem(position);
+                SearchComplexItem clicked = mAdapter.getItem(position);
                 if (clicked.isMark()) {
                     ((SearchFragment.SearchFragmentListener) mActivity).showPhotosByMark(clicked.getMark().getId());
                 }
@@ -131,7 +131,7 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
                 List<Mark> marks = db.searchMarks(mUserId, filter);
                 List<UserMedia> medias = db.searchUserMedia(mUserId, filter);
 
-                List<RecyclerItem> result = merge(marks, medias);
+                List<SearchComplexItem> result = merge(marks, medias);
                 mAdapter.changeItems(result);
 
                 handler.post(new Runnable() {
@@ -145,15 +145,15 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
         t.start();
     }
 
-    private List<RecyclerItem> merge(List<Mark> marks, List<UserMedia> medias) {
+    private List<SearchComplexItem> merge(List<Mark> marks, List<UserMedia> medias) {
         int resultSize = marks.size() + medias.size();
-        List<RecyclerItem> result = new ArrayList<>(resultSize);
+        List<SearchComplexItem> result = new ArrayList<>(resultSize);
 
         for (int i = 0; i < resultSize; i++) {
             if (i < marks.size()){
-                result.add(new RecyclerItem(i, marks.get(i)));
+                result.add(new SearchComplexItem(i, marks.get(i)));
             }else {
-                result.add(new RecyclerItem(i, medias.get(i - marks.size())));
+                result.add(new SearchComplexItem(i, medias.get(i - marks.size())));
             }
         }
         return result;

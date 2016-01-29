@@ -14,7 +14,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
-import com.polant.touristapp.model.recycler.RecyclerItem;
+import com.polant.touristapp.model.search.SearchComplexItem;
 import com.polant.touristapp.utils.image.ImageUtils;
 
 import java.text.DateFormatSymbols;
@@ -34,13 +34,13 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
     private static final int LAYOUT_PHOTO = R.layout.multi_recycler_item_photo;
 
     private Context mContext;
-    private List<RecyclerItem> mItems;
+    private List<SearchComplexItem> mItems;
     private RecyclerClickListener mClickListener;
     private LayoutInflater mInflater;
 
     private static Handler mHandler = new Handler();
 
-    public SearchMultiTypesAdapter(Context mContext, List<RecyclerItem> mItems, RecyclerClickListener mClickListener) {
+    public SearchMultiTypesAdapter(Context mContext, List<SearchComplexItem> mItems, RecyclerClickListener mClickListener) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mClickListener = mClickListener;
@@ -49,11 +49,11 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
         setHasStableIds(true);
     }
 
-    public void changeItems(List<RecyclerItem> newItems){
+    public void changeItems(List<SearchComplexItem> newItems){
         mItems = newItems;
     }
 
-    public RecyclerItem getItem(int position){
+    public SearchComplexItem getItem(int position){
         return mItems != null ? mItems.get(position) : null;
     }
 
@@ -116,16 +116,16 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
             itemView.setOnClickListener(this);
         }
 
-        public void bindData(final Context context, RecyclerItem recyclerItem) {
-            if (recyclerItem.isMark()){
-                Mark mark = recyclerItem.getMark();
+        public void bindData(final Context context, SearchComplexItem searchComplexItem) {
+            if (searchComplexItem.isMark()){
+                Mark mark = searchComplexItem.getMark();
 
                 markImageView.setImageResource(R.drawable.mark);
                 textMarkName.setText(mark.getName());
                 textMarkDescription.setText(mark.getDescription());
             }
-            else if (recyclerItem.isUserMedia()){
-                final UserMedia media = recyclerItem.getMedia();
+            else if (searchComplexItem.isUserMedia()){
+                final UserMedia media = searchComplexItem.getMedia();
 
                 SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", getDateFormatSymbols(context));
 
