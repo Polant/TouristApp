@@ -14,6 +14,7 @@ import android.view.View;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
+import com.polant.touristapp.fragment.PhotosFragment;
 import com.polant.touristapp.fragment.SearchFragment;
 import com.polant.touristapp.interfaces.ISearchableFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
@@ -25,6 +26,7 @@ public class SearchActivity extends AppCompatActivity
     private static final int LAYOUT = R.layout.activity_search;
 
     private static final String SEARCH_FRAGMENT_TAG = SearchFragment.class.toString();
+    private static final String PHOTOS_FRAGMENT_TAG = PhotosFragment.class.toString();
 
     private Database db;
 
@@ -113,12 +115,25 @@ public class SearchActivity extends AppCompatActivity
 
     @Override
     public void showPhotosByMark(long markId) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
+        PhotosFragment fragment = new PhotosFragment();
+        //Передаю Id пользователя и метку во фрагмент.
+        Bundle args = new Bundle();
+        args.putInt(Constants.USER_ID, mUserId);
+        args.putLong(PhotosFragment.INPUT_MARK_ID, markId);
+
+        fragment.setArguments(args);
+        transaction.replace(R.id.container_search_info,
+                fragment,
+                PHOTOS_FRAGMENT_TAG);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
     public void showSelectedPhoto(UserMedia photo) {
-
+        //TODO: перейти к выбранному фото.
     }
 
     @Override
