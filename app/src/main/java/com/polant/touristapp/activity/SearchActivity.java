@@ -1,30 +1,26 @@
 package com.polant.touristapp.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
 import com.polant.touristapp.fragment.SearchFragment;
 import com.polant.touristapp.interfaces.ISearchableFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
-import com.polant.touristapp.utils.alert.AlertUtil;
 
 public class SearchActivity extends AppCompatActivity
         implements IWorkWithDatabaseActivity, SearchFragment.SearchFragmentListener {
@@ -99,14 +95,15 @@ public class SearchActivity extends AppCompatActivity
         Menu toolbarMenu = toolbar.getMenu();
 
         MenuItem searchItem = toolbarMenu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView)searchItem.getActionView();
-        initSearchView(searchView);
+        initSearchView(searchItem);
     }
 
-    private void initSearchView(SearchView searchView) {
+    private void initSearchView(final MenuItem searchItem) {
+        final SearchView searchView = (SearchView)searchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchItem.collapseActionView();
                 return false;
             }
 
@@ -137,7 +134,7 @@ public class SearchActivity extends AppCompatActivity
         transaction.commit();
 
         //Заголовком делаю название метки.
-        setToolbarMarkTitle(mark);
+        setToolbarMarkData(mark);
     }
 
     @Override
@@ -145,14 +142,21 @@ public class SearchActivity extends AppCompatActivity
         //TODO: перейти к выбранному фото.
     }
 
-    private void setToolbarMarkTitle(Mark mark){
+    private void setToolbarMarkData(Mark mark){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mark.getName());
+
+        MenuItem searchItem = toolbar.getMenu().findItem(R.id.action_search);
+        searchItem.collapseActionView();
+        searchItem.setVisible(false);
     }
 
-    private void setToolbarTitleSearch(){
+    private void setToolbarSearchData(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.activity_search);
+
+        MenuItem searchItem = toolbar.getMenu().findItem(R.id.action_search);
+        searchItem.setVisible(true);
     }
 
     @Override
@@ -163,7 +167,7 @@ public class SearchActivity extends AppCompatActivity
             //Обновляю список на случай того, если удалил фото.
             mSearchableFragment.search(lastSearchFilter);
 
-            setToolbarTitleSearch();
+            setToolbarSearchData();
         }else {
             super.onBackPressed();
         }
