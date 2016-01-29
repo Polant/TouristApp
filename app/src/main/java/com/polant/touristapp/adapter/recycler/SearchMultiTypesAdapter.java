@@ -7,13 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.RecyclerClickListener;
-import com.polant.touristapp.data.Database;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.model.recycler.RecyclerItem;
@@ -75,7 +73,7 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return mItems != null ? mItems.size() : 0;
     }
 
     public static class SearchHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

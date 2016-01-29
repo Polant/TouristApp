@@ -309,6 +309,47 @@ public class Database {
         }
     }
 
+    //-------------------------------------Search-----------------------------------------//
+
+
+    public ArrayList<UserMedia> searchUserMedia(int userId, String filter){
+        ArrayList<UserMedia> result = new ArrayList<>();
+
+        String where;
+        String[] whereArgs;
+        if (filter != null && !filter.equals("")) {
+            where = MEDIA_USER_ID + "=? AND (" + MEDIA_NAME + " LIKE '%?%' OR " +
+                    MEDIA_DESCRIPTION + " LIKE '%?%')";
+            whereArgs = new String[]{ String.valueOf(userId), filter, filter };
+        }else {
+            where = MEDIA_USER_ID + "=?";
+            whereArgs = new String[]{ String.valueOf(userId) };
+        }
+        Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, whereArgs, null, null, null);
+
+        parseUserMediaCursor(c, result);
+        return result;
+    }
+
+    public ArrayList<Mark> searchMarks(int userId, String filter){
+        ArrayList<Mark> result = new ArrayList<>();
+
+        String where;
+        String[] whereArgs;
+        if (filter != null && !filter.equals("")) {
+            where = MARK_USER_ID + "=? AND (" + MARK_NAME + " LIKE '%?%' OR " +
+                    MARK_DESCRIPTION + " LIKE '%?%')";
+            whereArgs = new String[]{ String.valueOf(userId), filter, filter };
+        }else {
+            where = MARK_USER_ID + "=?";
+            whereArgs = new String[]{ String.valueOf(userId) };
+        }
+        Cursor c = sqLiteDatabase.query(TABLE_MARKS, null, where, whereArgs, null, null, null);
+
+        parseMarkCursor(c, result);
+        return result;
+    }
+
     //-------------------------Названия таблиц и их атрибуты--------------------------------//
 
     //Пользователи.
