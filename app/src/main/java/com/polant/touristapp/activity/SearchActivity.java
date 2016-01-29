@@ -11,10 +11,14 @@ import android.view.View;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.interfaces.ISearchableFragment;
 
 public class SearchActivity extends AppCompatActivity {
 
     private static final int LAYOUT = R.layout.activity_search;
+
+    private ISearchableFragment mSearchableFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +60,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 Log.d(Constants.APP_LOG_TAG + " change: ", newText);
+                mSearchableFragment.search(newText);
                 return false;
             }
         });
