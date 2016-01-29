@@ -13,6 +13,8 @@
         <item name="actionModeStyle">@style/AppDefault.ActionModeStyle</item>
         <item name="actionModeCloseDrawable">@drawable/ic_keyboard_backspace</item>
         <item name="actionMenuTextColor">@color/colorWhite</item>
+        <!-- SearchView -->
+        <item name="autoCompleteTextViewStyle">@style/cursorColor</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark" />
@@ -28,6 +30,15 @@
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 
+    <!-- SearchView -->
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@android:color/transparent</item>
+        <item name="queryHint">@string/search_hint</item>
+    </style>
+    <style name="cursorColor" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:textCursorDrawable">@drawable/white_cursor</item>
+    </style>
+
     <!--Edit text style -->
     <style name="AppEditTextTheme" parent="MaterialTheme.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -35,5 +46,4 @@
         <item name="colorAccent">@color/colorEditTextUnderline</item>
         <item name="colorControlNormal">@color/colorWhite</item>
     </style>
-
 </resources>

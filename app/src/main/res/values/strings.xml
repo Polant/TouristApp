@@ -39,4 +39,5 @@
     <string name="alertDeleteMarksConfirmMessage">Вы уверены что хотите удалить метки? Фотографии, которые связаны с метками будут утеряны.</string>
     <string name="search">Поиск</string>
     <string name="activity_search">Поиск</string>
+    <string name="search_hint">Введите текст</string>
 </resources>
