@@ -15,6 +15,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksActivity;
+import com.polant.touristapp.activity.SearchActivity;
 
 /**
  * Реализация NavigationDrawer - для использования его во всех activity.
@@ -56,6 +57,11 @@ public class NavigationDrawer {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         //TODO: реализовать обработку клика по navigation drawer.
                         switch (position){
+                            case 2://Поиск.
+                                Intent search = new Intent(activity, SearchActivity.class);
+                                search.putExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
+                                activity.startActivityForResult(search, Constants.SHOW_SEARCH_ACTIVITY);
+                                break;
                             case 3://Метки.
                                 Intent marks = new Intent(activity, MarksActivity.class);
                                 marks.putExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
