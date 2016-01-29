@@ -17,8 +17,10 @@ import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.SearchFragment;
 import com.polant.touristapp.interfaces.ISearchableFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
+import com.polant.touristapp.model.UserMedia;
 
-public class SearchActivity extends AppCompatActivity implements IWorkWithDatabaseActivity {
+public class SearchActivity extends AppCompatActivity
+        implements IWorkWithDatabaseActivity, SearchFragment.SearchFragmentListener {
 
     private static final int LAYOUT = R.layout.activity_search;
 
@@ -110,6 +112,16 @@ public class SearchActivity extends AppCompatActivity implements IWorkWithDataba
     }
 
     @Override
+    public void showPhotosByMark(long markId) {
+
+    }
+
+    @Override
+    public void showSelectedPhoto(UserMedia photo) {
+
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         openDatabase();
@@ -125,5 +137,4 @@ public class SearchActivity extends AppCompatActivity implements IWorkWithDataba
     public Database getDatabase() {
         return db;
     }
-
 }

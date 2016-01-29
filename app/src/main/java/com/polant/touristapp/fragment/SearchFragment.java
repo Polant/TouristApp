@@ -33,6 +33,11 @@ import java.util.List;
  */
 public class SearchFragment extends Fragment implements IRecyclerFragment, ISearchableFragment {
 
+    public interface SearchFragmentListener {
+        void showPhotosByMark(long markId);
+        void showSelectedPhoto(UserMedia photo);
+    }
+
     private static int LAYOUT = R.layout.fragment_search;
 
     protected Activity mActivity;
@@ -50,8 +55,9 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof IWorkWithDatabaseActivity)) {
-            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT IWorkWithDatabaseActivity");
+        if (!(context instanceof IWorkWithDatabaseActivity) || !(context instanceof SearchFragmentListener)) {
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT IWorkWithDatabaseActivity and " +
+                    "SearchFragmentListener");
         }
         mActivity = (Activity) context;
     }
@@ -90,7 +96,13 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
         mAdapter = new SearchMultiTypesAdapter(mActivity, null, new RecyclerClickListener() {
             @Override
             public void onItemClicked(int position) {
-
+                RecyclerItem clicked = mAdapter.getItem(position);
+                if (clicked.isMark()) {
+                    ((SearchFragment.SearchFragmentListener) mActivity).showPhotosByMark(clicked.getMark().getId());
+                }
+                else if(clicked.isUserMedia()){
+                    ((SearchFragment.SearchFragmentListener) mActivity).showSelectedPhoto(clicked.getMedia());
+                }
             }
 
             @Override

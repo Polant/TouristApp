@@ -311,6 +311,7 @@ public class Database {
 
     //-------------------------------------Search-----------------------------------------//
 
+    //TODO: возможно стоит перевести приложение на английский язык, так как Lower(), Upper() не работают с utf-8.
 
     public ArrayList<UserMedia> searchUserMedia(int userId, String filter){
         ArrayList<UserMedia> result = new ArrayList<>();

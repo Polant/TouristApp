@@ -53,6 +53,10 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
         mItems = newItems;
     }
 
+    public RecyclerItem getItem(int position){
+        return mItems != null ? mItems.get(position) : null;
+    }
+
     @Override
     public int getItemViewType(int position) {
         return mItems.get(position).isMark() ? TYPE_MARK : TYPE_PHOTO;
