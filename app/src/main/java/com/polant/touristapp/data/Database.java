@@ -325,7 +325,7 @@ public class Database {
             where = MEDIA_USER_ID + "=?";
             whereArgs = new String[]{ String.valueOf(userId) };
         }
-        Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, whereArgs, null, null, null);
+        Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, whereArgs, null, null, MEDIA_NAME);
 
         parseUserMediaCursor(c, result);
         return result;
@@ -344,7 +344,7 @@ public class Database {
             where = MARK_USER_ID + "=?";
             whereArgs = new String[]{ String.valueOf(userId) };
         }
-        Cursor c = sqLiteDatabase.query(TABLE_MARKS, null, where, whereArgs, null, null, null);
+        Cursor c = sqLiteDatabase.query(TABLE_MARKS, null, where, whereArgs, null, null, MARK_NAME);
 
         parseMarkCursor(c, result);
         return result;

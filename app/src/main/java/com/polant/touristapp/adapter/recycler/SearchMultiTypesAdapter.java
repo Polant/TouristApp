@@ -72,6 +72,11 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
     }
 
     @Override
+    public long getItemId(int position) {
+        return mItems == null ? super.getItemId(position) : mItems.get(position).getId();
+    }
+
+    @Override
     public int getItemCount() {
         return mItems != null ? mItems.size() : 0;
     }

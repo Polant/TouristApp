@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.RecyclerClickListener;
-import com.polant.touristapp.adapter.recycler.PhotosCursorMultiAdapter;
 import com.polant.touristapp.adapter.recycler.SearchMultiTypesAdapter;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.interfaces.IRecyclerFragment;
@@ -29,7 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Антон on 29.01.2016.
+ * Фрагмент, содержащий RecyclerView, который служит для вывода результата поиска.
+ * Текущий Адаптер позволяет выводить различные типы представлений одновременно в RecyclerView.
  */
 public class SearchFragment extends Fragment implements IRecyclerFragment, ISearchableFragment {
 
