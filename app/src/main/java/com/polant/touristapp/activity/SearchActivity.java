@@ -198,7 +198,14 @@ public class SearchActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
-            mSearchableFragment.search("");
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0){
+                PhotosFragment photosFragment = (PhotosFragment)fm.findFragmentByTag(PHOTOS_FRAGMENT_TAG);
+                photosFragment.notifyRecyclerView();
+            }
+            else {
+                mSearchableFragment.search("");
+            }
         }
     }
 
