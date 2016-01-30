@@ -126,13 +126,29 @@ public class Database {
         return cv;
     }
 
-    //Вставка записи в TABLE_MARK_RECORDS.
+    //-----------------------------MarkRecords------------------------------//
+
     public int insertMarkRecord(MarkRecord record){
         ContentValues cv = putMarkRecordContentValues(record);
         return (int)sqLiteDatabase.insert(TABLE_MARK_RECORDS, null, cv);
     }
 
-    private void parseMarkRecordCursor(Cursor c, ArrayList<Long> result){
+    public void deleteMarkRecordsByMediaId(int mediaId) {
+        String where = MARK_RECORD_MEDIA_ID + "=" + mediaId;
+        sqLiteDatabase.delete(TABLE_MARK_RECORDS, where, null);
+    }
+
+    private void parseMarkRecordMarksIdsCursor(Cursor c, ArrayList<Long> result) {
+        if (c != null) {
+            int colId = c.getColumnIndex(MARK_RECORD_MARK_ID);
+            while (c.moveToNext()){
+                result.add(c.getLong(colId));
+            }
+            c.close();
+        }
+    }
+
+    private void parseMarkRecordMediaIdsCursor(Cursor c, ArrayList<Long> result){
         if (c != null) {
             if (c.moveToFirst()) {
                 int colId = c.getColumnIndex(MARK_RECORD_MEDIA_ID);
@@ -142,6 +158,16 @@ public class Database {
             }
             c.close();
         }
+    }
+
+    //Создание ContentValues для талбицы TABLE_MARK_RECORDS.
+    private ContentValues putMarkRecordContentValues(MarkRecord record){
+        ContentValues cv = new ContentValues();
+        cv.put(MARK_RECORD_MEDIA_ID, record.getMediaId());
+        if (record.getMarkId() >= 0) {
+            cv.put(MARK_RECORD_MARK_ID, record.getMarkId());
+        }
+        return cv;
     }
 
     //--------------------------Фильтрация фото по меткам---------------------------------//
@@ -159,7 +185,7 @@ public class Database {
         whereBuilder.append(");");
         Cursor c = sqLiteDatabase.rawQuery(whereBuilder.toString(), null);
 
-        parseMarkRecordCursor(c, mediaIds);
+        parseMarkRecordMediaIdsCursor(c, mediaIds);
         return mediaIds;
     }
 
@@ -207,18 +233,6 @@ public class Database {
         }
         String query = createUserMediaFilterQueryByMark(userId, medias, "_id");
         return sqLiteDatabase.rawQuery(query, null);
-    }
-
-    //-------------------------------------------------------------------------//
-
-    //Создание ContentValues для талбицы TABLE_MARK_RECORDS.
-    private ContentValues putMarkRecordContentValues(MarkRecord record){
-        ContentValues cv = new ContentValues();
-        cv.put(MARK_RECORD_MEDIA_ID, record.getMediaId());
-        if (record.getMarkId() >= 0) {
-            cv.put(MARK_RECORD_MARK_ID, record.getMarkId());
-        }
-        return cv;
     }
 
     //----------------------------------Marks---------------------------------//
@@ -307,6 +321,14 @@ public class Database {
             }
             c.close();
         }
+    }
+
+    public List<Long> findMarksIdsByMediaId(int mediaId){
+        ArrayList<Long> result = new ArrayList<>();
+        String where = MARK_RECORD_MEDIA_ID + "=" + mediaId;
+        Cursor c = sqLiteDatabase.query(TABLE_MARK_RECORDS, null, where, null, null, null, null);
+        parseMarkRecordMarksIdsCursor(c, result);
+        return result;
     }
 
     //-------------------------------------Search-----------------------------------------//

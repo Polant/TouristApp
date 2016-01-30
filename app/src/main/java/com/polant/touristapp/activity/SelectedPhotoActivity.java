@@ -7,6 +7,7 @@ import android.media.ExifInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class SelectedPhotoActivity extends AppCompatActivity {
@@ -34,6 +36,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     //используются как ключи в полученном намерении.
     public static final String IMAGE_EXTERNAL_PATH = "IMAGE_EXTERNAL_PATH";
     public static final String IMAGE_LOCATION = "IMAGE_LOCATION";
+    public static final String INPUT_MEDIA = "INPUT_MEDIA";
 
     private Database db;
     private int userId;
@@ -42,6 +45,8 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     private boolean exportToGalleryFlag = false;  //TODO: когда сделаю настройки приложения, то сделать проверку этого флага.
 
     private long[] marksIds;    //Массив Id выбранных меток.
+
+    private UserMedia mInputMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +69,22 @@ public class SelectedPhotoActivity extends AppCompatActivity {
             imagePath = responseIntent.getStringExtra(IMAGE_EXTERNAL_PATH);
             userId = responseIntent.getIntExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
             location = (Location)responseIntent.getExtras().get(IMAGE_LOCATION);
+
+            //Если фото уже есть в базе и надо его посмотреть/отредактировать.
+            mInputMedia = (UserMedia)responseIntent.getExtras().get(INPUT_MEDIA);
+            if (mInputMedia != null){
+                EditText nameText = (EditText) findViewById(R.id.editTextPhotoName);
+                EditText descriptionText = (EditText) findViewById(R.id.editTextPhotoDescription);
+
+                nameText.setText(mInputMedia.getName());
+                descriptionText.setText(mInputMedia.getDescription());
+
+                openDatabase();
+                if (mInputMedia != null) {
+                    setMarksIdsByPhoto(mInputMedia);
+                    Log.d(Constants.APP_LOG_TAG, "setMArks");
+                }
+            }
         }
     }
 
@@ -79,7 +100,12 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 switch (id) {
                     case R.id.item_check_confirm:
-                        savePhoto();
+                        if (mInputMedia == null) {
+                            savePhoto();
+                        }
+                        else{
+                            updatePhoto();
+                        }
                         return true;
                     case R.id.item_bookmark:
                         //Выбор меток для фото.
@@ -121,8 +147,55 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         ImageView imageView = (ImageView) findViewById(R.id.imageViewSelectedPhoto);
 
         //Изменяю размер фото чтоб оно поместилось в ImageView.
-        Bitmap bitmap = ImageUtils.createBitmap(imagePath, imageView.getWidth(), imageView.getHeight());
+        Bitmap bitmap = ImageUtils.createBitmap(
+                mInputMedia == null ? imagePath : mInputMedia.getMediaExternalPath(),
+                imageView.getWidth(), imageView.getHeight());
         imageView.setImageBitmap(bitmap);
+    }
+
+    //---------------------------Обновление фото-------------------------------//
+
+    private void updatePhoto() {
+        if (marksIds == null) { //Фото должно иметь хотя бы 1 метку.
+            AlertUtil.showAlertDialog(this, R.string.alertSelectedPhotoHasNotMarksTitle,
+                    R.string.alertSelectedPhotoHasNotMarksMessage, R.drawable.warning_orange,
+                    null, true, getString(R.string.alertResultPositive), null, null, null);
+            return;
+        }
+        //TODO: проверить на корректность введенных данных (пустые строки и т.д.).
+        //Получаю название фото и его описание.
+        EditText nameText = (EditText) findViewById(R.id.editTextPhotoName);
+        EditText descriptionText = (EditText) findViewById(R.id.editTextPhotoDescription);
+        mInputMedia.setName(nameText.getText().toString());
+        mInputMedia.setDescription(descriptionText.getText().toString());
+
+        //Получаю новый путь к фото.
+        String renamedPath = generateNewPhotoName(mInputMedia.getMediaExternalPath(),
+                mInputMedia.getId(), mInputMedia.getName());
+        renamePhoto(mInputMedia.getMediaExternalPath(), renamedPath);
+
+        mInputMedia.setMediaExternalPath(renamedPath);
+        db.updateMedia(mInputMedia);
+
+        //Сначала надо удалить старые записи.
+        db.deleteMarkRecordsByMediaId(mInputMedia.getId());
+
+        for (long marksId : marksIds) {
+            db.insertMarkRecord(new MarkRecord(mInputMedia.getId(), (int) marksId));
+        }
+        exportInGallery(renamedPath);
+
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    //Вызываю, когда откроется база.
+    private void setMarksIdsByPhoto(UserMedia photo){
+        List<Long> marks = db.findMarksIdsByMediaId(photo.getId());
+        marksIds = new long[marks.size()];
+        for (int i = 0; i < marks.size(); i++) {
+            marksIds[i] = marks.get(i);
+        }
     }
 
     //----------------------------Сохранение фото------------------------------//

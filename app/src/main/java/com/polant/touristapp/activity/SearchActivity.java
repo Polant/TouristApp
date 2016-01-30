@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +35,7 @@ public class SearchActivity extends AppCompatActivity
 
     private int mUserId;
 
-    private String lastSearchFilter;
+    private String mLastSearchFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +108,7 @@ public class SearchActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                lastSearchFilter = newText;
+                mLastSearchFilter = newText;
                 mSearchableFragment.search(newText);
                 return false;
             }
@@ -139,7 +138,12 @@ public class SearchActivity extends AppCompatActivity
 
     @Override
     public void showSelectedPhoto(UserMedia photo) {
-        //TODO: перейти к выбранному фото.
+        Intent intent = new Intent(this, SelectedPhotoActivity.class);
+
+        intent.putExtra(Constants.USER_ID, mUserId);
+        intent.putExtra(SelectedPhotoActivity.INPUT_MEDIA, photo);
+
+        startActivityForResult(intent, Constants.SHOW_SELECTED_PHOTO_ACTIVITY);
     }
 
     private void setToolbarMarkData(Mark mark){
@@ -165,11 +169,20 @@ public class SearchActivity extends AppCompatActivity
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
             //Обновляю список на случай того, если удалил фото.
-            mSearchableFragment.search(lastSearchFilter);
+            mSearchableFragment.search(mLastSearchFilter);
 
             setToolbarSearchData();
         }else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY && resultCode == RESULT_OK){
+            openDatabase();
+            mSearchableFragment.search(mLastSearchFilter);
         }
     }
 
