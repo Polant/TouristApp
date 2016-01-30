@@ -30,8 +30,6 @@ public abstract class BaseRecyclerFragment extends Fragment
 
     protected CursorRecyclerViewMultiAdapter mAdapter;
 
-    protected Database db;
-
     protected int mUserId;
 
     protected ActionMode mActionMode;
@@ -52,12 +50,11 @@ public abstract class BaseRecyclerFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getDatabase();
         getDataFromArguments(getArguments());
     }
 
-    protected void getDatabase() {
-        db = ((IWorkWithDatabaseActivity) mActivity).getDatabase();
+    protected Database getDatabase() {
+        return ((IWorkWithDatabaseActivity) mActivity).getDatabase();
     }
 
     protected void getDataFromArguments(Bundle args) {

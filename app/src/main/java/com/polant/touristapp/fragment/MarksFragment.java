@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
+import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
 import com.polant.touristapp.model.UserMedia;
@@ -139,7 +140,7 @@ public class MarksFragment extends BaseRecyclerFragment {
         return new CursorLoader(mActivity, null, null, null, null, null){
             @Override
             public Cursor loadInBackground() {
-                return db.selectMarksAndPhotosCountCursor(mUserId);
+                return getDatabase().selectMarksAndPhotosCountCursor(mUserId);
             }
         };
     }
@@ -198,6 +199,7 @@ public class MarksFragment extends BaseRecyclerFragment {
         }
 
         private void removeMarksWithTheirPhotos() {
+            Database db = getDatabase();
             List<UserMedia> medias = db.selectUserMediaByFilter(mUserId, getSelectedItemsIdsArray());
             if (medias.size() > 0) {
                 List<Long> mediasIds = new ArrayList<>(medias.size());

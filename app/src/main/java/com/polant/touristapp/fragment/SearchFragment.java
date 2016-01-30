@@ -71,7 +71,6 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getDatabase();
         getDataFromArguments(getArguments());
         initAdapter();
         initRecycledView();

@@ -101,7 +101,7 @@ public class PhotosFragment extends BaseRecyclerFragment {
         return new CursorLoader(mActivity, null, null, null, null, null){
             @Override
             public Cursor loadInBackground() {
-                return db.selectCursorUserMediaByFilter(mUserId, new long[]{mMarkId});
+                return getDatabase().selectCursorUserMediaByFilter(mUserId, new long[]{mMarkId});
             }
         };
     }
@@ -145,7 +145,7 @@ public class PhotosFragment extends BaseRecyclerFragment {
         }
 
         private void removePhotos() {
-            db.deleteUserMedias(mAdapter.getSelectedItemsIds());
+            getDatabase().deleteUserMedias(mAdapter.getSelectedItemsIds());
             mActionMode.finish();
             notifyRecyclerView();
         }
