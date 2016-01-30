@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.MarksFragment;
@@ -26,7 +27,7 @@ import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 
 public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
-        MarksFragment.MarksFragmentListener, ICollapsedToolbarActivity{
+        MarksFragment.MarksFragmentListener, ICollapsedToolbarActivity, PhotosFragment.PhotoFragmentListener{
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
 
@@ -278,6 +279,16 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         collapsingToolbar.setTitle(getString(R.string.title_activity_marks_multi_choice));
     }
 
+    @Override
+    public void showSelectedPhoto(UserMedia photo) {
+        Intent intent = new Intent(this, SelectedPhotoActivity.class);
+
+        intent.putExtra(Constants.USER_ID, userId);
+        intent.putExtra(SelectedPhotoActivity.INPUT_MEDIA, photo);
+
+        startActivityForResult(intent, Constants.SHOW_SELECTED_PHOTO_ACTIVITY);
+    }
+
     //------------------------------------------------------------------------//
 
     @Override
@@ -295,6 +306,17 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
             fab.show(mFABVisibilityListener);
         }else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY && resultCode == RESULT_OK){
+            openDatabase();
+            PhotosFragment fragment = (PhotosFragment)getSupportFragmentManager()
+                    .findFragmentByTag(PHOTOS_FRAGMENT_TAG);
+            fragment.notifyRecyclerView();
         }
     }
 

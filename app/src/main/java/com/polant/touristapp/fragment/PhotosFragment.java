@@ -31,6 +31,7 @@ import com.polant.touristapp.utils.alert.AlertUtil;
  */
 public class PhotosFragment extends BaseRecyclerFragment {
 
+    //TODO: заменить более общим имтерфейсом.
     public interface PhotoFragmentListener{
         void showSelectedPhoto(UserMedia photo);
     }

@@ -23,7 +23,7 @@ import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
 
 public class SearchActivity extends AppCompatActivity
-        implements IWorkWithDatabaseActivity, SearchFragment.SearchFragmentListener {
+        implements IWorkWithDatabaseActivity, PhotosFragment.PhotoFragmentListener, SearchFragment.SearchFragmentListener {
 
     private static final int LAYOUT = R.layout.activity_search;
 
