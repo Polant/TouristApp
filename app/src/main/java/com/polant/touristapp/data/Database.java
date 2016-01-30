@@ -42,6 +42,10 @@ public class Database {
         }
     }
 
+    public boolean isClosed(){
+        return sqLiteDatabase == null || !sqLiteDatabase.isOpen();
+    }
+
 
     public ArrayList<UserMedia> selectAllUserMediaByUserId(int userId){
         ArrayList<UserMedia> result = new ArrayList<>();

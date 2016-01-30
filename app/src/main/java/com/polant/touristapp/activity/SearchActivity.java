@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,8 +36,6 @@ public class SearchActivity extends AppCompatActivity
 
     private int mUserId;
 
-    private String mLastSearchFilter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +49,16 @@ public class SearchActivity extends AppCompatActivity
     }
 
     private void openDatabase() {
-        db = new Database(this);
-        db.open();//База открывается и закрывается в onStart() и onStop().
+        //База открывается и закрывается в onStart() и onStop().
+        if (db != null) {
+            if (db.isClosed()) {
+                db = new Database(this);
+                db.open();
+            }
+        }else{
+            db = new Database(this);
+            db.open();
+        }
     }
 
     private void getDataFromIntent() {
@@ -102,14 +109,16 @@ public class SearchActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                mSearchableFragment.search(query);
                 searchItem.collapseActionView();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mLastSearchFilter = newText;
-                mSearchableFragment.search(newText);
+                if (!newText.equals("")) {
+                    mSearchableFragment.search(newText);
+                }
                 return false;
             }
         });
@@ -138,6 +147,8 @@ public class SearchActivity extends AppCompatActivity
 
     @Override
     public void showSelectedPhoto(UserMedia photo) {
+        collapseSearchView((Toolbar) findViewById(R.id.toolbar));
+
         Intent intent = new Intent(this, SelectedPhotoActivity.class);
 
         intent.putExtra(Constants.USER_ID, mUserId);
@@ -150,9 +161,7 @@ public class SearchActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mark.getName());
 
-        MenuItem searchItem = toolbar.getMenu().findItem(R.id.action_search);
-        searchItem.collapseActionView();
-        searchItem.setVisible(false);
+        collapseSearchView(toolbar).setVisible(false);
     }
 
     private void setToolbarSearchData(){
@@ -163,13 +172,20 @@ public class SearchActivity extends AppCompatActivity
         searchItem.setVisible(true);
     }
 
+    private MenuItem collapseSearchView(Toolbar toolbar){
+        MenuItem searchItem = toolbar.getMenu().findItem(R.id.action_search);
+        searchItem.collapseActionView();
+
+        return searchItem;
+    }
+
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
             //Обновляю список на случай того, если удалил фото.
-            mSearchableFragment.search(mLastSearchFilter);
+            mSearchableFragment.search("");
 
             setToolbarSearchData();
         }else {
@@ -182,7 +198,7 @@ public class SearchActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
-            mSearchableFragment.search(mLastSearchFilter);
+            mSearchableFragment.search("");
         }
     }
 

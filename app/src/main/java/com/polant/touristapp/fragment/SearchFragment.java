@@ -46,8 +46,6 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
 
     protected SearchMultiTypesAdapter mAdapter;
 
-    protected Database db;
-
     protected int mUserId;
 
     protected Handler handler = new Handler();
@@ -82,8 +80,8 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
         search("");
     }
 
-    protected void getDatabase() {
-        db = ((IWorkWithDatabaseActivity) mActivity).getDatabase();
+    protected Database getDatabase() {
+        return ((IWorkWithDatabaseActivity) mActivity).getDatabase();
     }
 
     protected void getDataFromArguments(Bundle args) {
@@ -128,6 +126,7 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
+                Database db = getDatabase();
                 List<Mark> marks = db.searchMarks(mUserId, filter);
                 List<UserMedia> medias = db.searchUserMedia(mUserId, filter);
 
