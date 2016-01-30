@@ -335,6 +335,14 @@ public class Database {
         return result;
     }
 
+    public UserMedia findUserMediaById(long mediaId) {
+        ArrayList<UserMedia> result = new ArrayList<>(1);
+        String where = MEDIA_ID + "=" + mediaId;
+        Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, null, null, null, null);
+        parseUserMediaCursor(c, result);
+        return result.size() > 0 ? result.get(0) : null;
+    }
+
     //-------------------------------------Search-----------------------------------------//
 
     //TODO: возможно стоит перевести приложение на английский язык, так как Lower(), Upper() не работают с utf-8.

@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class MarksFragment extends BaseRecyclerFragment {
 
-    public interface PhotosFragmentListener{
+    public interface MarksFragmentListener {
         void showPhotosByMark(long markId);
     }
 
@@ -53,8 +53,8 @@ public class MarksFragment extends BaseRecyclerFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof PhotosFragmentListener) || !(context instanceof ICollapsedToolbarActivity)) {
-            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT PhotosFragmentListener and " +
+        if (!(context instanceof MarksFragmentListener) || !(context instanceof ICollapsedToolbarActivity)) {
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT MarksFragmentListener and " +
                     "ICollapsedToolbarActivity");
         }
     }
@@ -120,7 +120,7 @@ public class MarksFragment extends BaseRecyclerFragment {
         else if (!isCallToFilterOrAddMarksToPhoto){
             //Выполняю замену данного фрагмента.
             long markId = mAdapter.getItemId(position);
-            ((PhotosFragmentListener)mActivity).showPhotosByMark(markId);
+            ((MarksFragmentListener)mActivity).showPhotosByMark(markId);
         }
     }
 

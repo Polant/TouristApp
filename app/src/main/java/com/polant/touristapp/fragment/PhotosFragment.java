@@ -1,5 +1,6 @@
 package com.polant.touristapp.fragment;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,12 +23,17 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.PhotosCursorMultiAdapter;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
+import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
 
 /**
  * Created by Антон on 25.01.2016.
  */
 public class PhotosFragment extends BaseRecyclerFragment {
+
+    public interface PhotoFragmentListener{
+        void showSelectedPhoto(UserMedia photo);
+    }
 
     private static final int LAYOUT = R.layout.fragment_photos_recycler;
 
@@ -36,6 +42,14 @@ public class PhotosFragment extends BaseRecyclerFragment {
     private View view;
 
     private long mMarkId;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (!(context instanceof PhotoFragmentListener)) {
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT PhotoFragmentListener");
+        }
+    }
 
     @Nullable
     @Override
@@ -79,9 +93,8 @@ public class PhotosFragment extends BaseRecyclerFragment {
         if (mActionMode != null) {
             toggleSelection(position);
         }else {
-            //TODO: сделать переход на SelectedPhotoActivity.
-            Log.d(Constants.APP_LOG_TAG,
-                    String.format("Photo №%d, Id:%d", position, mAdapter.getItemId(position)));
+            UserMedia clicked = getDatabase().findUserMediaById(mAdapter.getItemId(position));
+            ((PhotoFragmentListener)mActivity).showSelectedPhoto(clicked);
         }
     }
 

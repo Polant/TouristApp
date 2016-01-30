@@ -26,7 +26,7 @@ import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 
 public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
-        MarksFragment.PhotosFragmentListener, ICollapsedToolbarActivity{
+        MarksFragment.MarksFragmentListener, ICollapsedToolbarActivity{
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
 
