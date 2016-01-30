@@ -60,9 +60,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         initFAB();
     }
 
-    private void openDatabase(){
-        db = new Database(this);
-        db.open();//База открывается и закрывается в onStart() и onStop().
+    private void openDatabase() {
+        //База открывается и закрывается в onStart() и onStop().
+        if (db != null) {
+            if (db.isClosed()) {
+                db = new Database(this);
+                db.open();
+            }
+        }else{
+            db = new Database(this);
+            db.open();
+        }
     }
 
     //---------------------------------Геолокация и карта------------------------------------//

@@ -62,8 +62,16 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
     }
 
     private void openDatabase() {
-        db = new Database(this);
-        db.open();//База открывается и закрывается в onStart() и onStop().
+        //База открывается и закрывается в onStart() и onStop().
+        if (db != null) {
+            if (db.isClosed()) {
+                db = new Database(this);
+                db.open();
+            }
+        }else{
+            db = new Database(this);
+            db.open();
+        }
     }
 
     private void getDataFromIntent() {
