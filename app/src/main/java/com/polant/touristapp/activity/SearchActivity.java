@@ -1,10 +1,10 @@
 package com.polant.touristapp.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -96,12 +96,25 @@ public class SearchActivity extends AppCompatActivity
                 onBackPressed();
             }
         });
-
         toolbar.inflateMenu(R.menu.toolbar_search);
-        Menu toolbarMenu = toolbar.getMenu();
 
-        MenuItem searchItem = toolbarMenu.findItem(R.id.action_search);
+        Menu toolbarMenu = toolbar.getMenu();
+        final MenuItem searchItem = toolbarMenu.findItem(R.id.action_search);
         initSearchView(searchItem);
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.action_search_show_all:
+                        searchItem.collapseActionView();
+                        mSearchableFragment.search("");
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void initSearchView(final MenuItem searchItem) {
@@ -147,7 +160,7 @@ public class SearchActivity extends AppCompatActivity
 
     @Override
     public void showSelectedPhoto(UserMedia photo) {
-        collapseSearchView((Toolbar) findViewById(R.id.toolbar));
+        collapseSearchView(((Toolbar) findViewById(R.id.toolbar)).getMenu());
 
         Intent intent = new Intent(this, SelectedPhotoActivity.class);
 
@@ -161,19 +174,27 @@ public class SearchActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mark.getName());
 
-        collapseSearchView(toolbar).setVisible(false);
+        Menu menu = toolbar.getMenu();
+        collapseSearchView(menu).setVisible(false);
+
+        MenuItem showAllDataItem = menu.findItem(R.id.action_search_show_all);
+        showAllDataItem.setVisible(false);
     }
 
     private void setToolbarSearchData(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.activity_search);
 
-        MenuItem searchItem = toolbar.getMenu().findItem(R.id.action_search);
+        Menu menu = toolbar.getMenu();
+        MenuItem searchItem = menu.findItem(R.id.action_search);
         searchItem.setVisible(true);
+
+        MenuItem showAllDataItem = menu.findItem(R.id.action_search_show_all);
+        showAllDataItem.setVisible(true);
     }
 
-    private MenuItem collapseSearchView(Toolbar toolbar){
-        MenuItem searchItem = toolbar.getMenu().findItem(R.id.action_search);
+    private MenuItem collapseSearchView(Menu menu){
+        MenuItem searchItem = menu.findItem(R.id.action_search);
         searchItem.collapseActionView();
 
         return searchItem;

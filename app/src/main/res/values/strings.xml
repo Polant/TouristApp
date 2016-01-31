@@ -40,4 +40,5 @@
     <string name="search">Поиск</string>
     <string name="activity_search">Поиск</string>
     <string name="search_hint">Введите текст</string>
+    <string name="show_all">Показать все</string>
 </resources>
