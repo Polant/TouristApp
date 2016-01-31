@@ -50,12 +50,8 @@
         <activity android:name=".activity.MarksActivity" />
         <activity android:name=".activity.SearchActivity" />
         <activity
-            android:name=".activity.SettingsTestActivity"
-            android:label="@string/title_activity_settings" />
-        <activity
             android:name=".activity.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme"></activity>
+            android:label="@string/title_activity_settings"/>
     </application>
 
 </manifest>
