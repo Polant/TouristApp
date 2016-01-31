@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.polant.touristapp.R;
+import com.polant.touristapp.fragment.SettingsFragment;
 
 public class SettingsActivity extends AppCompatActivity {
 
