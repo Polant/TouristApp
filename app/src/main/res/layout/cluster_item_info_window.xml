@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/info_window_background">
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardElevation="8dp"
+    app:cardCornerRadius="12dp">
 
-    <ImageView
-        android:layout_width="@dimen/default_info_window_width"
-        android:layout_height="@dimen/default_info_window_height"
-        android:id="@+id/imageClusterItemInfoWindow"
-        android:layout_margin="5dp" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="New Text"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:id="@+id/textViewClusterItemName"
-        android:layout_margin="5dp"
-        android:gravity="center_horizontal" />
+        <ImageView
+            android:id="@+id/imageClusterItemInfoWindow"
+            android:layout_width="@dimen/default_info_window_width"
+            android:layout_height="@dimen/default_info_window_height"
+            android:layout_margin="5dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:textSize="15sp"
-        android:textColor="@android:color/black"
-        android:id="@+id/textViewClusterItemDescription"
-        android:layout_margin="5dp" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/textViewClusterItemName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="New Text"
+            android:textColor="@android:color/black"
+            android:layout_margin="5dp"
+            style="@style/Base.TextAppearance.AppCompat.Subhead" />
+
+        <TextView
+            android:id="@+id/textViewClusterItemDescription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Small Text"
+            android:textColor="@android:color/black"
+            android:layout_margin="5dp"
+            style="@style/Base.TextAppearance.AppCompat.Small" />
+        </LinearLayout>
+</android.support.v7.widget.CardView>
