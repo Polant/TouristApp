@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,10 +17,10 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.polant.touristapp.utils.image.ImageUtils;
 import com.polant.touristapp.R;
 import com.polant.touristapp.maps.drawable.MultiDrawable;
 import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.utils.image.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +34,16 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
 
     private final IconGenerator mIconGenerator;
     private final IconGenerator mClusterIconGenerator;
+
     private final ImageView mImageView;
     private final ImageView mClusterImageView;
+
     private final int mDimension;
 
     private final Activity mContext;
 
     //Сохраняю последний кластеризированный маркер.
-    private MapClusterItem clickedClusterItem;
+    private MapClusterItem mClickedClusterItem;
 //    private Cluster<MapClusterItem> clickedCluster;
 
 
@@ -99,7 +100,7 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
         clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MapClusterItem>() {
             @Override
             public boolean onClusterItemClick(MapClusterItem mapClusterItem) {
-                clickedClusterItem = mapClusterItem;
+                mClickedClusterItem = mapClusterItem;
                 return false;
             }
         });
@@ -115,14 +116,16 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
     protected void onBeforeClusterItemRendered(MapClusterItem item, MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
 
-        mImageView.setImageURI(Uri.parse(item.getMedia().getMediaExternalPath()));
+        mImageView.setImageBitmap(ImageUtils.createBitmap(item.getMedia().getMediaExternalPath(),
+                mDimension, mDimension));
         Bitmap icon = mIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }
 
-    /**Данный метод
+    /**
      * Если в этом методе оставить только вызов метода суперкласса,
-     * то будет отображаться стандартное представление кластера в виде круга с числом в центре.*/
+     * то будет отображаться стандартное представление кластера в виде круга с числом в центре.
+     */
     @Override
     protected void onBeforeClusterRendered(Cluster<MapClusterItem> cluster, MarkerOptions markerOptions) {
         super.onBeforeClusterRendered(cluster, markerOptions);
@@ -176,16 +179,16 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
 
         @Override
         public View getInfoWindow(Marker marker) {
-            if (clickedClusterItem != null){
-                render(clickedClusterItem, mWindow);
+            if (mClickedClusterItem != null){
+                render(mClickedClusterItem, mWindow);
             }
             return mWindow;
         }
 
         @Override
         public View getInfoContents(Marker marker) {
-            if (clickedClusterItem != null){
-                render(clickedClusterItem, mContents);
+            if (mClickedClusterItem != null){
+                render(mClickedClusterItem, mContents);
             }
             return mContents;
         }
