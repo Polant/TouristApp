@@ -235,17 +235,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             openDatabase();
             updateClustersByFilter(filterMarks);
         }else if (requestCode == Constants.SHOW_SETTINGS_ACTIVITY){
-            //TODO: сделать изменения в работе приложения в соответствии с новыми настройками.
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-            int locationUpdateFrequency = Integer.valueOf(sp.getString(SettingsActivity.KEY_LOCATION_UPDATE_FREQUENCY,
-                    String.valueOf(Constants.DEFAULT_LOCATION_UPDATE_FREQUENCY)));
-            int locationUpdateMinDistance = Integer.valueOf(sp.getString(SettingsActivity.KEY_LOCATION_UPDATE_MIN_DISTANCE,
-                    String.valueOf(Constants.DEFAULT_LOCATION_UPDATE_MIN_DISTANCE)));
-            boolean galleryAutoExport = sp.getBoolean(SettingsActivity.KEY_GALLERY_AUTO_EXPORT, false);
-
-            Log.d(Constants.APP_LOG_TAG, "Частота: " + locationUpdateFrequency);
-            Log.d(Constants.APP_LOG_TAG, "Дистанция: " + locationUpdateMinDistance);
-            Log.d(Constants.APP_LOG_TAG, "Автоэкспорт: " + galleryAutoExport);
+            //Сделал обновление данные для работы TouristLocationManager в его методе
+            //registerListener(), который вызывается в onResume().
         }
     }
 

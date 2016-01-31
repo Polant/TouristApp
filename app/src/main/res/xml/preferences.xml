@@ -35,6 +35,6 @@
         <Preference
             android:key="key_tourist_app_version"
             android:title="@string/pref_title_application_version"
-            android:enabled="false"/>
+            android:selectable="false"/>
     </PreferenceCategory>
 </PreferenceScreen>

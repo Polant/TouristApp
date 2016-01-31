@@ -1,14 +1,17 @@
 package com.polant.touristapp.maps.location;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.polant.touristapp.Constants;
+import com.polant.touristapp.activity.SettingsActivity;
 
 /**
  * Класс-обертка для работы с результатами геолокации на карте.
@@ -62,10 +65,16 @@ public class TouristLocationManager implements ILocationManager{
 
     @Override
     public void registerListener() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        int locationUpdateFrequency = Integer.valueOf(sp.getString(SettingsActivity.KEY_LOCATION_UPDATE_FREQUENCY,
+                String.valueOf(Constants.DEFAULT_LOCATION_UPDATE_FREQUENCY)));
+        int locationUpdateMinDistance = Integer.valueOf(sp.getString(SettingsActivity.KEY_LOCATION_UPDATE_MIN_DISTANCE,
+                String.valueOf(Constants.DEFAULT_LOCATION_UPDATE_MIN_DISTANCE)));
+
         String provider = mLocationManager.getBestProvider(mCriteria, true);
         mLocationManager.requestLocationUpdates(provider,
-                Constants.DEFAULT_LOCATION_UPDATE_FREQUENCY,
-                Constants.DEFAULT_LOCATION_UPDATE_MIN_DISTANCE,
+                locationUpdateFrequency,
+                locationUpdateMinDistance,
                 mLocationListener);
     }
 
