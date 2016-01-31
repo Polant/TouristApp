@@ -1,14 +1,17 @@
 package com.polant.touristapp.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -231,6 +234,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         else if (requestCode == Constants.SHOW_MARKS_ACTIVITY){
             openDatabase();
             updateClustersByFilter(filterMarks);
+        }else if (requestCode == Constants.SHOW_SETTINGS_ACTIVITY){
+            //TODO: сделать изменения в работе приложения в соответствии с новыми настройками.
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            int locationUpdateFrequency = Integer.valueOf(sp.getString(SettingsActivity.KEY_LOCATION_UPDATE_FREQUENCY,
+                    String.valueOf(Constants.DEFAULT_LOCATION_UPDATE_FREQUENCY)));
+            int locationUpdateMinDistance = Integer.valueOf(sp.getString(SettingsActivity.KEY_LOCATION_UPDATE_MIN_DISTANCE,
+                    String.valueOf(Constants.DEFAULT_LOCATION_UPDATE_MIN_DISTANCE)));
+            boolean galleryAutoExport = sp.getBoolean(SettingsActivity.KEY_GALLERY_AUTO_EXPORT, false);
+
+            Log.d(Constants.APP_LOG_TAG, "Частота: " + locationUpdateFrequency);
+            Log.d(Constants.APP_LOG_TAG, "Дистанция: " + locationUpdateMinDistance);
+            Log.d(Constants.APP_LOG_TAG, "Автоэкспорт: " + galleryAutoExport);
         }
     }
 

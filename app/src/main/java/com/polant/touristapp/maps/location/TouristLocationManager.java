@@ -64,8 +64,8 @@ public class TouristLocationManager implements ILocationManager{
     public void registerListener() {
         String provider = mLocationManager.getBestProvider(mCriteria, true);
         mLocationManager.requestLocationUpdates(provider,
-                Constants.LOCATION_UPDATE_FREQUENCY,
-                Constants.LOCATION_UPDATE_MIN_DISTANCE,
+                Constants.DEFAULT_LOCATION_UPDATE_FREQUENCY,
+                Constants.DEFAULT_LOCATION_UPDATE_MIN_DISTANCE,
                 mLocationListener);
     }
 

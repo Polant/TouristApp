@@ -70,7 +70,8 @@ public class NavigationDrawer {
                                 activity.startActivityForResult(marks, Constants.SHOW_MARKS_ACTIVITY);
                                 break;
                             case 4://Настройки.
-                                activity.startActivity(new Intent(activity, SettingsActivity.class));
+                                Intent settings = new Intent(activity, SettingsActivity.class);
+                                activity.startActivityForResult(settings, Constants.SHOW_SETTINGS_ACTIVITY);
                                 break;
                         }
                         return false;
