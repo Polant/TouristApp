@@ -41,4 +41,8 @@
     <string name="activity_search">Поиск</string>
     <string name="search_hint">Введите текст</string>
     <string name="show_all">Показать все</string>
+    <string name="menu_toolbar_change_marks">Изменить метку</string>
+    <string name="alertChangeMarkTilte">Изменение метки</string>
+    <string name="alertChangeMarkMessage">Введите новое название и описание</string>
+    <string name="mark_was_changed">Метка изменена</string>
 </resources>

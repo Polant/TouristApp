@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksActivity;
@@ -111,6 +114,22 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
         mActionMode = toolbar.startActionMode(mActionModeCallback);
     }
 
+    @Override
+    protected void toggleSelection(int position) {
+        super.toggleSelection(position);
+        if (mActionMode != null) {
+            int count = mAdapter.getSelectedItemCount();
+
+            Menu actionMenu = mActionMode.getMenu();
+            MenuItem changeMarkItem = actionMenu.findItem(R.id.item_change_mark);
+            if (count == 1) {
+                changeMarkItem.setVisible(true);
+            } else {
+                changeMarkItem.setVisible(false);
+            }
+        }
+    }
+
     //------------------------RecyclerClickListener--------------------------//
 
     @Override
@@ -179,6 +198,10 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
                 case R.id.item_remove_mark:
                     removeMarksDialog();
                     return true;
+                case R.id.item_change_mark:
+                    changeMarkDialog(getDatabase().findMarkById(
+                            (long)mAdapter.getSelectedItemsIds().get(0)));
+                    return true;
             }
             return false;
         }
@@ -226,6 +249,50 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
 
             AlertUtil.showAlertDialog(mActivity, R.string.alertDeleteMarksTitle, R.string.alertDeleteMarksConfirmMessage,
                     R.drawable.warning_orange, null, true, positiveListener, null);
+        }
+
+        private void changeMark(Mark mark, View fab, View alertView) {
+            EditText nameText = (EditText) alertView.findViewById(R.id.editTextNewMarkName);
+            EditText descriptionText = (EditText) alertView.findViewById(R.id.editTextNewMarkDescription);
+
+            //TODO: сделать проверки на входные параметры: пустая строка и т.д.
+            String name = nameText.getText().toString();
+            String description = descriptionText.getText().toString();
+
+            mark.setName(name);
+            mark.setDescription(description);
+
+            getDatabase().updateMark(mark);
+
+            notifyRecyclerView();
+
+            ((FloatingActionButton)fab).show();
+            Snackbar.make(fab, R.string.mark_was_changed, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.snackbar_close_text, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    })
+                    .show();
+        }
+
+        private void changeMarkDialog(final Mark mark) {
+            final View alertView = mActivity.getLayoutInflater().inflate(R.layout.alert_new_mark, null);
+
+            EditText nameText = (EditText) alertView.findViewById(R.id.editTextNewMarkName);
+            EditText descriptionText = (EditText) alertView.findViewById(R.id.editTextNewMarkDescription);
+            nameText.setText(mark.getName());
+            descriptionText.setText(mark.getDescription());
+
+            DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    changeMark(mark, mActivity.findViewById(R.id.fab), alertView);
+                }
+            };
+
+            AlertUtil.showAlertDialog(mActivity, R.string.alertChangeMarkTilte, R.string.alertChangeMarkMessage,
+                    R.drawable.ic_bookmark, alertView, true, positiveListener, null);
         }
     }
 }
