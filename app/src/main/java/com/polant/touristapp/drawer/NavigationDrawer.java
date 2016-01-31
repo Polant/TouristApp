@@ -17,6 +17,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.activity.SearchActivity;
 import com.polant.touristapp.activity.SettingsActivity;
+import com.polant.touristapp.activity.SettingsTestActivity;
 
 /**
  * Реализация NavigationDrawer - для использования его во всех activity.
