@@ -7,11 +7,13 @@ import android.view.ActionMode;
 import com.polant.touristapp.R;
 
 /**
- * Created by Антон on 31.01.2016.
+ * Базовый фрагмент для всех фрагментов, содержащих RecyclerView с множественным выбором
+ * и работающими с БД через Cursor-ы, а также с реализацией ActionMode.
  */
 public abstract class BaseRecyclerActionModeFragment extends BaseRecyclerMultiChoiceFragment {
 
     protected ActionMode mActionMode;
+
     protected ActionMode.Callback mActionModeCallback;
 
 
@@ -22,7 +24,6 @@ public abstract class BaseRecyclerActionModeFragment extends BaseRecyclerMultiCh
             throw new IllegalArgumentException("ACTIVITY MUST will be a child of AppCompatActivity");
         }
     }
-
 
     protected abstract void startActionMode();
 

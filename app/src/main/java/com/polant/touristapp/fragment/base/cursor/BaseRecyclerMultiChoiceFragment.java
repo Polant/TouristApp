@@ -6,7 +6,6 @@ import android.support.v4.content.Loader;
 
 import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
-import com.polant.touristapp.interfaces.IMultiChoiceRecyclerFragment;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * и работающими с БД через Cursor-ы.
  */
 public abstract class BaseRecyclerMultiChoiceFragment extends BaseRecyclerFragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, IMultiChoiceRecyclerFragment {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     protected CursorRecyclerViewMultiAdapter mAdapter;
 
@@ -24,12 +23,6 @@ public abstract class BaseRecyclerMultiChoiceFragment extends BaseRecyclerFragme
         mAdapter.toggleSelection(position);
     }
 
-    @Override
-    public void notifyRecyclerView() {
-        getLoaderManager().restartLoader(0, null, this);
-    }
-
-    @Override
     public long[] getSelectedItemsIdsArray() {
         long[] result = new long[mAdapter.getSelectedItemCount()];
         List<Long> list = mAdapter.getSelectedItemsIds();
@@ -37,6 +30,11 @@ public abstract class BaseRecyclerMultiChoiceFragment extends BaseRecyclerFragme
             result[i] = list.get(i);
         }
         return result;
+    }
+
+    @Override
+    public void notifyRecyclerView() {
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override

@@ -8,14 +8,12 @@ import android.support.v4.app.Fragment;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.interfaces.IRecyclerFragment;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 
 /**
- * Created by Антон on 31.01.2016.
+ * Базовый фрагмент для всех фрагментов, содержащих RecyclerView.
  */
-public abstract class BaseRecyclerFragment extends Fragment
-        implements IRecyclerFragment, RecyclerClickListener {
+public abstract class BaseRecyclerFragment extends Fragment implements RecyclerClickListener {
 
     protected Activity mActivity;
 
@@ -46,4 +44,6 @@ public abstract class BaseRecyclerFragment extends Fragment
     protected Database getDatabase() {
         return ((IWorkWithDatabaseActivity) mActivity).getDatabase();
     }
+
+    public abstract void notifyRecyclerView();
 }
