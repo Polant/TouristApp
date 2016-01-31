@@ -27,7 +27,7 @@ import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 
 public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
-        MarksFragment.MarksFragmentListener, ICollapsedToolbarActivity, PhotosFragment.PhotoFragmentListener{
+        MarksFragment.MarksListener, PhotosFragment.PhotosListener, ICollapsedToolbarActivity {
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
 
@@ -238,14 +238,14 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
 
 
     @Override
-    public void showPhotosByMark(long markId) {
+    public void showPhotosByMark(Mark mark) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         PhotosFragment fragment = new PhotosFragment();
         //Передаю Id пользователя и метку во фрагмент.
         Bundle args = new Bundle();
         args.putInt(Constants.USER_ID, userId);
-        args.putLong(PhotosFragment.INPUT_MARK_ID, markId);
+        args.putLong(PhotosFragment.INPUT_MARK_ID, mark.getId());
 
         fragment.setArguments(args);
         transaction.replace(R.id.container_marks,
@@ -255,7 +255,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         transaction.commit();
 
         //Устанавливаю в заголовок название последней выбранной метки.
-        setCollapsedToolbarTitleData(markId);
+        setCollapsedToolbarTitleData(mark.getId());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.hide(mFABVisibilityListener);

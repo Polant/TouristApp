@@ -25,6 +25,7 @@ import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
+import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
 
@@ -36,8 +37,8 @@ import java.util.List;
  */
 public class MarksFragment extends BaseRecyclerFragment {
 
-    public interface MarksFragmentListener {
-        void showPhotosByMark(long markId);
+    public interface MarksListener {
+        void showPhotosByMark(Mark mark);
     }
 
     private static final int LAYOUT = R.layout.fragment_marks_recycler;
@@ -53,8 +54,8 @@ public class MarksFragment extends BaseRecyclerFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof MarksFragmentListener) || !(context instanceof ICollapsedToolbarActivity)) {
-            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT MarksFragmentListener and " +
+        if (!(context instanceof MarksListener) || !(context instanceof ICollapsedToolbarActivity)) {
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT MarksListener and " +
                     "ICollapsedToolbarActivity");
         }
     }
@@ -120,7 +121,8 @@ public class MarksFragment extends BaseRecyclerFragment {
         else if (!isCallToFilterOrAddMarksToPhoto){
             //Выполняю замену данного фрагмента.
             long markId = mAdapter.getItemId(position);
-            ((MarksFragmentListener)mActivity).showPhotosByMark(markId);
+            Mark clicked = getDatabase().findMarkById(markId);
+            ((MarksListener) mActivity).showPhotosByMark(clicked);
         }
     }
 

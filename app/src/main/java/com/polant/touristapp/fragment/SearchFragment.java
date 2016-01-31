@@ -33,11 +33,6 @@ import java.util.List;
  */
 public class SearchFragment extends Fragment implements IRecyclerFragment, ISearchableFragment {
 
-    public interface SearchFragmentListener {
-        void showPhotosByMark(Mark mark);
-        void showSelectedPhoto(UserMedia photo);
-    }
-
     private static int LAYOUT = R.layout.fragment_search;
 
     protected Activity mActivity;
@@ -53,9 +48,10 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof IWorkWithDatabaseActivity) || !(context instanceof SearchFragmentListener)) {
-            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT IWorkWithDatabaseActivity and " +
-                    "SearchFragmentListener");
+        if (!(context instanceof IWorkWithDatabaseActivity) || !(context instanceof MarksFragment.MarksListener)
+                || !(context instanceof PhotosFragment.PhotosListener) ) {
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT IWorkWithDatabaseActivity, " +
+                    "MarksFragment.MarksListener and PhotosFragment.PhotosListener");
         }
         mActivity = (Activity) context;
     }
@@ -95,10 +91,10 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
             public void onItemClicked(int position) {
                 SearchComplexItem clicked = mAdapter.getItem(position);
                 if (clicked.isMark()) {
-                    ((SearchFragment.SearchFragmentListener) mActivity).showPhotosByMark(clicked.getMark());
+                    ((MarksFragment.MarksListener) mActivity).showPhotosByMark(clicked.getMark());
                 }
                 else if(clicked.isUserMedia()){
-                    ((SearchFragment.SearchFragmentListener) mActivity).showSelectedPhoto(clicked.getMedia());
+                    ((PhotosFragment.PhotosListener) mActivity).showSelectedPhoto(clicked.getMedia());
                 }
             }
 
@@ -156,5 +152,4 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
         }
         return result;
     }
-
 }

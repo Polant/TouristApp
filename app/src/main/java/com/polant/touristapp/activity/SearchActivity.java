@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.view.View;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.data.Database;
+import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
 import com.polant.touristapp.fragment.SearchFragment;
 import com.polant.touristapp.interfaces.ISearchableFragment;
@@ -23,7 +23,7 @@ import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
 
 public class SearchActivity extends AppCompatActivity
-        implements IWorkWithDatabaseActivity, PhotosFragment.PhotoFragmentListener, SearchFragment.SearchFragmentListener {
+        implements IWorkWithDatabaseActivity, MarksFragment.MarksListener, PhotosFragment.PhotosListener {
 
     private static final int LAYOUT = R.layout.activity_search;
 

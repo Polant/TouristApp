@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.PhotosCursorMultiAdapter;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
@@ -31,8 +29,7 @@ import com.polant.touristapp.utils.alert.AlertUtil;
  */
 public class PhotosFragment extends BaseRecyclerFragment {
 
-    //TODO: заменить более общим имтерфейсом.
-    public interface PhotoFragmentListener{
+    public interface PhotosListener {
         void showSelectedPhoto(UserMedia photo);
     }
 
@@ -47,8 +44,8 @@ public class PhotosFragment extends BaseRecyclerFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof PhotoFragmentListener)) {
-            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT PhotoFragmentListener");
+        if (!(context instanceof PhotosListener)) {
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT PhotosListener");
         }
     }
 
@@ -95,7 +92,7 @@ public class PhotosFragment extends BaseRecyclerFragment {
             toggleSelection(position);
         }else {
             UserMedia clicked = getDatabase().findUserMediaById(mAdapter.getItemId(position));
-            ((PhotoFragmentListener)mActivity).showSelectedPhoto(clicked);
+            ((PhotosListener)mActivity).showSelectedPhoto(clicked);
         }
     }
 
