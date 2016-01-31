@@ -23,7 +23,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
+import com.polant.touristapp.fragment.base.cursor.BaseRecyclerActionModeFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by Антон on 25.01.2016.
  */
-public class MarksFragment extends BaseRecyclerFragment {
+public class MarksFragment extends BaseRecyclerActionModeFragment {
 
     public interface MarksListener {
         void showPhotosByMark(Mark mark);

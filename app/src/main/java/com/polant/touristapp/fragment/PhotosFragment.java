@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.PhotosCursorMultiAdapter;
-import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
+import com.polant.touristapp.fragment.base.cursor.BaseRecyclerActionModeFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
 import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
@@ -27,7 +27,7 @@ import com.polant.touristapp.utils.alert.AlertUtil;
 /**
  * Created by Антон on 25.01.2016.
  */
-public class PhotosFragment extends BaseRecyclerFragment {
+public class PhotosFragment extends BaseRecyclerActionModeFragment {
 
     public interface PhotosListener {
         void showSelectedPhoto(UserMedia photo);

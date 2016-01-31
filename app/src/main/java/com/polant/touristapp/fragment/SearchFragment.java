@@ -1,25 +1,20 @@
 package com.polant.touristapp.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
-import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.adapter.recycler.SearchMultiTypesAdapter;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.interfaces.IRecyclerFragment;
+import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
 import com.polant.touristapp.interfaces.ISearchableFragment;
-import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.model.search.SearchComplexItem;
@@ -31,29 +26,23 @@ import java.util.List;
  * Фрагмент, содержащий RecyclerView, который служит для вывода результата поиска.
  * Текущий Адаптер позволяет выводить различные типы представлений одновременно в RecyclerView.
  */
-public class SearchFragment extends Fragment implements IRecyclerFragment, ISearchableFragment {
+public class SearchFragment extends BaseRecyclerFragment implements ISearchableFragment {
 
     private static int LAYOUT = R.layout.fragment_search;
-
-    protected Activity mActivity;
 
     protected View view;
 
     protected SearchMultiTypesAdapter mAdapter;
-
-    protected int mUserId;
 
     protected Handler handler = new Handler();
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof IWorkWithDatabaseActivity) || !(context instanceof MarksFragment.MarksListener)
-                || !(context instanceof PhotosFragment.PhotosListener) ) {
-            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT IWorkWithDatabaseActivity, " +
+        if (!(context instanceof MarksFragment.MarksListener) || !(context instanceof PhotosFragment.PhotosListener) ) {
+            throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT " +
                     "MarksFragment.MarksListener and PhotosFragment.PhotosListener");
         }
-        mActivity = (Activity) context;
     }
 
     @Nullable
@@ -67,7 +56,6 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getDataFromArguments(getArguments());
         initAdapter();
         initRecycledView();
 
@@ -75,34 +63,8 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
         search("");
     }
 
-    protected Database getDatabase() {
-        return ((IWorkWithDatabaseActivity) mActivity).getDatabase();
-    }
-
-    protected void getDataFromArguments(Bundle args) {
-        if (args != null) {
-            mUserId = args.getInt(Constants.USER_ID);
-        }
-    }
-
     protected void initAdapter(){
-        mAdapter = new SearchMultiTypesAdapter(mActivity, null, new RecyclerClickListener() {
-            @Override
-            public void onItemClicked(int position) {
-                SearchComplexItem clicked = mAdapter.getItem(position);
-                if (clicked.isMark()) {
-                    ((MarksFragment.MarksListener) mActivity).showPhotosByMark(clicked.getMark());
-                }
-                else if(clicked.isUserMedia()){
-                    ((PhotosFragment.PhotosListener) mActivity).showSelectedPhoto(clicked.getMedia());
-                }
-            }
-
-            @Override
-            public boolean onItemLongClicked(int position) {
-                return false;
-            }
-        });
+        mAdapter = new SearchMultiTypesAdapter(mActivity, null, this);
     }
 
     protected void initRecycledView(){
@@ -111,10 +73,32 @@ public class SearchFragment extends Fragment implements IRecyclerFragment, ISear
         recyclerView.setAdapter(mAdapter);
     }
 
+    //---------------------------RecyclerClickListener------------------------//
+
+    @Override
+    public void onItemClicked(int position) {
+        SearchComplexItem clicked = mAdapter.getItem(position);
+        if (clicked.isMark()) {
+            ((MarksFragment.MarksListener) mActivity).showPhotosByMark(clicked.getMark());
+        }
+        else if(clicked.isUserMedia()){
+            ((PhotosFragment.PhotosListener) mActivity).showSelectedPhoto(clicked.getMedia());
+        }
+    }
+
+    @Override
+    public boolean onItemLongClicked(int position) {
+        return false;
+    }
+
+    //-------------------------------------------------------------------------//
+
     @Override
     public void notifyRecyclerView() {
         mAdapter.notifyDataSetChanged();
     }
+
+    //------------------------------ISearchableFragment------------------------//
 
     @Override
     public void search(final String filter) {
