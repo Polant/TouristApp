@@ -41,6 +41,7 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppDefault);
     }
 
     protected void onPostCreate(Bundle savedInstanceState) {

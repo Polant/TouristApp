@@ -74,7 +74,8 @@
 
     <!-- ///////////////////////////////////////////////////////////////////////// -->
 
-    <string name="pref_title_location_update_frequency">Частота обновлений</string>
+    <string name="pref_title_location_update_frequency">Частота</string>
+    <string name="pref_summary_location_update_frequency">Минимальная частота обновлений местонахождения</string>
     <string-array name="pref_location_update_frequency_titles">
         <item>1 секунда</item>
         <item>2 секунды</item>
@@ -107,10 +108,12 @@
         <item>50</item>
         <item>10</item>
     </string-array>
-    <string name="pref_title_location_update_min_distance">Минимальная дистанция обновлений</string>
+    <string name="pref_title_location_update_min_distance">Дистанция</string>
+    <string name="pref_summary_location_update_min_distance">Минимальная дистанция обновлений местонахождения</string>
 
     <string name="pref_title_application_version">Версия 1.0</string>
-    <string name="pref_title_gallery_auto_export">Автоматически добавлять фото в галарею</string>
+    <string name="pref_title_gallery_auto_export">Добавление фото</string>
+    <string name="pref_summary_gallery_auto_export">Автоматически добавлять фото в галарею</string>
 
 
 
