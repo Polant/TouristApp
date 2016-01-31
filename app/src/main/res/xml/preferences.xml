@@ -30,9 +30,11 @@
             android:summary="@string/pref_summary_gallery_auto_export"
             android:title="@string/pref_title_gallery_auto_export" />
     </PreferenceCategory>
+
     <PreferenceCategory android:title="Версия приложения">
         <Preference
             android:key="key_tourist_app_version"
-            android:title="@string/pref_title_application_version" />
+            android:title="@string/pref_title_application_version"
+            android:enabled="false"/>
     </PreferenceCategory>
 </PreferenceScreen>

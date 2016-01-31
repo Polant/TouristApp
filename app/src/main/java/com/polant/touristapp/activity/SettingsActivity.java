@@ -12,6 +12,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     private static final int LAYOUT = R.layout.activity_settings;
 
+    public static final String KEY_LOCATION_UPDATE_FREQUENCY = "key_location_update_frequency";
+    public static final String KEY_LOCATION_UPDATE_MIN_DISTANCE = "key_location_update_min_distance";
+    public static final String KEY_GALLERY_AUTO_EXPORT = "key_gallery_auto_export";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
