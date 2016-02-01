@@ -1,61 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="4dp">
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:foreground="?android:attr/selectableItemBackground"
+        card:cardElevation="2dp"
+        card:cardCornerRadius="4dp"
+        card:cardUseCompatPadding="true">
 
-        <ImageView
-            android:id="@+id/imageViewPhoto"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/recycler_item_image_view_height"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/photo_has_not_loaded_yet"/>
-        <TextView
-            android:id="@+id/textPhotoName"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            style="@style/Base.TextAppearance.AppCompat.Headline"/>
-        <TextView
-            android:id="@+id/textPhotoDescription"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            style="@style/Base.TextAppearance.AppCompat.Subhead"/>
-        <TextView
-            android:id="@+id/textPhotoCreatedDate"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:text="New Text"
-            style="@style/Base.TextAppearance.AppCompat.Small"/>
+            android:layout_height="match_parent"
+            android:padding="8dp">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/imageViewPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/recycler_item_image_view_height"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/photo_has_not_loaded_yet" />
+            <TextView
+                android:id="@+id/textPhotoName"
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                style="@style/Base.TextAppearance.AppCompat.Headline"/>
+            <TextView
+                android:id="@+id/textPhotoDescription"
+                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
+                android:paddingRight="5dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"/>
+            <TextView
+                android:id="@+id/textPhotoCreatedDate"
+                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
+                android:paddingRight="5dp"
+                android:paddingEnd="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="New Text"
+                style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-</android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

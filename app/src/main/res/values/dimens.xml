@@ -12,7 +12,7 @@
     <dimen name="recycler_item_image_view_height">200dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
 
-    <dimen name="selected_overlay_alpha">0.9</dimen>
+    <item name="selected_overlay_alpha" format="float" type="dimen">0.9</item>
 
     <dimen name="toolbar_collapsed">56dp</dimen>
     <dimen name="toolbar_expanded">180dp</dimen>
