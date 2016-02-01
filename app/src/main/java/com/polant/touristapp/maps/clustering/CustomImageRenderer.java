@@ -1,6 +1,7 @@
 package com.polant.touristapp.maps.clustering;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -17,7 +18,9 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.activity.SelectedPhotoActivity;
 import com.polant.touristapp.maps.drawable.MultiDrawable;
 import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.utils.image.ImageUtils;
@@ -76,7 +79,7 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
         mIconGenerator.setContentView(mImageView);
     }
 
-    private void initInfoWindowAdapterSettings(Activity activity, GoogleMap map, ClusterManager<MapClusterItem> clusterManager) {
+    private void initInfoWindowAdapterSettings(final Activity activity, GoogleMap map, ClusterManager<MapClusterItem> clusterManager) {
         map.setOnCameraChangeListener(clusterManager);//Обязательно, иначе кластеры не распадаются при увеличении масштаба.
         map.setInfoWindowAdapter(clusterManager.getMarkerManager());
 
@@ -107,7 +110,18 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                //TODO: здесь нужно будет обработать клик по InfoWindow.
+                if (mClickedClusterItem == null){
+                    return;
+                }
+                UserMedia clicked = mClickedClusterItem.getMedia();
+                marker.hideInfoWindow();
+
+                Intent intent = new Intent(activity, SelectedPhotoActivity.class);
+
+                intent.putExtra(Constants.USER_ID, clicked.getUserId());
+                intent.putExtra(SelectedPhotoActivity.INPUT_MEDIA, clicked);
+
+                activity.startActivityForResult(intent, Constants.SHOW_SELECTED_PHOTO_ACTIVITY_FROM_INFO_WINDOW);
             }
         });
     }

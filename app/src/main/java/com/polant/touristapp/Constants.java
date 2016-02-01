@@ -19,6 +19,7 @@ public class Constants {
     public static final int SHOW_MARKS_ACTIVITY = 3;//MarksActivity как пункт меню NavigationDrawer.
     public static final int SHOW_SEARCH_ACTIVITY = 4;//SearchActivity
     public static final int SHOW_SETTINGS_ACTIVITY = 5;//SettingsActivity
+    public static final int SHOW_SELECTED_PHOTO_ACTIVITY_FROM_INFO_WINDOW = 6;//После onInfoWindowClick.
 
     public static final String APP_LOG_TAG = "POLANT_LOGS"; //Используется в логах.
 }

@@ -223,6 +223,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             updateClustersByFilter(filterMarks);
             showSnackbar(getString(R.string.add_photo_text));
         }
+        else if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY_FROM_INFO_WINDOW && resultCode == RESULT_OK){
+            openDatabase();
+            //Обновляю кластеры после клика но InfoWindow на карте.
+            updateClustersByFilter(filterMarks);
+        }
         else if (requestCode == Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
             if (data != null){//Обновляю метки на карте.

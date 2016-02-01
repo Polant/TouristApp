@@ -122,9 +122,9 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
 
             Menu actionMenu = mActionMode.getMenu();
             MenuItem changeMarkItem = actionMenu.findItem(R.id.item_change_mark);
-            if (count == 1) {
+            if (changeMarkItem != null && count == 1) {
                 changeMarkItem.setVisible(true);
-            } else {
+            } else if (changeMarkItem != null){
                 changeMarkItem.setVisible(false);
             }
         }
