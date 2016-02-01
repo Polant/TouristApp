@@ -19,7 +19,6 @@ import com.polant.touristapp.data.Database;
 import com.polant.touristapp.utils.date.DateFormatUtil;
 import com.polant.touristapp.utils.image.ImageUtils;
 
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -122,7 +121,7 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
                 public void run() {
                     //Использую 1 и максимальную высоту, т.к. мах высота = 200, и если передать ширину 1,
                     //то изображение "подгонится" по высоту. (см. ImageUtils.createBitmap).
-                    final Bitmap photo = ImageUtils.createBitmap(photoPath, 1, (int)context.getResources().getDimension(R.dimen.recycler_item_image_view_height));
+                    final Bitmap photo = ImageUtils.createBitmap(photoPath, 1, (int)context.getResources().getDimension(R.dimen.recycler_item_photo_image_view_height));
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {

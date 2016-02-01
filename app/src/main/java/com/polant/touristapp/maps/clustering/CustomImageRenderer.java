@@ -68,7 +68,7 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
         mClusterImageView = (ImageView)multiImage.findViewById(R.id.image);
 
         mImageView = new ImageView(context);
-        mDimension = (int) context.getResources().getDimension(R.dimen.custom_cluster_image);
+        mDimension = (int) context.getResources().getDimension(R.dimen.custom_cluster_image_size);
         mImageView.setLayoutParams(new ViewGroup.LayoutParams(mDimension, mDimension));
 
         int padding = (int)context.getResources().getDimension(R.dimen.custom_cluster_text_padding);

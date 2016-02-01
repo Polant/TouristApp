@@ -29,7 +29,7 @@
             <ImageView
                 android:id="@+id/imageViewPhoto"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/recycler_item_image_view_height"
+                android:layout_height="@dimen/recycler_item_photo_image_view_height"
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@string/photo_has_not_loaded_yet" />
             <TextView
