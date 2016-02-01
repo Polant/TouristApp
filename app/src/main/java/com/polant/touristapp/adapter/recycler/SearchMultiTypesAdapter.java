@@ -18,7 +18,6 @@ import com.polant.touristapp.model.search.SearchComplexItem;
 import com.polant.touristapp.utils.date.DateFormatUtil;
 import com.polant.touristapp.utils.image.ImageUtils;
 
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -134,8 +133,8 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
                     @Override
                     public void run() {
                         final Bitmap photo = ImageUtils.createBitmap(media.getMediaExternalPath(),
-                                (int) context.getResources().getDimension(R.dimen.multi_types_recycler_photo_width),
-                                (int) context.getResources().getDimension(R.dimen.multi_types_recycler_photo_height));
+                                (int) context.getResources().getDimension(R.dimen.multi_types_recycler_circle_photo_size),
+                                (int) context.getResources().getDimension(R.dimen.multi_types_recycler_circle_photo_size));
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {

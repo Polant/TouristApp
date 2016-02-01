@@ -26,8 +26,8 @@
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/imageMultiRecyclerPhoto"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/multi_types_recycler_circle_photo_size"
+                android:layout_height="@dimen/multi_types_recycler_circle_photo_size"
                 android:layout_gravity="center_vertical" />
 
             <LinearLayout

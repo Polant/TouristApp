@@ -26,8 +26,8 @@
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/imageViewMark"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/mark_circle_image_view_size"
+                android:layout_height="@dimen/mark_circle_image_view_size"
                 android:layout_gravity="center_vertical"/>
 
             <LinearLayout android:orientation="vertical"
