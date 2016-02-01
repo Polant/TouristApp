@@ -15,6 +15,7 @@ import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.model.search.SearchComplexItem;
+import com.polant.touristapp.utils.date.DateFormatUtil;
 import com.polant.touristapp.utils.image.ImageUtils;
 
 import java.text.DateFormatSymbols;
@@ -127,7 +128,7 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
             else if (searchComplexItem.isUserMedia()){
                 final UserMedia media = searchComplexItem.getMedia();
 
-                SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", getDateFormatSymbols(context));
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", DateFormatUtil.getDateFormatSymbols(context));
 
                 Thread t = new Thread(new Runnable() {
                     @Override
@@ -151,15 +152,6 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
                         String.format("%s %s", context.getString(R.string.photo_taken),
                                 sdf.format(new Date(media.getCreatedDate()))));
             }
-        }
-
-        private static DateFormatSymbols getDateFormatSymbols(final Context context) {
-            return new DateFormatSymbols(){
-                @Override
-                public String[] getMonths() {
-                    return context.getResources().getStringArray(R.array.date_format_symbols);
-                }
-            };
         }
 
         @Override

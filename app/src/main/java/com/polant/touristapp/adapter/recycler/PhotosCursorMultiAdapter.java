@@ -16,6 +16,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
 import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.data.Database;
+import com.polant.touristapp.utils.date.DateFormatUtil;
 import com.polant.touristapp.utils.image.ImageUtils;
 
 import java.text.DateFormatSymbols;
@@ -114,7 +115,7 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
             String photoDesc = c.getString(c.getColumnIndex(Database.MEDIA_DESCRIPTION));
             long photoCreated = c.getLong(c.getColumnIndex(Database.MEDIA_CREATED_DATE));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", getDateFormatSymbols(context));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", DateFormatUtil.getDateFormatSymbols(context));
 
             Thread t = new Thread(new Runnable() {
                 @Override
@@ -136,15 +137,6 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
             textDescription.setText(photoDesc);
             textCreatedDate.setText(
                     String.format("%s %s", context.getString(R.string.photo_taken),sdf.format(new Date(photoCreated))));
-        }
-
-        private static DateFormatSymbols getDateFormatSymbols(final Context context) {
-            return new DateFormatSymbols(){
-                @Override
-                public String[] getMonths() {
-                    return context.getResources().getStringArray(R.array.date_format_symbols);
-                }
-            };
         }
 
         @Override
