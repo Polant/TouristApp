@@ -8,8 +8,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.activity.SettingsActivity;
 
@@ -25,6 +28,8 @@ public class TouristLocationManager implements ILocationManager{
 
     private GoogleMap mMap;
 
+    private Marker myLocation;
+
     public TouristLocationManager(Context mContext) {
         this.mContext = mContext;
 
@@ -32,9 +37,12 @@ public class TouristLocationManager implements ILocationManager{
         initLocationManager();
     }
 
-    public TouristLocationManager setGoogleMap(GoogleMap mMap) {
+    public void setGoogleMap(GoogleMap mMap) {
         this.mMap = mMap;
-        return this;
+    }
+
+    public void setMyLocation(Marker myLocation) {
+        this.myLocation = myLocation;
     }
 
     private void initCriteria(){
@@ -60,6 +68,7 @@ public class TouristLocationManager implements ILocationManager{
         mLocation = l;
         if (mMap != null){
             //TODO: сделать обработку изменения локации.
+            myLocation.setPosition(new LatLng(l.getLatitude(), l.getLongitude()));
         }
     }
 

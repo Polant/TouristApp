@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -110,7 +111,9 @@ public class CustomImageRenderer extends DefaultClusterRenderer<MapClusterItem> 
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                if (mClickedClusterItem == null){
+                if (marker.getTitle() != null && marker.getTitle().equals(activity.getString(R.string.i_am_here))
+                        || mClickedClusterItem == null){
+                    //Если кликнул по метке с местоположением, а не по ClusterItem.
                     return;
                 }
                 UserMedia clicked = mClickedClusterItem.getMedia();

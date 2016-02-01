@@ -20,6 +20,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.mikepenz.materialdrawer.Drawer;
 import com.polant.touristapp.Constants;
@@ -94,6 +96,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                     Constants.DEFAULT_CAMERA_ZOOM_LEVEL));
+
+            MarkerOptions options = new MarkerOptions()
+                    .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
+                    .title(getString(R.string.i_am_here));
+            //Обязательно установить маркер, чтобы обновлять маркер своего местоположения.
+            Marker myPosition = mMap.addMarker(options);
+            mLocationManager.setMyLocation(myPosition);
         }
         //Устанавливаю менеджер кластеризации.
         setUpClusterManager();
