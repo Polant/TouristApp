@@ -64,12 +64,11 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
 
     @Override
     public void onBindViewHolder(MarkViewHolder holder, Cursor c) {
-        long id = c.getLong(c.getColumnIndex("_id"));
         int pos = c.getPosition();
         /*Не знаю почему, но курсор будет иметь не ту позицию, если просто его передать
         * в bindData(), несмотря на то, что в данный момент от имеет верную позицию. Передача
         * текущей позиции рещает проблему. Не могу понять почему так?!*/
-        holder.bindData(mContext, c, pos, isSelectedId(id));
+        holder.bindData(mContext, c, pos);
     }
 
     public static class MarkViewHolder extends RecyclerView.ViewHolder
@@ -80,7 +79,6 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
         private CircularImageView imageView;
         private TextView textName;
         private TextView textPhotosCount;
-        private View selectedOverlay;
 
         public MarkViewHolder(View itemView, RecyclerClickListener mClickListener) {
             super(itemView);
@@ -89,13 +87,12 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
             imageView = (CircularImageView) itemView.findViewById(R.id.imageViewMark);
             textName = (TextView) itemView.findViewById(R.id.textMarkName);
             textPhotosCount = (TextView) itemView.findViewById(R.id.textMarkPhotosCount);
-            selectedOverlay = itemView.findViewById(R.id.selected_overlay);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
 
-        public void bindData(Context context, Cursor c, int pos, boolean isSelected){
+        public void bindData(Context context, Cursor c, int pos){
             if (c == null){
                 return;
             }
@@ -105,7 +102,6 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
             textPhotosCount.setText(String.format("%d %s",
                     c.getInt(c.getColumnIndex(Database.COUNT_PHOTOS_BY_MARK)),
                     context.getString(R.string.photo_text)));
-            selectedOverlay.setVisibility(isSelected ? View.VISIBLE : View.INVISIBLE);
         }
 
         @Override

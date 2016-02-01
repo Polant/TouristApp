@@ -88,6 +88,7 @@
     <string name="pref_title_application_version">Версия 1.0</string>
     <string name="pref_title_gallery_auto_export">Добавление фото</string>
     <string name="pref_summary_gallery_auto_export">Автоматически добавлять фото в галарею</string>
+    <string name="photo_has_not_loaded_yet">Фото еще не загрузилось</string>
 
     <!--  -->
 </resources>

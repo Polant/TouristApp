@@ -8,7 +8,6 @@
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="4dp">
 
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -41,14 +40,14 @@
                 android:textColor="@color/selected_photos_count_color"
                 style="@style/Base.TextAppearance.AppCompat.Subhead"/>
         </LinearLayout>
+
     </LinearLayout>
 
     <View
-        android:id="@+id/selected_overlay"
         android:alpha="@dimen/selected_overlay_alpha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
 </android.support.v7.widget.CardView>
