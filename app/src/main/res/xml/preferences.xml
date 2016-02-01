@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Карты">
+        <ListPreference
+            android:defaultValue="10000"
+            android:entries="@array/pref_location_update_frequency_titles"
+            android:entryValues="@array/pref_location_update_frequency_values"
+            android:key="key_location_update_frequency"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_location_update_frequency" />
+
+        <ListPreference
+            android:defaultValue="5"
+            android:entries="@array/pref_location_update_min_distance_titles"
+            android:entryValues="@array/pref_location_update_min_distance_values"
+            android:key="key_location_update_min_distance"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_location_update_min_distance" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Галерея">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="key_gallery_auto_export"
+            android:summary="@string/pref_summary_gallery_auto_export"
+            android:title="@string/pref_title_gallery_auto_export" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Версия приложения">
+        <Preference
+            android:key="key_tourist_app_version"
+            android:title="@string/pref_title_application_version"
+            android:selectable="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>

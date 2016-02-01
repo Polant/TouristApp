@@ -40,4 +40,54 @@
     <string name="search">Поиск</string>
     <string name="activity_search">Поиск</string>
     <string name="search_hint">Введите текст</string>
+    <string name="show_all">Показать все</string>
+    <string name="menu_toolbar_change_marks">Изменить метку</string>
+    <string name="alertChangeMarkTilte">Изменение метки</string>
+    <string name="alertChangeMarkMessage">Введите новое название и описание</string>
+    <string name="mark_was_changed">Метка изменена</string>
+    <string name="title_activity_settings">Настройки</string>
+
+    <!-- Strings related to Settings -->
+
+    <string name="pref_title_location_update_frequency">Частота обновлений</string>
+    <!--<string name="pref_summary_location_update_frequency">Минимальная частота обновлений местонахождения</string>-->
+    <string-array name="pref_location_update_frequency_titles">
+        <item>1 секунда</item>
+        <item>2 секунды</item>
+        <item>5 секунд</item>
+        <item>10 секунд</item>
+        <item>20 секунд</item>
+        <item>1 минута</item>
+    </string-array>
+    <string-array name="pref_location_update_frequency_values">
+        <item>1000</item>
+        <item>2000</item>
+        <item>5000</item>
+        <item>10000</item>
+        <item>20000</item>
+        <item>60000</item>
+    </string-array>
+
+    <string-array name="pref_location_update_min_distance_titles">
+        <item>1 метр</item>
+        <item>5 метров</item>
+        <item>10 метров</item>
+        <item>50 метров</item>
+        <item>100 метров</item>
+    </string-array>
+    <string-array name="pref_location_update_min_distance_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>50</item>
+        <item>10</item>
+    </string-array>
+    <string name="pref_title_location_update_min_distance">Дистанция для обновления</string>
+    <!--<string name="pref_summary_location_update_min_distance">Минимальная дистанция обновлений местонахождения</string>-->
+
+    <string name="pref_title_application_version">Версия 1.0</string>
+    <string name="pref_title_gallery_auto_export">Добавление фото</string>
+    <string name="pref_summary_gallery_auto_export">Автоматически добавлять фото в галарею</string>
+
+    <!--  -->
 </resources>

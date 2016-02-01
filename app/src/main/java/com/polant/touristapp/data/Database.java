@@ -275,6 +275,14 @@ public class Database {
         return (int)sqLiteDatabase.insert(TABLE_MARKS, null, cv);
     }
 
+    public void updateMark(Mark mark){
+        ContentValues cv = putMarkContentValues(mark);
+
+        String where = MARK_ID + "=?";
+        String[] whereArgs = { String.valueOf(mark.getId()) };
+        sqLiteDatabase.update(TABLE_MARKS, cv, where, whereArgs);
+    }
+
     public void deleteMarks(List<Long> marksIds){
         String query = "DELETE FROM " + TABLE_MARKS + " WHERE " + MARK_ID + " IN (";
         StringBuilder whereBuilder = new StringBuilder(query);

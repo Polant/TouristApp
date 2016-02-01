@@ -16,6 +16,7 @@ import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.activity.SearchActivity;
+import com.polant.touristapp.activity.SettingsActivity;
 
 /**
  * Реализация NavigationDrawer - для использования его во всех activity.
@@ -67,6 +68,10 @@ public class NavigationDrawer {
                                 marks.putExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
                                 marks.putExtra(MarksActivity.CALL_FILTER_OR_ADD_MARKS, false);
                                 activity.startActivityForResult(marks, Constants.SHOW_MARKS_ACTIVITY);
+                                break;
+                            case 4://Настройки.
+                                Intent settings = new Intent(activity, SettingsActivity.class);
+                                activity.startActivityForResult(settings, Constants.SHOW_SETTINGS_ACTIVITY);
                                 break;
                         }
                         return false;

@@ -18,6 +18,7 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
@@ -26,6 +27,7 @@
         <item name="background">@color/colorAccent</item>
         <item name="titleTextStyle">@style/AppDefault.ActionModeTitleColor</item>
     </style>
+
     <style name="AppDefault.ActionModeTitleColor" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
         <item name="android:textColor">@color/colorWhite</item>
     </style>
@@ -35,6 +37,7 @@
         <item name="queryBackground">@android:color/transparent</item>
         <item name="queryHint">@string/search_hint</item>
     </style>
+
     <style name="cursorColor" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:textCursorDrawable">@drawable/white_cursor</item>
     </style>

@@ -7,4 +7,9 @@
         android:icon="@drawable/ic_magnify_white"
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView" />
+    <item
+        android:id="@+id/action_search_show_all"
+        android:title="@string/show_all"
+        android:icon="@drawable/ic_check_all"
+        app:showAsAction="ifRoom"/>
 </menu>
