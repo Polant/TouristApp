@@ -61,6 +61,7 @@
                     android:textColor="@color/selected_recycler_item_subtitle_color"
                     android:text="New Text"
                     style="@style/Base.TextAppearance.AppCompat.Subhead"/>
+
             </LinearLayout>
 
         </LinearLayout>
