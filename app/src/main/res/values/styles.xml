@@ -37,7 +37,7 @@
         <item name="queryBackground">@android:color/transparent</item>
         <item name="queryHint">@string/search_hint</item>
     </style>
-
+    <!-- Color of cursor in SearchView-->
     <style name="cursorColor" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:textCursorDrawable">@drawable/white_cursor</item>
     </style>

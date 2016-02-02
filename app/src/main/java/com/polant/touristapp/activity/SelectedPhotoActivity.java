@@ -90,7 +90,6 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                 openDatabase();
                 if (mInputMedia != null) {
                     setMarksIdsByPhoto(mInputMedia);
-                    Log.d(Constants.APP_LOG_TAG, "setMArks");
                 }
             }
         }
