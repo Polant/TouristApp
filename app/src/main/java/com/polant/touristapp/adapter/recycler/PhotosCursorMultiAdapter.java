@@ -47,6 +47,7 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
     public PhotosCursorMultiAdapter(Context context, @Nullable Cursor cursor,
                                    RecyclerClickListener clickListener, @Nullable List<Long> inputData) {
         super(context, cursor);
+
         mContext = context;
         mClickListener = clickListener;
         mInputData = inputData;
@@ -134,8 +135,7 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
 
             textName.setText(photoName);
             textDescription.setText(photoDesc);
-            textCreatedDate.setText(
-                    String.format("%s %s", context.getString(R.string.photo_taken),sdf.format(new Date(photoCreated))));
+            textCreatedDate.setText(String.format("%s %s", context.getString(R.string.photo_taken),sdf.format(new Date(photoCreated))));
         }
 
         @Override
@@ -150,5 +150,4 @@ public class PhotosCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Pho
             return mListener != null && mListener.onItemLongClicked(getLayoutPosition());
         }
     }
-
 }

@@ -38,6 +38,7 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
     public MarksCursorMultiAdapter(Context context, @Nullable Cursor cursor,
                                    RecyclerClickListener clickListener, @Nullable List<Long> inputData) {
         super(context, cursor);
+
         mContext = context;
         mClickListener = clickListener;
         mInputData = inputData;
@@ -116,5 +117,4 @@ public class MarksCursorMultiAdapter extends CursorRecyclerViewMultiAdapter<Mark
             return mListener != null && mListener.onItemLongClicked(getLayoutPosition());
         }
     }
-
 }

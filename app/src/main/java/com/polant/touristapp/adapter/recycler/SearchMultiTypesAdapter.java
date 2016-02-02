@@ -34,13 +34,15 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
     private static final int LAYOUT_PHOTO = R.layout.multi_recycler_item_photo;
 
     private Context mContext;
-    private List<SearchComplexItem> mItems;
     private RecyclerClickListener mClickListener;
     private LayoutInflater mInflater;
+
+    private List<SearchComplexItem> mItems;
 
     private static Handler mHandler = new Handler();
 
     public SearchMultiTypesAdapter(Context mContext, List<SearchComplexItem> mItems, RecyclerClickListener mClickListener) {
+
         this.mContext = mContext;
         this.mItems = mItems;
         this.mClickListener = mClickListener;
@@ -50,6 +52,7 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
     }
 
     public void changeItems(List<SearchComplexItem> newItems){
+        //Изменяю коллекцию, перед тем как вызвать notifyDataSetChanged().
         mItems = newItems;
     }
 
