@@ -1,17 +1,15 @@
 package com.polant.touristapp.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -42,16 +40,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private ClusterManager<MapClusterItem> mClusterManager;
-    private TouristLocationManager mLocationManager; //Работа с геолокацией.
+    private TouristLocationManager mLocationManager;
 
-    private Database db;    //База данных.
+    private Database db;
 
-    private Drawer navigationDrawer;
+    private Drawer mNavigationDrawer;
 
-    private String lastImagePath; //Путь к последнему созданному изображению.
-    private final int userId = Constants.DEFAULT_USER_ID_VALUE; //Id пользователя по умолчанию.
+    private final int mUserId = Constants.DEFAULT_USER_ID_VALUE;
 
-    private long[] filterMarks; //Фильтр, который хранит Id меток.
+    private String mLastImagePath;
+
+    private long[] mFilterMarks; //Фильтр, который хранит Id меток.
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +83,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationManager = new TouristLocationManager(this);
     }
 
+    private void initMapFragment() {
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -103,14 +109,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Marker myPosition = mMap.addMarker(options);
             mLocationManager.setMyLocation(myPosition);
         }
-        //Устанавливаю менеджер кластеризации.
         setUpClusterManager();
-    }
-
-    private void initMapFragment() {
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
     //---------------------------Кластеризация------------------------------//
@@ -120,7 +119,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Устанавливаю свой рендерер. Listener-ы и адаптеры устанавливаются внутри CustomImageRenderer.
         mClusterManager.setRenderer(new CustomImageRenderer(this, mMap, mClusterManager));
 
-        ArrayList<UserMedia> medias = db.selectAllUserMediaByUserId(userId);
+        ArrayList<UserMedia> medias = db.selectAllUserMediaByUserId(mUserId);
         addItemsToMap(medias);
     }
 
@@ -136,10 +135,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ArrayList<UserMedia> medias;
         if (markIds != null && markIds.length > 0){
-            medias = db.selectUserMediaByFilter(userId, markIds);
+            medias = db.selectUserMediaByFilter(mUserId, markIds);
         }
         else{
-            medias = db.selectAllUserMediaByUserId(userId);
+            medias = db.selectAllUserMediaByUserId(mUserId);
         }
         addItemsToMap(medias);
         mClusterManager.cluster();
@@ -160,14 +159,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case R.id.item_filter:
                         //Фильтрация меток на карте.
                         Intent intent = new Intent(MapsActivity.this, MarksActivity.class);
-                        intent.putExtra(Constants.USER_ID, userId);
-                        intent.putExtra(MarksActivity.INPUT_CHECKED_LIST_ITEMS_IDS, filterMarks);
+                        intent.putExtra(Constants.USER_ID, mUserId);
+                        intent.putExtra(MarksActivity.INPUT_CHECKED_LIST_ITEMS_IDS, mFilterMarks);
                         intent.putExtra(MarksActivity.CALL_FILTER_OR_ADD_MARKS, true);
                         startActivityForResult(intent, Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY);
                         return true;
                     case R.id.item_reset_filter:
                         //Сбрасываю фильтр.
-                        filterMarks = null;
+                        mFilterMarks = null;
                         updateClustersByFilter(null);
                         showSnackbar(getString(R.string.reset_filter_text));
                         return true;
@@ -180,7 +179,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void initNavigationDrawer(Toolbar toolbar) {
         NavigationDrawer drawer = new NavigationDrawer(this, toolbar);
-        navigationDrawer = drawer.getMaterialDrawer();
+        mNavigationDrawer = drawer.getMaterialDrawer();
     }
 
     private void initFAB() {
@@ -192,7 +191,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Uri outputFileUri = Uri.fromFile(image);
 
                 //Путь к последнему сделанному изображению сохраняю в поле класса.
-                lastImagePath = outputFileUri.getPath();
+                mLastImagePath = outputFileUri.getPath();
                 //Намерение для вызова камеры.
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
@@ -228,25 +227,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         else if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
             //Обновляю кластеры после добавления нового фото.
-            updateClustersByFilter(filterMarks);
+            updateClustersByFilter(mFilterMarks);
             showSnackbar(getString(R.string.add_photo_text));
         }
         else if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY_FROM_INFO_WINDOW && resultCode == RESULT_OK){
             openDatabase();
             //Обновляю кластеры после клика но InfoWindow на карте.
-            updateClustersByFilter(filterMarks);
+            updateClustersByFilter(mFilterMarks);
         }
         else if (requestCode == Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY && resultCode == RESULT_OK){
             openDatabase();
             if (data != null){//Обновляю метки на карте.
                 long[] marksIds = data.getLongArrayExtra(MarksActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS);
-                filterMarks = marksIds;
+                mFilterMarks = marksIds;
                 updateClustersByFilter(marksIds);
             }
         }
         else if (requestCode == Constants.SHOW_MARKS_ACTIVITY){
             openDatabase();
-            updateClustersByFilter(filterMarks);
+            updateClustersByFilter(mFilterMarks);
         }else if (requestCode == Constants.SHOW_SETTINGS_ACTIVITY){
             //Сделал обновление данные для работы TouristLocationManager в его методе
             //registerListener(), который вызывается в onResume().
@@ -256,25 +255,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void startSelectedPhotoActivity(){
         Intent intent = new Intent(this, SelectedPhotoActivity.class);
 
-        //Передаю путь к изображению, Id пользователя, текущее местоположение.
-        intent.putExtra(SelectedPhotoActivity.IMAGE_EXTERNAL_PATH, lastImagePath);
-        intent.putExtra(Constants.USER_ID, userId);
+        intent.putExtra(SelectedPhotoActivity.IMAGE_EXTERNAL_PATH, mLastImagePath);
+        intent.putExtra(Constants.USER_ID, mUserId);
         intent.putExtra(SelectedPhotoActivity.IMAGE_LOCATION, mLocationManager.getLastLocation());
 
         startActivityForResult(intent, Constants.SHOW_SELECTED_PHOTO_ACTIVITY);
     }
 
-
     @Override
     public void onBackPressed() {
-        if (navigationDrawer.isDrawerOpen()) {
-            navigationDrawer.closeDrawer();
+        if (mNavigationDrawer.isDrawerOpen()) {
+            mNavigationDrawer.closeDrawer();
         } else {
             super.onBackPressed();
         }
     }
-
-    //------------------------------Открытие и закрытие базы----------------------------//
 
     @Override
     protected void onStart() {
@@ -288,8 +283,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         db.close();
     }
 
-    //------------Регистрация и отмена регистрации слушателя геолокации------------------//
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -301,5 +294,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onPause();
         mLocationManager.unregisterListener();
     }
-
 }
