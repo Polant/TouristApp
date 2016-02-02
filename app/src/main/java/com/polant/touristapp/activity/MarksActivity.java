@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.activity.base.BaseTouristActivity;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
@@ -28,7 +29,7 @@ import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
 
-public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
+public class MarksActivity extends BaseTouristActivity implements IWorkWithDatabaseActivity,
         MarksFragment.MarksListener, PhotosFragment.PhotosListener, ICollapsedToolbarActionModeActivity {
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
@@ -40,10 +41,6 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
     public static final String INPUT_CHECKED_LIST_ITEMS_IDS = "INPUT_CHECKED_LIST_ITEMS_IDS";
 
     public static final String CALL_FILTER_OR_ADD_MARKS = "CALL_FILTER_OR_ADD_MARKS";
-
-    private Database db;
-
-    private int mUserId;
 
     private long[] mInputMarks;
 
@@ -62,19 +59,6 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         initToolbar();
         initMarksRecyclerFragment();
         initFAB();
-    }
-
-    private void openDatabase() {
-        //База открывается и закрывается в onStart() и onStop().
-        if (db != null) {
-            if (db.isClosed()) {
-                db = new Database(this);
-                db.open();
-            }
-        }else{
-            db = new Database(this);
-            db.open();
-        }
     }
 
     private void getDataFromIntent() {
@@ -251,16 +235,6 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         showSnackbar(fab, R.string.mark_was_added);
     }
 
-    private void showSnackbar(View view, int stringResource) {
-        Snackbar.make(view, stringResource, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.snackbar_close_text, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                })
-                .show();
-    }
-
     //-------------------------------Photos------------------------------------//
 
     @Override
@@ -343,18 +317,6 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                     .findFragmentByTag(PHOTOS_FRAGMENT_TAG);
             fragment.notifyRecyclerView();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        openDatabase();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        db.close();
     }
 
     @Override

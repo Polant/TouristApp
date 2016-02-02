@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.polant.touristapp.Constants;
+import com.polant.touristapp.activity.base.BaseTouristActivity;
 import com.polant.touristapp.utils.alert.AlertUtil;
 import com.polant.touristapp.utils.image.ImageUtils;
 import com.polant.touristapp.R;
@@ -28,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class SelectedPhotoActivity extends AppCompatActivity {
+public class SelectedPhotoActivity extends BaseTouristActivity {
 
     private static final int LAYOUT = R.layout.activity_selected_photo;
 
@@ -37,10 +38,10 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     public static final String IMAGE_LOCATION = "IMAGE_LOCATION";
     public static final String INPUT_MEDIA = "INPUT_MEDIA";
 
-    private Database db;
-    private int mUserId;
     private Location mLocation;
+
     private String mImagePath;
+
     private boolean exportToGalleryFlag = false;  //TODO: когда сделаю настройки приложения, то сделать проверку этого флага.
 
     private long[] marksIds;    //Массив Id выбранных меток.
@@ -55,19 +56,6 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         openDatabase();
         getDataFromIntent();
         initToolbar();
-    }
-
-    private void openDatabase() {
-        //База открывается и закрывается в onStart() и onStop().
-        if (db != null) {
-            if (db.isClosed()) {
-                db = new Database(this);
-                db.open();
-            }
-        }else{
-            db = new Database(this);
-            db.open();
-        }
     }
 
     private void getDataFromIntent() {
@@ -287,19 +275,5 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                 marksIds = data.getLongArrayExtra(MarksActivity.OUTPUT_CHECKED_LIST_ITEMS_IDS);
             }
         }
-    }
-
-    //----------------------Открытие и закрытие базы-----------------------------//
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        openDatabase();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        db.close();
     }
 }

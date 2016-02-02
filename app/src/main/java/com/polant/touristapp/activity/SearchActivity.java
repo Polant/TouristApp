@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.activity.base.BaseTouristActivity;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
@@ -22,7 +23,7 @@ import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
 
-public class SearchActivity extends AppCompatActivity
+public class SearchActivity extends BaseTouristActivity
         implements IWorkWithDatabaseActivity, MarksFragment.MarksListener, PhotosFragment.PhotosListener {
 
     private static final int LAYOUT = R.layout.activity_search;
@@ -30,11 +31,7 @@ public class SearchActivity extends AppCompatActivity
     private static final String SEARCH_FRAGMENT_TAG = SearchFragment.class.toString();
     private static final String PHOTOS_FRAGMENT_TAG = PhotosFragment.class.toString();
 
-    private Database db;
-
     private ISearchableFragment mSearchableFragment;
-
-    private int mUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +42,6 @@ public class SearchActivity extends AppCompatActivity
         getDataFromIntent();
         initSearchFragment();
         initToolbar();
-    }
-
-    private void openDatabase() {
-        //База открывается и закрывается в onStart() и onStop().
-        if (db != null) {
-            if (db.isClosed()) {
-                db = new Database(this);
-                db.open();
-            }
-        }else{
-            db = new Database(this);
-            db.open();
-        }
     }
 
     private void getDataFromIntent() {
@@ -233,18 +217,6 @@ public class SearchActivity extends AppCompatActivity
                 mSearchableFragment.search("");
             }
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        openDatabase();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        db.close();
     }
 
     @Override

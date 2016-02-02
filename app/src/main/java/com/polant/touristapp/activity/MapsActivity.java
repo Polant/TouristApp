@@ -24,6 +24,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.mikepenz.materialdrawer.Drawer;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.activity.base.BaseTouristActivity;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.drawer.NavigationDrawer;
 import com.polant.touristapp.maps.clustering.CustomImageRenderer;
@@ -34,7 +35,7 @@ import com.polant.touristapp.model.UserMedia;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends BaseTouristActivity implements OnMapReadyCallback {
 
     private static final int LAYOUT = R.layout.activity_maps;
 
@@ -42,11 +43,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ClusterManager<MapClusterItem> mClusterManager;
     private TouristLocationManager mLocationManager;
 
-    private Database db;
-
     private Drawer mNavigationDrawer;
-
-    private final int mUserId = Constants.DEFAULT_USER_ID_VALUE;
 
     private String mLastImagePath;
 
@@ -62,19 +59,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         initMapFragment();
         initNavigationDrawer(initToolbar());
         initFAB();
-    }
-
-    private void openDatabase() {
-        //База открывается и закрывается в onStart() и onStop().
-        if (db != null) {
-            if (db.isClosed()) {
-                db = new Database(this);
-                db.open();
-            }
-        }else{
-            db = new Database(this);
-            db.open();
-        }
     }
 
     //---------------------------------Геолокация и карта------------------------------------//
@@ -168,7 +152,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //Сбрасываю фильтр.
                         mFilterMarks = null;
                         updateClustersByFilter(null);
-                        showSnackbar(getString(R.string.reset_filter_text));
+                        showSnackbar(findViewById(R.id.fab), R.string.reset_filter_text);
                         return true;
                 }
                 return false;
@@ -201,17 +185,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private void showSnackbar(String message){
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        Snackbar.make(fab, message, Snackbar.LENGTH_LONG)
-                .setAction(R.string.snackbar_close_text, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                })
-                .show();
-    }
-
     //--------------------------------------------------------------------------//
 
     @Override
@@ -228,7 +201,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             openDatabase();
             //Обновляю кластеры после добавления нового фото.
             updateClustersByFilter(mFilterMarks);
-            showSnackbar(getString(R.string.add_photo_text));
+            showSnackbar(findViewById(R.id.fab), R.string.reset_filter_text);
         }
         else if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY_FROM_INFO_WINDOW && resultCode == RESULT_OK){
             openDatabase();
@@ -269,18 +242,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        openDatabase();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        db.close();
     }
 
     @Override
