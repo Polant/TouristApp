@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -150,15 +152,32 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
 
     @Override
     public void changeCollapsedToolbarLayoutBackground(boolean isStartActionMode){
-        //TODO: попробовать залесть в ActionMode, чтобы переопределить метод
-        //для того чтобы при сбросе ActionMode visibility менялось сразу же, а есть
-        //видимая разница во времени.
-        findViewById(R.id.collapsing_toolbar_background).setVisibility(
-                isStartActionMode ? View.VISIBLE : View.INVISIBLE
-        );
+        final View overlay = findViewById(R.id.collapsing_toolbar_background);
+        if (isStartActionMode){
+            overlay.setVisibility(View.VISIBLE);
+        }else {
+            AlphaAnimation animation = new AlphaAnimation(1, 0);
+            animation.setStartOffset(200);
+            animation.setDuration(150);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    overlay.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            overlay.startAnimation(animation);
+        }
     }
 
-    //-----------------------------Marks------------------------------//
+    //-----------------------------Marks---------------------------------//
 
     private void initMarksRecyclerFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
