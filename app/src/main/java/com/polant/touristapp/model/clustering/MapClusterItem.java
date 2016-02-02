@@ -1,8 +1,8 @@
-package com.polant.touristapp.maps.clustering;
+package com.polant.touristapp.model.clustering;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
-import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.model.database.UserMedia;
 
 /**
  * Created by Антон on 07.01.2016.

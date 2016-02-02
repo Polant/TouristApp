@@ -21,7 +21,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.PhotosCursorMultiAdapter;
 import com.polant.touristapp.fragment.base.cursor.BaseRecyclerActionModeFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
-import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.model.database.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
 
 /**

@@ -1,4 +1,4 @@
-package com.polant.touristapp.model;
+package com.polant.touristapp.model.database;
 
 /**
  * Created by Антон on 08.01.2016.

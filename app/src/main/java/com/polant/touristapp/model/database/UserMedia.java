@@ -1,4 +1,4 @@
-package com.polant.touristapp.model;
+package com.polant.touristapp.model.database;
 
 import java.io.Serializable;
 

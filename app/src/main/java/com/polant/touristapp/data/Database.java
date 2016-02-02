@@ -9,9 +9,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.polant.touristapp.Constants;
-import com.polant.touristapp.model.Mark;
-import com.polant.touristapp.model.MarkRecord;
-import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.model.database.Mark;
+import com.polant.touristapp.model.database.MarkRecord;
+import com.polant.touristapp.model.database.UserMedia;
 
 import java.util.ArrayList;
 import java.util.List;

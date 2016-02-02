@@ -1,7 +1,7 @@
 package com.polant.touristapp.model.search;
 
-import com.polant.touristapp.model.Mark;
-import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.model.database.Mark;
+import com.polant.touristapp.model.database.UserMedia;
 
 /**
  * Created by Антон on 29.01.2016.

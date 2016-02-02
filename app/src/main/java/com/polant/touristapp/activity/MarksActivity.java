@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,8 +23,8 @@ import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
-import com.polant.touristapp.model.Mark;
-import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.model.database.Mark;
+import com.polant.touristapp.model.database.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
 
 public class MarksActivity extends BaseTouristActivity implements IWorkWithDatabaseActivity,

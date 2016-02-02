@@ -15,8 +15,8 @@ import com.polant.touristapp.adapter.recycler.SearchMultiTypesAdapter;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
 import com.polant.touristapp.interfaces.ISearchableFragment;
-import com.polant.touristapp.model.Mark;
-import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.model.database.Mark;
+import com.polant.touristapp.model.database.UserMedia;
 import com.polant.touristapp.model.search.SearchComplexItem;
 
 import java.util.ArrayList;

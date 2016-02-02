@@ -29,8 +29,8 @@ import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.base.cursor.BaseRecyclerActionModeFragment;
 import com.polant.touristapp.interfaces.IActionModeActivity;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
-import com.polant.touristapp.model.Mark;
-import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.model.database.Mark;
+import com.polant.touristapp.model.database.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
 
 import java.util.ArrayList;

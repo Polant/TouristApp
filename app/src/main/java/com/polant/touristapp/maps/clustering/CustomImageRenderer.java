@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,7 +22,8 @@ import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.activity.SelectedPhotoActivity;
 import com.polant.touristapp.maps.drawable.MultiDrawable;
-import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.model.database.UserMedia;
+import com.polant.touristapp.model.clustering.MapClusterItem;
 import com.polant.touristapp.utils.image.ImageUtils;
 
 import java.util.ArrayList;
