@@ -27,6 +27,7 @@ import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.base.cursor.BaseRecyclerActionModeFragment;
+import com.polant.touristapp.interfaces.IActionModeActivity;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
@@ -57,9 +58,9 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (!(context instanceof MarksListener) || !(context instanceof ICollapsedToolbarActivity)) {
+        if (!(context instanceof MarksListener) || !(context instanceof IActionModeActivity)) {
             throw new IllegalArgumentException("ACTIVITY MUST IMPLEMENT MarksListener and " +
-                    "ICollapsedToolbarActivity");
+                    "IActionModeActivity");
         }
     }
 
@@ -179,7 +180,10 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
             else{
                 inflater.inflate(R.menu.toolbar_marks_remove, menu);
             }
-            ((ICollapsedToolbarActivity)mActivity).changeCollapsedToolbarLayoutBackground(true);
+            if (mActivity instanceof  ICollapsedToolbarActivity) {
+                ((ICollapsedToolbarActivity) mActivity).changeCollapsedToolbarLayoutBackground(true);
+            }
+            ((IActionModeActivity)mActivity).hideFAB();
             return true;
         }
 
@@ -208,7 +212,10 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            ((ICollapsedToolbarActivity)mActivity).changeCollapsedToolbarLayoutBackground(false);
+            if (mActivity instanceof ICollapsedToolbarActivity) {
+                ((ICollapsedToolbarActivity) mActivity).changeCollapsedToolbarLayoutBackground(false);
+            }
+            ((IActionModeActivity)mActivity).showFAB();
             mAdapter.clearSelection();
             mActionMode = null;
         }

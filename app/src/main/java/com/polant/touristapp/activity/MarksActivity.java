@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.interfaces.IActionModeActivity;
 import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
 import com.polant.touristapp.data.Database;
@@ -27,7 +28,7 @@ import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 
 public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
-        MarksFragment.MarksListener, PhotosFragment.PhotosListener, ICollapsedToolbarActivity {
+        MarksFragment.MarksListener, PhotosFragment.PhotosListener, ICollapsedToolbarActivity, IActionModeActivity {
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
 
@@ -257,8 +258,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         //Устанавливаю в заголовок название последней выбранной метки.
         setCollapsedToolbarTitleData(mark.getId());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.hide(mFABVisibilityListener);
+        hideFAB();
     }
 
     private void setCollapsedToolbarTitleData(long markId) {
@@ -302,8 +302,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
             //Убираю из заголовка название последней выбранной метки.
             backCollapsedToolbarTitleData();
 
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.show(mFABVisibilityListener);
+            showFAB();
         }else {
             super.onBackPressed();
         }
@@ -318,6 +317,18 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                     .findFragmentByTag(PHOTOS_FRAGMENT_TAG);
             fragment.notifyRecyclerView();
         }
+    }
+
+    @Override
+    public void hideFAB() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide(mFABVisibilityListener);
+    }
+
+    @Override
+    public void showFAB() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.show(mFABVisibilityListener);
     }
 
     @Override
