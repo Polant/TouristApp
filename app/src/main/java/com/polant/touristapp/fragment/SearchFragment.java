@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class SearchFragment extends BaseRecyclerFragment implements ISearchableFragment {
 
-    private static int LAYOUT = R.layout.fragment_search;
+    private static final int LAYOUT = R.layout.fragment_search;
 
     protected View view;
 

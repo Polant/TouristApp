@@ -25,13 +25,14 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         addPreferencesFromResource(R.xml.preferences);
+        initPreferencesSummary(getPreferenceScreen().getSharedPreferences());
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
         Preference changed = findPreference(key);
-
         if (changed instanceof ListPreference){
             changed.setSummary(((ListPreference)changed).getEntry());
         }
@@ -45,10 +46,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
-        sp.registerOnSharedPreferenceChangeListener(this);
-
-        initPreferencesSummary(sp);
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override

@@ -80,7 +80,7 @@
         <item>5</item>
         <item>10</item>
         <item>50</item>
-        <item>10</item>
+        <item>100</item>
     </string-array>
     <string name="pref_title_location_update_min_distance">Дистанция для обновления</string>
     <!--<string name="pref_summary_location_update_min_distance">Минимальная дистанция обновлений местонахождения</string>-->
