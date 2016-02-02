@@ -28,7 +28,7 @@ import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.base.cursor.BaseRecyclerActionModeFragment;
 import com.polant.touristapp.interfaces.IActionModeActivity;
-import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
+import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
 import com.polant.touristapp.model.Mark;
 import com.polant.touristapp.model.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
@@ -180,8 +180,8 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
             else{
                 inflater.inflate(R.menu.toolbar_marks_remove, menu);
             }
-            if (mActivity instanceof  ICollapsedToolbarActivity) {
-                ((ICollapsedToolbarActivity) mActivity).changeCollapsedToolbarLayoutBackground(true);
+            if (mActivity instanceof ICollapsedToolbarActionModeActivity) {
+                ((ICollapsedToolbarActionModeActivity) mActivity).changeCollapsedToolbarLayoutBackground(true);
             }
             ((IActionModeActivity)mActivity).hideFAB();
             return true;
@@ -212,8 +212,8 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            if (mActivity instanceof ICollapsedToolbarActivity) {
-                ((ICollapsedToolbarActivity) mActivity).changeCollapsedToolbarLayoutBackground(false);
+            if (mActivity instanceof ICollapsedToolbarActionModeActivity) {
+                ((ICollapsedToolbarActionModeActivity) mActivity).changeCollapsedToolbarLayoutBackground(false);
             }
             ((IActionModeActivity)mActivity).showFAB();
             mAdapter.clearSelection();

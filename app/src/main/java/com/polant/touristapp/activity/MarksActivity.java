@@ -25,12 +25,12 @@ import com.polant.touristapp.utils.alert.AlertUtil;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
-import com.polant.touristapp.interfaces.ICollapsedToolbarActivity;
+import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
 
 public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
-        MarksFragment.MarksListener, PhotosFragment.PhotosListener, ICollapsedToolbarActivity, IActionModeActivity {
+        MarksFragment.MarksListener, PhotosFragment.PhotosListener, ICollapsedToolbarActionModeActivity {
 
     private static final int LAYOUT = R.layout.activity_marks_multi_choice;
 
