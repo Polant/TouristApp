@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.polant.touristapp.Constants;
+import com.polant.touristapp.R;
 import com.polant.touristapp.model.database.Mark;
 import com.polant.touristapp.model.database.MarkRecord;
 import com.polant.touristapp.model.database.UserMedia;
@@ -46,6 +47,7 @@ public class Database {
         return sqLiteDatabase == null || !sqLiteDatabase.isOpen();
     }
 
+    //--------------------------------UserMedia---------------------------------//
 
     public ArrayList<UserMedia> selectAllUserMediaByUserId(int userId){
         ArrayList<UserMedia> result = new ArrayList<>();
@@ -58,7 +60,32 @@ public class Database {
         return result;
     }
 
-    private void parseUserMediaCursor(Cursor c, ArrayList<UserMedia> result){
+    public int insertMedia(UserMedia media){
+        ContentValues cv = putUsersMediaContentValues(media);
+        return (int) sqLiteDatabase.insert(TABLE_USERS_MEDIA, null, cv);
+    }
+
+    public void updateMedia(UserMedia media){
+        ContentValues cv = putUsersMediaContentValues(media);
+
+        String where = MEDIA_ID + "=?";
+        String[] whereArgs = { String.valueOf(media.getId()) };
+        sqLiteDatabase.update(TABLE_USERS_MEDIA, cv, where, whereArgs);
+    }
+
+    public void deleteUserMedias(List<Long> mediasIds){
+        String query = "DELETE FROM " + TABLE_USERS_MEDIA + " WHERE " + MEDIA_ID + " IN (";
+        StringBuilder whereBuilder = new StringBuilder(query);
+        for (long id : mediasIds){
+            whereBuilder.append(id).append(", ");
+        }
+        whereBuilder.delete(whereBuilder.length() - 2, whereBuilder.length());//Убираю последнюю запятую.
+        whereBuilder.append(");");
+
+        sqLiteDatabase.execSQL(whereBuilder.toString());
+    }
+
+    private void parseUserMediaCursor(Cursor c, List<UserMedia> result){
         if (c != null) {
             if (c.moveToFirst()) {
                 int colId = c.getColumnIndex(MEDIA_ID);
@@ -89,32 +116,6 @@ public class Database {
         }
     }
 
-    //Вставка записи в TABLE_USERS_MEDIA.
-    public int insertMedia(UserMedia media){
-        ContentValues cv = putUsersMediaContentValues(media);
-        return (int) sqLiteDatabase.insert(TABLE_USERS_MEDIA, null, cv);
-    }
-
-    public void updateMedia(UserMedia media){
-        ContentValues cv = putUsersMediaContentValues(media);
-
-        String where = MEDIA_ID + "=?";
-        String[] whereArgs = { String.valueOf(media.getId()) };
-        sqLiteDatabase.update(TABLE_USERS_MEDIA, cv, where, whereArgs);
-    }
-
-    public void deleteUserMedias(List<Long> mediasIds){
-        String query = "DELETE FROM " + TABLE_USERS_MEDIA + " WHERE " + MEDIA_ID + " IN (";
-        StringBuilder whereBuilder = new StringBuilder(query);
-        for (long id : mediasIds){
-            whereBuilder.append(id).append(", ");
-        }
-        whereBuilder.delete(whereBuilder.length() - 2, whereBuilder.length());//Убираю последнюю запятую.
-        whereBuilder.append(");");
-
-        sqLiteDatabase.execSQL(whereBuilder.toString());
-    }
-
     //Создание ContentValues для талбицы TABLE_USERS_MEDIA.
     private ContentValues putUsersMediaContentValues(UserMedia media){
         ContentValues cv = new ContentValues();
@@ -142,7 +143,7 @@ public class Database {
         sqLiteDatabase.delete(TABLE_MARK_RECORDS, where, null);
     }
 
-    private void parseMarkRecordMarksIdsCursor(Cursor c, ArrayList<Long> result) {
+    private void parseMarkRecordMarksIdsCursor(Cursor c, List<Long> result) {
         if (c != null) {
             int colId = c.getColumnIndex(MARK_RECORD_MARK_ID);
             while (c.moveToNext()){
@@ -152,7 +153,7 @@ public class Database {
         }
     }
 
-    private void parseMarkRecordMediaIdsCursor(Cursor c, ArrayList<Long> result){
+    private void parseMarkRecordMediaIdsCursor(Cursor c, List<Long> result){
         if (c != null) {
             if (c.moveToFirst()) {
                 int colId = c.getColumnIndex(MARK_RECORD_MEDIA_ID);
@@ -193,7 +194,7 @@ public class Database {
         return mediaIds;
     }
 
-    private String createUserMediaFilterQueryByMark(int userId, ArrayList<Long> medias, String colMediaIdAlias){
+    private String createUserMediaFilterQueryByMark(int userId, List<Long> medias, String colMediaIdAlias){
         String query = "SELECT " +
                 MEDIA_ID + " AS " + colMediaIdAlias + ", " +
                 MEDIA_NAME + ", " +
@@ -240,17 +241,6 @@ public class Database {
     }
 
     //----------------------------------Marks---------------------------------//
-
-    public Cursor selectAllMarksCursorByUserId(int userId){
-        //Обязательно надо указать псевдоним '_id' для поля id, чтоб он смог обработаться адаптером.
-        String query = "SELECT "  + MARK_ID + " AS _id, " +
-                                    MARK_NAME + ", " +
-                                    MARK_DESCRIPTION + ", " +
-                                    MARK_USER_ID +
-                        " FROM "  + TABLE_MARKS +
-                        " WHERE " + MARK_USER_ID + "="+ userId + ";";
-        return sqLiteDatabase.rawQuery(query, null);
-    }
 
     public static final String COUNT_PHOTOS_BY_MARK = "COUNT_PHOTOS_BY_MARK";
     //Сортирую по убыванию количества фото, а по имени по возрастанию.
@@ -315,7 +305,7 @@ public class Database {
         return result.size() > 0 ? result.get(0) : null;
     }
 
-    private void parseMarkCursor(Cursor c, ArrayList<Mark> result) {
+    private void parseMarkCursor(Cursor c, List<Mark> result) {
         if (c != null) {
             if (c.moveToFirst()) {
                 int colId = c.getColumnIndex(MARK_ID);
@@ -418,6 +408,8 @@ public class Database {
         private static final int DB_VERSION = 10;
         private static final String DB_NAME = "Tourist";
 
+        private Context context;
+
         private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + " ( " +
                 USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 USER_LOGIN + " TEXT UNIQUE, " +
@@ -447,6 +439,7 @@ public class Database {
 
         TouristOpenHelper(Context context){
             super(context, DB_NAME, null, DB_VERSION);
+            this.context = context;
         }
 
         @Override
@@ -470,11 +463,11 @@ public class Database {
 
             //Добавил 5 меток по умолчанию.
             ArrayList<Mark> marks = new ArrayList<>(5);
-            marks.add(new Mark(1, "Отдых", "Здесь находятся все данные с различных поездок, отпусков, вечеринок...", userId));
-            marks.add(new Mark(2, "Работа", "Здесь находятся все данные, связанные с работой.", userId));
-            marks.add(new Mark(3, "Учеба", "Здесь находятся все данные, связанные с учебой.", userId));
-            marks.add(new Mark(4, "Путеществия", "Здесь находятся все данные, связанные с путеществиями.", userId));
-            marks.add(new Mark(5, "Другое", "Здесь находятся все данные с другой различной информацией", userId));
+            marks.add(new Mark(1, context.getString(R.string.mark_name_rest), context.getString(R.string.mark_description_rest), userId));
+            marks.add(new Mark(2, context.getString(R.string.mark_name_work), context.getString(R.string.mark_description_work), userId));
+            marks.add(new Mark(3, context.getString(R.string.mark_name_studies), context.getString(R.string.mark_description_studies), userId));
+            marks.add(new Mark(4, context.getString(R.string.mark_name_travel), context.getString(R.string.mark_description_travel), userId));
+            marks.add(new Mark(5, context.getString(R.string.mark_name_other), context.getString(R.string.mark_description_other), userId));
 
             for (Mark m : marks){
                 cv = new ContentValues();

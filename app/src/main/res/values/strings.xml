@@ -91,6 +91,16 @@
     <string name="photo_has_not_loaded_yet">Фото еще не загрузилось</string>
     <string name="i_am_here">Я здесь</string>
     <string name="photos_by_mark_not_found">К данной метке не прикреплено ни одно фото</string>
+    <string name="mark_name_rest">Отдых</string>
+    <string name="mark_description_rest">Здесь находятся все данные с различных поездок, отпусков, вечеринок...</string>
+    <string name="mark_name_work">Работа</string>
+    <string name="mark_description_work">Здесь находятся все данные, связанные с работой.</string>
+    <string name="mark_name_studies">Учеба</string>
+    <string name="mark_description_studies">Здесь находятся все данные, связанные с учебой.</string>
+    <string name="mark_name_travel">Путеществия</string>
+    <string name="mark_description_travel">Здесь находятся все данные, связанные с путеществиями.</string>
+    <string name="mark_name_other">Другое</string>
+    <string name="mark_description_other">Здесь находятся все данные с другой различной информацией</string>
 
     <!--  -->
 </resources>
