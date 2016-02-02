@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.PhotosCursorMultiAdapter;
@@ -23,6 +24,8 @@ import com.polant.touristapp.fragment.base.cursor.BaseRecyclerActionModeFragment
 import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
 import com.polant.touristapp.model.database.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by Антон on 25.01.2016.
@@ -112,9 +115,19 @@ public class PhotosFragment extends BaseRecyclerActionModeFragment {
         return new CursorLoader(mActivity, null, null, null, null, null){
             @Override
             public Cursor loadInBackground() {
-                return getDatabase().selectCursorUserMediaByFilter(mUserId, new long[]{mMarkId});
+                return getDatabase().selectCursorUserMediaByFilter(mUserId, new long[]{ mMarkId });
             }
         };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        super.onLoadFinished(loader, data);
+        if (data == null || data.getCount() == 0){
+            //Подсказка пользователю о том, что нет фото, связанных с выбранной меткой.
+            TextView photoNotFound = (TextView)view.findViewById(R.id.textViewNoPhotos);
+            photoNotFound.setVisibility(View.VISIBLE);
+        }
     }
 
     //---------------------------------------------------------------------//
