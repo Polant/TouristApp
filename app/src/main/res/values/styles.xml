@@ -24,7 +24,7 @@
 
     <!--Action mode -->
     <style name="AppDefault.ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/colorAccent</item>
+        <item name="background">@color/colorActionModeBackground</item>
         <item name="titleTextStyle">@style/AppDefault.ActionModeTitleColor</item>
     </style>
 
@@ -49,4 +49,5 @@
         <item name="colorAccent">@color/colorEditTextUnderline</item>
         <item name="colorControlNormal">@color/colorWhite</item>
     </style>
+
 </resources>

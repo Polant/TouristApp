@@ -9,6 +9,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#e2e2e2</color>
 
+    <color name="colorActionModeBackground">#EF5350</color>
+
     <color name="colorEditTextUnderline">#009688</color>
 
     <color name="selected_overlay">#DDDDDD</color>
