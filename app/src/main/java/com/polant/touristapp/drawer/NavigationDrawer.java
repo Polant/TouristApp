@@ -57,7 +57,7 @@ public class NavigationDrawer {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         //TODO: реализовать обработку клика по navigation drawer.
-                        switch (position) {
+                        switch (drawerItem.getIdentifier()) {
                             case 2://Поиск.
                                 Intent search = new Intent(activity, SearchActivity.class);
                                 search.putExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
