@@ -66,8 +66,7 @@ public class TouristLocationManager implements ILocationManager{
 
     private void updateMapWithLocation(Location l) {
         mLocation = l;
-        if (mMap != null){
-            //TODO: сделать обработку изменения локации.
+        if (mMap != null && myLocation != null){
             myLocation.setPosition(new LatLng(l.getLatitude(), l.getLongitude()));
         }
     }

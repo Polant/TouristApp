@@ -124,8 +124,8 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                         return true;
                     case R.id.item_map_marker:
                         return true;
-                    case R.id.item_export_to_gallery:
-                        return true;
+//                    case R.id.item_export_to_gallery:
+//                        return true;
                 }
                 return false;
             }
