@@ -169,6 +169,8 @@ public class SearchActivity extends AppCompatActivity
         startActivityForResult(intent, Constants.SHOW_SELECTED_PHOTO_ACTIVITY);
     }
 
+    //------------------------------------------------------------------//
+
     private void setToolbarMarkData(Mark mark){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mark.getName());
@@ -199,6 +201,8 @@ public class SearchActivity extends AppCompatActivity
         return searchItem;
     }
 
+    //-----------------------------------------------------------------//
+
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
@@ -220,10 +224,12 @@ public class SearchActivity extends AppCompatActivity
             openDatabase();
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0){
+                //Если открыт PhotosFragment.
                 PhotosFragment photosFragment = (PhotosFragment)fm.findFragmentByTag(PHOTOS_FRAGMENT_TAG);
                 photosFragment.notifyRecyclerView();
             }
             else {
+                //Если открыт SearchFragment.
                 mSearchableFragment.search("");
             }
         }

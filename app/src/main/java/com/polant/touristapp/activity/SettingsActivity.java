@@ -21,6 +21,11 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
+        initToolbar();
+        initPreferenceFragment();
+    }
+
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_activity_settings);
 
@@ -31,7 +36,6 @@ public class SettingsActivity extends AppCompatActivity {
                 finish();
             }
         });
-        initPreferenceFragment();
     }
 
     private void initPreferenceFragment(){

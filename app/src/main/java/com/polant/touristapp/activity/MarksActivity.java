@@ -19,15 +19,14 @@ import android.widget.TextView;
 
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
-import com.polant.touristapp.interfaces.IActionModeActivity;
-import com.polant.touristapp.model.UserMedia;
-import com.polant.touristapp.utils.alert.AlertUtil;
 import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
 import com.polant.touristapp.interfaces.IWorkWithDatabaseActivity;
 import com.polant.touristapp.model.Mark;
+import com.polant.touristapp.model.UserMedia;
+import com.polant.touristapp.utils.alert.AlertUtil;
 
 public class MarksActivity extends AppCompatActivity implements IWorkWithDatabaseActivity,
         MarksFragment.MarksListener, PhotosFragment.PhotosListener, ICollapsedToolbarActionModeActivity {
@@ -44,8 +43,9 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
 
     private Database db;
 
-    private int userId;
-    private long[] inputMarks;
+    private int mUserId;
+
+    private long[] mInputMarks;
 
     //true - если Активити вызвана для фильтрования фото по меткам на карте
     //или добавления меток для нового фото.
@@ -80,8 +80,8 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
     private void getDataFromIntent() {
         Intent responseIntent = getIntent();
         if (responseIntent != null && responseIntent.getExtras() != null){
-            userId = responseIntent.getIntExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
-            inputMarks = responseIntent.getLongArrayExtra(INPUT_CHECKED_LIST_ITEMS_IDS);
+            mUserId = responseIntent.getIntExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
+            mInputMarks = responseIntent.getLongArrayExtra(INPUT_CHECKED_LIST_ITEMS_IDS);
             isCallToFilterOrAddMarksToPhoto = responseIntent.getBooleanExtra(CALL_FILTER_OR_ADD_MARKS, false);
         }
     }
@@ -107,7 +107,8 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
             int id = item.getItemId();
             switch (id) {
                 case R.id.item_filter_remove:
-                    //Возвращаю ПУСТОЙ массив обратно в вызвавшую Активити.
+                    //Возвращаю ПУСТОЙ массив обратно в вызвавшую Активити - таким
+                    //образом я сбрасываю фильтр фото на карте.
                     Intent backIntent = new Intent();
 //                        backIntent.putExtra(OUTPUT_CHECKED_LIST_ITEMS_IDS, (long[])null);
                     setResult(RESULT_OK, backIntent);
@@ -129,7 +130,12 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
 
     public void initFAB() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        setMarksFABClickListener(fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buildNewMarkDialog(v);
+            }
+        });
     }
 
     private FloatingActionButton.OnVisibilityChangedListener mFABVisibilityListener =
@@ -146,6 +152,18 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                     fab.setVisibility(View.INVISIBLE);
                 }
             };
+
+    @Override
+    public void hideFAB() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.hide(mFABVisibilityListener);
+    }
+
+    @Override
+    public void showFAB() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.show(mFABVisibilityListener);
+    }
 
     //----------------------------ActionMode----------------------------//
 
@@ -182,11 +200,11 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         MarksFragment fragment = new MarksFragment();
-        //Передаю Id пользователя и массив выбранных Id меток во фрагмент.
+        //Передаю Id пользователя и массив изначально выбранных Id меток во фрагмент.
         Bundle args = new Bundle();
-        args.putInt(Constants.USER_ID, userId);
-        if (inputMarks != null && inputMarks.length > 0){
-            args.putLongArray(INPUT_CHECKED_LIST_ITEMS_IDS, inputMarks);
+        args.putInt(Constants.USER_ID, mUserId);
+        if (mInputMarks != null && mInputMarks.length > 0){
+            args.putLongArray(INPUT_CHECKED_LIST_ITEMS_IDS, mInputMarks);
         }
         //Передаю тип вызова Активити.
         args.putBoolean(CALL_FILTER_OR_ADD_MARKS, isCallToFilterOrAddMarksToPhoto);
@@ -196,15 +214,6 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                 fragment,
                 MARKS_FRAGMENT_TAG);
         transaction.commit();
-    }
-
-    private void setMarksFABClickListener(FloatingActionButton fab){
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buildNewMarkDialog(v);
-            }
-        });
     }
 
     private MarksFragment findMarksListMultiFragmentByTag(){
@@ -233,10 +242,9 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         String name = nameText.getText().toString();
         String description = descriptionText.getText().toString();
 
-        Mark mark = new Mark(name, description, userId);
-        db.insertMark(mark);    //Вставляю метку в БД.
+        Mark mark = new Mark(name, description, mUserId);
+        db.insertMark(mark);
 
-        //Обновляю ListView во фрагменте.
         MarksFragment fragment = findMarksListMultiFragmentByTag();
         fragment.notifyRecyclerView();
 
@@ -255,7 +263,6 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
 
     //-------------------------------Photos------------------------------------//
 
-
     @Override
     public void showPhotosByMark(Mark mark) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -263,7 +270,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         PhotosFragment fragment = new PhotosFragment();
         //Передаю Id пользователя и метку во фрагмент.
         Bundle args = new Bundle();
-        args.putInt(Constants.USER_ID, userId);
+        args.putInt(Constants.USER_ID, mUserId);
         args.putLong(PhotosFragment.INPUT_MARK_ID, mark.getId());
 
         fragment.setArguments(args);
@@ -273,7 +280,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
         transaction.addToBackStack(null);
         transaction.commit();
 
-        //Устанавливаю в заголовок название последней выбранной метки.
+        //Устанавливаю в заголовок Toolbar-а название последней выбранной метки.
         setCollapsedToolbarTitleData(mark.getId());
 
         hideFAB();
@@ -301,7 +308,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
     public void showSelectedPhoto(UserMedia photo) {
         Intent intent = new Intent(this, SelectedPhotoActivity.class);
 
-        intent.putExtra(Constants.USER_ID, userId);
+        intent.putExtra(Constants.USER_ID, mUserId);
         intent.putExtra(SelectedPhotoActivity.INPUT_MEDIA, photo);
 
         startActivityForResult(intent, Constants.SHOW_SELECTED_PHOTO_ACTIVITY);
@@ -317,6 +324,7 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
             //Обновляю список меток на случай того, если удалил фото.
             MarksFragment marksFragment = findMarksListMultiFragmentByTag();
             marksFragment.notifyRecyclerView();
+
             //Убираю из заголовка название последней выбранной метки.
             backCollapsedToolbarTitleData();
 
@@ -335,18 +343,6 @@ public class MarksActivity extends AppCompatActivity implements IWorkWithDatabas
                     .findFragmentByTag(PHOTOS_FRAGMENT_TAG);
             fragment.notifyRecyclerView();
         }
-    }
-
-    @Override
-    public void hideFAB() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.hide(mFABVisibilityListener);
-    }
-
-    @Override
-    public void showFAB() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.show(mFABVisibilityListener);
     }
 
     @Override

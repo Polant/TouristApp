@@ -7,7 +7,6 @@ import android.media.ExifInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -39,9 +38,9 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     public static final String INPUT_MEDIA = "INPUT_MEDIA";
 
     private Database db;
-    private int userId;
-    private Location location;
-    private String imagePath;
+    private int mUserId;
+    private Location mLocation;
+    private String mImagePath;
     private boolean exportToGalleryFlag = false;  //TODO: когда сделаю настройки приложения, то сделать проверку этого флага.
 
     private long[] marksIds;    //Массив Id выбранных меток.
@@ -53,6 +52,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
+        openDatabase();
         getDataFromIntent();
         initToolbar();
     }
@@ -73,9 +73,9 @@ public class SelectedPhotoActivity extends AppCompatActivity {
     private void getDataFromIntent() {
         Intent responseIntent = getIntent();
         if (responseIntent != null && responseIntent.getExtras() != null){
-            imagePath = responseIntent.getStringExtra(IMAGE_EXTERNAL_PATH);
-            userId = responseIntent.getIntExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
-            location = (Location)responseIntent.getExtras().get(IMAGE_LOCATION);
+            mImagePath = responseIntent.getStringExtra(IMAGE_EXTERNAL_PATH);
+            mUserId = responseIntent.getIntExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
+            mLocation = (Location)responseIntent.getExtras().get(IMAGE_LOCATION);
 
             //Если фото уже есть в базе и надо его посмотреть/отредактировать.
             mInputMedia = (UserMedia)responseIntent.getExtras().get(INPUT_MEDIA);
@@ -86,11 +86,18 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                 nameText.setText(mInputMedia.getName());
                 descriptionText.setText(mInputMedia.getDescription());
 
-                openDatabase();
                 if (mInputMedia != null) {
                     setMarksIdsByPhoto(mInputMedia);
                 }
             }
+        }
+    }
+
+    private void setMarksIdsByPhoto(UserMedia photo){
+        List<Long> marks = db.findMarksIdsByMediaId(photo.getId());
+        marksIds = new long[marks.size()];
+        for (int i = 0; i < marks.size(); i++) {
+            marksIds[i] = marks.get(i);
         }
     }
 
@@ -102,7 +109,6 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //TODO: реализовать обработчик выбора пункта меню toolbar-а.
                 int id = item.getItemId();
                 switch (id) {
                     case R.id.item_check_confirm:
@@ -116,12 +122,13 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                     case R.id.item_bookmark:
                         //Выбор меток для фото.
                         Intent intent = new Intent(SelectedPhotoActivity.this, MarksActivity.class);
-                        intent.putExtra(Constants.USER_ID, userId);
+                        intent.putExtra(Constants.USER_ID, mUserId);
                         intent.putExtra(MarksActivity.INPUT_CHECKED_LIST_ITEMS_IDS, marksIds);
                         intent.putExtra(MarksActivity.CALL_FILTER_OR_ADD_MARKS, true);
                         startActivityForResult(intent, Constants.SHOW_MARKS_MULTI_CHOICE_ACTIVITY);
                         return true;
                     case R.id.item_map_marker:
+                        //TODO: реализовать обработчик выбора пункта меню toolbar-а: 'Показать на карте'.
                         return true;
 //                    case R.id.item_export_to_gallery:
 //                        return true;
@@ -154,7 +161,7 @@ public class SelectedPhotoActivity extends AppCompatActivity {
 
         //Изменяю размер фото чтоб оно поместилось в ImageView.
         Bitmap bitmap = ImageUtils.createBitmap(
-                mInputMedia == null ? imagePath : mInputMedia.getMediaExternalPath(),
+                mInputMedia == null ? mImagePath : mInputMedia.getMediaExternalPath(),
                 imageView.getWidth(), imageView.getHeight());
         imageView.setImageBitmap(bitmap);
     }
@@ -169,9 +176,9 @@ public class SelectedPhotoActivity extends AppCompatActivity {
             return;
         }
         //TODO: проверить на корректность введенных данных (пустые строки и т.д.).
-        //Получаю название фото и его описание.
         EditText nameText = (EditText) findViewById(R.id.editTextPhotoName);
         EditText descriptionText = (EditText) findViewById(R.id.editTextPhotoDescription);
+
         mInputMedia.setName(nameText.getText().toString());
         mInputMedia.setDescription(descriptionText.getText().toString());
 
@@ -195,15 +202,6 @@ public class SelectedPhotoActivity extends AppCompatActivity {
         finish();
     }
 
-    //Вызываю, когда откроется база.
-    private void setMarksIdsByPhoto(UserMedia photo){
-        List<Long> marks = db.findMarksIdsByMediaId(photo.getId());
-        marksIds = new long[marks.size()];
-        for (int i = 0; i < marks.size(); i++) {
-            marksIds[i] = marks.get(i);
-        }
-    }
-
     //----------------------------Сохранение фото------------------------------//
 
     private void savePhoto() {
@@ -215,23 +213,22 @@ public class SelectedPhotoActivity extends AppCompatActivity {
                 return;
             }
             //TODO: проверить на корректность введенных данных (пустые строки и т.д.).
-            //Получаю название фото и его описание.
             EditText nameText = (EditText) findViewById(R.id.editTextPhotoName);
             EditText descriptionText = (EditText) findViewById(R.id.editTextPhotoDescription);
             String name = nameText.getText().toString();
             String description = descriptionText.getText().toString();
-            //Геолокация
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-            //Дата и время.
-            ExifInterface metadata = new ExifInterface(imagePath);
+
+            double latitude = mLocation.getLatitude();
+            double longitude = mLocation.getLongitude();
+
+            ExifInterface metadata = new ExifInterface(mImagePath);
             String date = metadata.getAttribute(ExifInterface.TAG_DATETIME);
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy:mm:dd hh:mm:ss", Locale.getDefault());
             Date createdDate = sdf.parse(date);
 
-            UserMedia newMedia = new UserMedia(name, description, userId,
-                    latitude, longitude, imagePath,
+            UserMedia newMedia = new UserMedia(name, description, mUserId,
+                    latitude, longitude, mImagePath,
                     exportToGalleryFlag ? UserMedia.IN_GALLERY : UserMedia.NOT_IN_GALLERY,
                     createdDate.getTime());
 
@@ -239,11 +236,11 @@ public class SelectedPhotoActivity extends AppCompatActivity {
             int mediaId = db.insertMedia(newMedia);
 
             //Получаю новое название фото.
-            String renamedPath = generateNewPhotoName(imagePath, mediaId, name);
+            String renamedPath = generateNewPhotoName(mImagePath, mediaId, name);
             //Переименовываю файл.
-            renamePhoto(imagePath, renamedPath);
+            renamePhoto(mImagePath, renamedPath);
 
-            //Устанавливаю обхекту UserMedia полученный Id и новый путь к изображению, а затем обновляю базу.
+            //Обновляю базу, чтобы задать новые Id и путь.
             newMedia.setId(mediaId);
             newMedia.setMediaExternalPath(renamedPath);
             db.updateMedia(newMedia);
@@ -252,7 +249,6 @@ public class SelectedPhotoActivity extends AppCompatActivity {
             for (long marksId : marksIds) {
                 db.insertMarkRecord(new MarkRecord(mediaId, (int)marksId));
             }
-            //Экспорт в галерею (проверка на то нужно ли экспортировать внутри метода).
             exportInGallery(renamedPath);
 
             setResult(RESULT_OK);
