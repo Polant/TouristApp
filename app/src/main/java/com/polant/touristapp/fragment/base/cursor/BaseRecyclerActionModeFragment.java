@@ -32,7 +32,7 @@ public abstract class BaseRecyclerActionModeFragment extends BaseRecyclerMultiCh
             if (selectedCount == 0) {
                 mActionMode.finish();
             } else {
-                mActionMode.setTitle(String.valueOf(getString(R.string.overlay_text) + " " + selectedCount));
+                mActionMode.setTitle(String.valueOf(getString(R.string.action_mode_overlay_text) + " " + selectedCount));
                 mActionMode.invalidate();
             }
         }

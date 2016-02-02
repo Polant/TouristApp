@@ -20,7 +20,7 @@ import com.polant.touristapp.activity.SearchActivity;
 import com.polant.touristapp.activity.SettingsActivity;
 
 /**
- * Реализация NavigationDrawer - для использования его во всех activity.
+ * Реализация обертки над NavigationDrawer.
  */
 public class NavigationDrawer {
 
@@ -45,13 +45,13 @@ public class NavigationDrawer {
                 .withTranslucentStatusBar(true)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName("Карта").withIcon(R.drawable.ic_map).withIdentifier(1),
-                        new PrimaryDrawerItem().withName("Поиск").withIcon(R.drawable.ic_magnify).withIdentifier(2),
-                        new PrimaryDrawerItem().withName("Метки").withIcon(R.drawable.ic_bookmark).withIdentifier(3),
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_map_name).withIcon(R.drawable.ic_map).withIdentifier(1),
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_search_name).withIcon(R.drawable.ic_magnify).withIdentifier(2),
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_marks_name).withIcon(R.drawable.ic_bookmark).withIdentifier(3),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName("Настройки").withIcon(R.drawable.ic_settings).withIdentifier(4),
-                        new PrimaryDrawerItem().withName("Помощь").withIcon(R.drawable.ic_help).withIdentifier(5),
-                        new PrimaryDrawerItem().withName("Обратная связь").withIcon(R.drawable.ic_contact_mail).withIdentifier(6)
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_settings_name).withIcon(R.drawable.ic_settings).withIdentifier(4),
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_help_name).withIcon(R.drawable.ic_help).withIdentifier(5),
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_feedback_name).withIcon(R.drawable.ic_contact_mail).withIdentifier(6)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
