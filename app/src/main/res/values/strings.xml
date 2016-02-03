@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Tourist app</string>
 
+    <string name="title_activity_help">Помощь</string>
     <string name="title_activity_settings">Настройки</string>
     <string name="title_activity_marks_multi_choice">Метки</string>
     <string name="title_activity_selected_photo">Фото</string>
@@ -117,12 +118,13 @@
     <string name="navigation_item_settings_name">Настройки</string>
     <string name="navigation_item_help_name">Помощь</string>
     <string name="navigation_item_feedback_name">Обратная связь</string>
+
+    <!-- Help -->
+
     <string name="tab_map_title">Карта</string>
+    <string name="tab_selected_photo_title">Фото</string>
     <string name="tab_marks_title">Метки</string>
     <string name="tab_search_title">Поиск</string>
-    <string name="activity_help_title">Помощь</string>
-    <string name="tab_photos_title">Фото</string>
     <string name="tab_settings_title">Настройки</string>
-    <string name="tab_selected_photo_title">Фотографируй</string>
 
 </resources>

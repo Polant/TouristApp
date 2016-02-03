@@ -39,7 +39,7 @@ public class HelpActivity extends AppCompatActivity {
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.activity_help_title);
+        toolbar.setTitle(R.string.title_activity_help);
 
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -55,10 +55,11 @@ public class HelpActivity extends AppCompatActivity {
 
         TabsHelpFragmentAdapter adapter = new TabsHelpFragmentAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new PagerChangeListener());
+//        viewPager.addOnPageChangeListener(new PagerChangeListener());
 
         TabLayout tabLayout = (TabLayout)findViewById(R.id.tabLayoutHelp);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     private class PagerChangeListener implements ViewPager.OnPageChangeListener{
