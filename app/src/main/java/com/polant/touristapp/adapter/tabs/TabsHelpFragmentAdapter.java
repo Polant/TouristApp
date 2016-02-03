@@ -29,11 +29,21 @@ public class TabsHelpFragmentAdapter extends FragmentPagerAdapter {
 
     private void initTabs() {
         tabs = new HashMap<>();
-        tabs.put(0, TabHelpFragment.getInstance(context.getString(R.string.tab_map_title), R.drawable.help_map));
-        tabs.put(1, TabHelpFragment.getInstance(context.getString(R.string.tab_selected_photo_title), R.drawable.help_selected_photo));
-        tabs.put(2, TabHelpFragment.getInstance(context.getString(R.string.tab_marks_title), R.drawable.help_marks));
-        tabs.put(3, TabHelpFragment.getInstance(context.getString(R.string.tab_search_title), R.drawable.help_search));
-        tabs.put(4, TabHelpFragment.getInstance(context.getString(R.string.tab_settings_title), R.drawable.help_settings));
+        tabs.put(0, TabHelpFragment.getInstance(context.getString(R.string.tab_selected_photo_title),
+                context.getString(R.string.help_photo_text),
+                R.drawable.help_selected_photo));
+        tabs.put(1, TabHelpFragment.getInstance(context.getString(R.string.tab_map_title),
+                context.getString(R.string.help_map_text),
+                R.drawable.help_map));
+        tabs.put(2, TabHelpFragment.getInstance(context.getString(R.string.tab_marks_title),
+                context.getString(R.string.help_title_text),
+                R.drawable.help_marks));
+        tabs.put(3, TabHelpFragment.getInstance(context.getString(R.string.tab_search_title),
+                context.getString(R.string.help_search_text),
+                R.drawable.help_search));
+        tabs.put(4, TabHelpFragment.getInstance(context.getString(R.string.tab_settings_title),
+                context.getString(R.string.help_settings_text),
+                R.drawable.help_settings));
     }
 
     @Override
@@ -48,6 +58,6 @@ public class TabsHelpFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return tabs.get(position).getTitle();
+        return tabs.get(position).getTabTitle();
     }
 }

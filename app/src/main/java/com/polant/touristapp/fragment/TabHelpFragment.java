@@ -17,16 +17,16 @@ public class TabHelpFragment extends Fragment {
 
     private static final int LAYOUT = R.layout.fragment_help;
 
-    private View view;
+    private String tabTitle;
 
-    private String title;
+    private String helpText;
 
     private int contentDrawable;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(LAYOUT, container, false);
+        View view = inflater.inflate(LAYOUT, container, false);
 
         ImageView contentHelp = (ImageView) view.findViewById(R.id.help_item_content);
         contentHelp.setImageResource(contentDrawable);
@@ -34,22 +34,31 @@ public class TabHelpFragment extends Fragment {
         return view;
     }
 
-    public static TabHelpFragment getInstance(String title, int drawableRes){
+    public static TabHelpFragment getInstance(String tabTitle, String helpText, int drawableRes){
         Bundle args = new Bundle();
         TabHelpFragment fragment = new TabHelpFragment();
 
         fragment.setArguments(args);
-        fragment.setTitle(title);
+        fragment.setTabTitle(tabTitle);
+        fragment.setHelpText(helpText);
         fragment.setContentDrawable(drawableRes);
         return fragment;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTabTitle() {
+        return tabTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTabTitle(String title) {
+        this.tabTitle = title;
+    }
+
+    public String getHelpText() {
+        return helpText;
+    }
+
+    public void setHelpText(String helpText) {
+        this.helpText = helpText;
     }
 
     public void setContentDrawable(int contentDrawable) {

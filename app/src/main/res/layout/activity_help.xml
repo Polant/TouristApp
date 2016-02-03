@@ -44,6 +44,7 @@
             android:padding="@dimen/help_footer_height">
 
             <TextView
+                android:id="@+id/helpTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
