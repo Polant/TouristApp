@@ -49,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="New Text"
+                android:minLines="2"
                 android:gravity="center"
                 android:typeface="normal"
                 android:textSize="20sp"/>
