@@ -52,6 +52,9 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"/>
+        <activity
+            android:name=".activity.HelpActivity"
+            android:label="@string/activity_help_title"/>
     </application>
 
 </manifest>

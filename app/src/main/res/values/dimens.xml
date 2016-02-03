@@ -15,4 +15,6 @@
     <dimen name="recycler_item_photo_image_view_height">200dp</dimen>
     <dimen name="multi_types_recycler_circle_photo_size">60dp</dimen>
     <dimen name="mark_circle_image_view_size">50dp</dimen>
+
+    <dimen name="help_footer_height">50dp</dimen>
 </resources>

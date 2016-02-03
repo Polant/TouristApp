@@ -15,6 +15,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
+import com.polant.touristapp.activity.HelpActivity;
 import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.activity.SearchActivity;
 import com.polant.touristapp.activity.SettingsActivity;
@@ -72,6 +73,10 @@ public class NavigationDrawer {
                             case 4://Настройки.
                                 Intent settings = new Intent(activity, SettingsActivity.class);
                                 activity.startActivityForResult(settings, Constants.SHOW_SETTINGS_ACTIVITY);
+                                break;
+                            case 5://Помощь.
+                                Intent help = new Intent(activity, HelpActivity.class);
+                                activity.startActivity(help);
                                 break;
                         }
                         return false;
