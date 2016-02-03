@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.tabs.TabsHelpFragmentAdapter;
 import com.polant.touristapp.fragment.TabHelpFragment;
-import com.polant.touristapp.utils.image.DeviceDimensionsHelper;
 
 /**
  * Created by Антон on 03.02.2016.
@@ -66,30 +65,8 @@ public class HelpActivity extends AppCompatActivity {
 
     private class PagerChangeListener implements ViewPager.OnPageChangeListener {
 
-        private int deviceWidth = DeviceDimensionsHelper.getDisplayWidth(HelpActivity.this);
-
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            float percentOffset = Math.abs(((float)positionOffsetPixels) / deviceWidth);
-            //TODO: отладить этот участок кода.
-            if (percentOffset < 0.5){
-                mHelpText.setAlpha(1 - percentOffset);
-            }
-            else{
-                mHelpText.setAlpha(percentOffset);
-
-                String text;
-                if (positionOffsetPixels < -20 ){
-                    text = mAdapter.getItem(position - 1).getHelpText();
-                }
-                else if (positionOffsetPixels > 20){
-                    text = mAdapter.getItem(position + 1).getHelpText();
-                }
-                else{
-                    text = mAdapter.getItem(position).getHelpText();
-                }
-                mHelpText.setText(text);
-            }
         }
 
         @Override
