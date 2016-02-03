@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.tabs.TabsHelpFragmentAdapter;
+import com.polant.touristapp.fragment.TabHelpFragment;
 
 /**
  * Created by Антон on 03.02.2016.
@@ -46,11 +47,16 @@ public class HelpActivity extends AppCompatActivity {
     }
 
     private void initTabLayout() {
+        mAdapter = new TabsHelpFragmentAdapter(this, getSupportFragmentManager());
+
         ViewPager viewPager = (ViewPager)findViewById(R.id.viewPager);
 
-        mAdapter = new TabsHelpFragmentAdapter(this, getSupportFragmentManager());
+        PagerChangeListener listener = new PagerChangeListener();
+
         viewPager.setAdapter(mAdapter);
-        viewPager.addOnPageChangeListener(new PagerChangeListener());
+        viewPager.addOnPageChangeListener(listener);
+
+        listener.onPageSelected(0);//Чтобы установить текст помощи для первой вкладки.
 
         TabLayout tabLayout = (TabLayout)findViewById(R.id.tabLayoutHelp);
         tabLayout.setupWithViewPager(viewPager);
@@ -65,7 +71,8 @@ public class HelpActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
-
+            TabHelpFragment selected = mAdapter.getItem(position);
+            mHelpText.setText(selected.getHelpText());
         }
 
         @Override

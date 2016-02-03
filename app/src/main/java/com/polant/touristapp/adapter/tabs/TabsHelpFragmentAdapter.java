@@ -47,7 +47,7 @@ public class TabsHelpFragmentAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public TabHelpFragment getItem(int position) {
         return tabs.get(position);
     }
 
