@@ -29,9 +29,12 @@ public class TabsHelpFragmentAdapter extends FragmentPagerAdapter {
 
     private void initTabs() {
         tabs = new HashMap<>();
-        tabs.put(0, TabHelpFragment.getInstance(context, R.string.tab_map_title));
-        tabs.put(1, TabHelpFragment.getInstance(context, R.string.tab_marks_title));
-        tabs.put(2, TabHelpFragment.getInstance(context, R.string.tab_search_title));
+        tabs.put(0, TabHelpFragment.getInstance(context.getString(R.string.tab_map_title), R.drawable.help_map));
+        tabs.put(1, TabHelpFragment.getInstance(context.getString(R.string.tab_selected_photo_title), R.drawable.help_selected_photo));
+        tabs.put(2, TabHelpFragment.getInstance(context.getString(R.string.tab_photos_title), R.drawable.help_photos));
+        tabs.put(3, TabHelpFragment.getInstance(context.getString(R.string.tab_marks_title), R.drawable.help_marks));
+        tabs.put(4, TabHelpFragment.getInstance(context.getString(R.string.tab_search_title), R.drawable.help_search));
+        tabs.put(5, TabHelpFragment.getInstance(context.getString(R.string.tab_settings_title), R.drawable.help_settings));
     }
 
     @Override
