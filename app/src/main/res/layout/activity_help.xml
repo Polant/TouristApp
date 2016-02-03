@@ -48,7 +48,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="New Text"/>
+                android:text="New Text"
+                android:gravity="center"
+                android:typeface="normal"
+                android:textSize="20sp"/>
 
         </FrameLayout>
 
