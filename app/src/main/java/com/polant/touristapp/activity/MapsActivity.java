@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
@@ -24,8 +25,8 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.activity.base.BaseTouristActivity;
 import com.polant.touristapp.drawer.NavigationDrawer;
 import com.polant.touristapp.maps.clustering.CustomImageRenderer;
-import com.polant.touristapp.model.clustering.MapClusterItem;
 import com.polant.touristapp.maps.location.TouristLocationManager;
+import com.polant.touristapp.model.clustering.MapClusterItem;
 import com.polant.touristapp.model.database.UserMedia;
 
 import java.io.File;
@@ -35,16 +36,17 @@ public class MapsActivity extends BaseTouristActivity implements OnMapReadyCallb
 
     private static final int LAYOUT = R.layout.activity_maps;
 
-    private GoogleMap mMap;
     private ClusterManager<MapClusterItem> mClusterManager;
+
     private TouristLocationManager mLocationManager;
 
     private Drawer mNavigationDrawer;
 
     private String mLastImagePath;
 
-    private long[] mFilterMarks; //Фильтр, который хранит Id меток.
+    private long[] mFilterMarks; //Фильтр фотографий, который хранит Id меток.
 
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,36 +73,46 @@ public class MapsActivity extends BaseTouristActivity implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
         //Обязательно, т.к. обработка геолокации на карте находится в TouristLocationManager!
         mLocationManager.setGoogleMap(googleMap);
 
         Location currentLocation = mLocationManager.getLastLocation();
         if (currentLocation != null){
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                     Constants.DEFAULT_CAMERA_ZOOM_LEVEL));
 
             MarkerOptions options = new MarkerOptions()
                     .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
                     .title(getString(R.string.i_am_here));
+
             //Обязательно установить маркер, чтобы обновлять маркер своего местоположения.
-            Marker myPosition = mMap.addMarker(options);
+            Marker myPosition = googleMap.addMarker(options);
             mLocationManager.setMyLocation(myPosition);
         }
-        setUpClusterManager();
+        setUpClusterManager(googleMap);
     }
 
     //---------------------------Кластеризация------------------------------//
 
-    private void setUpClusterManager() {
-        mClusterManager = new ClusterManager<>(this, mMap);
+    private void setUpClusterManager(GoogleMap googleMap) {
+        mClusterManager = new ClusterManager<>(this, googleMap);
         //Устанавливаю свой рендерер. Listener-ы и адаптеры устанавливаются внутри CustomImageRenderer.
-        mClusterManager.setRenderer(new CustomImageRenderer(this, mMap, mClusterManager));
+        mClusterManager.setRenderer(new CustomImageRenderer(this, googleMap, mClusterManager));
 
-        ArrayList<UserMedia> medias = db.selectAllUserMediaByUserId(mUserId);
-        addItemsToMap(medias);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final ArrayList<UserMedia> medias = db.selectAllUserMediaByUserId(mUserId);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        addItemsToMap(medias);
+                    }
+                });
+            }
+        });
+        t.start();
     }
 
     private void addItemsToMap(ArrayList<UserMedia> medias) {
@@ -110,18 +122,29 @@ public class MapsActivity extends BaseTouristActivity implements OnMapReadyCallb
     }
 
     //Передать null, если надо вывести все фото.
-    private void updateClustersByFilter(long[] markIds){
+    private void updateClustersByFilter(final long[] markIds){
         mClusterManager.clearItems();
 
-        ArrayList<UserMedia> medias;
-        if (markIds != null && markIds.length > 0){
-            medias = db.selectUserMediaByFilter(mUserId, markIds);
-        }
-        else{
-            medias = db.selectAllUserMediaByUserId(mUserId);
-        }
-        addItemsToMap(medias);
-        mClusterManager.cluster();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final ArrayList<UserMedia> medias;
+                if (markIds != null && markIds.length > 0){
+                    medias = db.selectUserMediaByFilter(mUserId, markIds);
+                }
+                else{
+                    medias = db.selectAllUserMediaByUserId(mUserId);
+                }
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        addItemsToMap(medias);
+                        mClusterManager.cluster();
+                    }
+                });
+            }
+        });
+        t.start();
     }
 
     //---------------------Toolbar, Navigation Drawer and FAB----------------------------//
