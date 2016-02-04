@@ -211,11 +211,8 @@ public class SelectedPhotoActivity extends BaseTouristActivity {
             ExifInterface metadata = new ExifInterface(mImagePath);
             String date = metadata.getAttribute(ExifInterface.TAG_DATETIME);
 
-            Log.d(Constants.APP_LOG_TAG, date);
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy:mm:dd hh:mm:ss", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault());
             Date createdDate = sdf.parse(date);
-            Log.d(Constants.APP_LOG_TAG, String.valueOf(createdDate));
 
             UserMedia newMedia = new UserMedia(name, description, mUserId,
                     latitude, longitude, mImagePath,
