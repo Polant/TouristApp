@@ -16,6 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -76,6 +77,9 @@ public class MapsActivity extends BaseTouristActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         //Обязательно, т.к. обработка геолокации на карте находится в TouristLocationManager!
         mLocationManager.setGoogleMap(googleMap);
+
+        UiSettings uiSettings = googleMap.getUiSettings();
+        uiSettings.setMapToolbarEnabled(false);
 
         Location currentLocation = mLocationManager.getLastLocation();
         if (currentLocation != null){
