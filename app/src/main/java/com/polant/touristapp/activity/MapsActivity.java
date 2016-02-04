@@ -238,7 +238,12 @@ public class MapsActivity extends BaseTouristActivity implements OnMapReadyCallb
         else if (requestCode == Constants.SHOW_MARKS_ACTIVITY){
             openDatabase();
             updateClustersByFilter(mFilterMarks);
-        }else if (requestCode == Constants.SHOW_SETTINGS_ACTIVITY){
+
+        }else if (requestCode == Constants.SHOW_SEARCH_ACTIVITY){
+            openDatabase();
+            updateClustersByFilter(mFilterMarks);
+        }
+        else if (requestCode == Constants.SHOW_SETTINGS_ACTIVITY){
             //Сделал обновление данные для работы TouristLocationManager в его методе
             //registerListener(), который вызывается в onResume().
         }

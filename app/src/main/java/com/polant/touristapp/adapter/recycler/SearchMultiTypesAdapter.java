@@ -15,12 +15,12 @@ import com.polant.touristapp.adapter.base.RecyclerClickListener;
 import com.polant.touristapp.model.database.Mark;
 import com.polant.touristapp.model.database.UserMedia;
 import com.polant.touristapp.model.search.SearchComplexItem;
-import com.polant.touristapp.utils.date.DateFormatUtil;
 import com.polant.touristapp.utils.image.ImageUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Антон on 29.01.2016.
@@ -130,7 +130,7 @@ public class SearchMultiTypesAdapter extends RecyclerView.Adapter<SearchMultiTyp
             else if (searchComplexItem.isUserMedia()){
                 final UserMedia media = searchComplexItem.getMedia();
 
-                SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", DateFormatUtil.getDateFormatSymbols(context));
+                SimpleDateFormat sdf = new SimpleDateFormat("d MMMM yyyy", Locale.getDefault());
 
                 Thread t = new Thread(new Runnable() {
                     @Override
