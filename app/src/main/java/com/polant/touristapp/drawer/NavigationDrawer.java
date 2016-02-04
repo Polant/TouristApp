@@ -85,7 +85,7 @@ public class NavigationDrawer {
                                 break;
                             case ITEM_HELP://Помощь.
                                 Intent help = new Intent(activity, HelpActivity.class);
-                                activity.startActivity(help);
+                                activity.startActivityForResult(help, Constants.SHOW_HELP_ACTIVITY);
                                 break;
                         }
                         return false;
