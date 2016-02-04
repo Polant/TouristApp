@@ -19,7 +19,7 @@ public class TabHelpFragment extends Fragment {
 
     private String tabTitle;
 
-    private String helpText;
+    private String contentText;
 
     private int contentDrawable;
 
@@ -40,7 +40,7 @@ public class TabHelpFragment extends Fragment {
 
         fragment.setArguments(args);
         fragment.setTabTitle(tabTitle);
-        fragment.setHelpText(helpText);
+        fragment.setContentText(helpText);
         fragment.setContentDrawable(drawableRes);
         return fragment;
     }
@@ -53,12 +53,12 @@ public class TabHelpFragment extends Fragment {
         this.tabTitle = title;
     }
 
-    public String getHelpText() {
-        return helpText;
+    public String getContentText() {
+        return contentText;
     }
 
-    public void setHelpText(String helpText) {
-        this.helpText = helpText;
+    public void setContentText(String contentText) {
+        this.contentText = contentText;
     }
 
     public void setContentDrawable(int contentDrawable) {

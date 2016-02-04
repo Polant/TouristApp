@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.SearchMultiTypesAdapter;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
+import com.polant.touristapp.fragment.base.recycler.BaseRecyclerFragment;
 import com.polant.touristapp.interfaces.ISearchableFragment;
 import com.polant.touristapp.model.database.Mark;
 import com.polant.touristapp.model.database.UserMedia;

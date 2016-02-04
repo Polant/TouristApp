@@ -1,11 +1,11 @@
-package com.polant.touristapp.fragment.base.cursor;
+package com.polant.touristapp.fragment.base.recycler.cursor;
 
 import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
 import com.polant.touristapp.adapter.base.CursorRecyclerViewMultiAdapter;
-import com.polant.touristapp.fragment.base.BaseRecyclerFragment;
+import com.polant.touristapp.fragment.base.recycler.BaseRecyclerFragment;
 
 import java.util.List;
 

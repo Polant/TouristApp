@@ -20,12 +20,10 @@ import android.widget.TextView;
 
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.PhotosCursorMultiAdapter;
-import com.polant.touristapp.fragment.base.cursor.BaseRecyclerActionModeFragment;
+import com.polant.touristapp.fragment.base.recycler.cursor.BaseRecyclerActionModeFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
 import com.polant.touristapp.model.database.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by Антон on 25.01.2016.

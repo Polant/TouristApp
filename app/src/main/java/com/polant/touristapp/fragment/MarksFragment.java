@@ -26,7 +26,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.activity.MarksActivity;
 import com.polant.touristapp.adapter.recycler.MarksCursorMultiAdapter;
 import com.polant.touristapp.data.Database;
-import com.polant.touristapp.fragment.base.cursor.BaseRecyclerActionModeFragment;
+import com.polant.touristapp.fragment.base.recycler.cursor.BaseRecyclerActionModeFragment;
 import com.polant.touristapp.interfaces.IActionModeActivity;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
 import com.polant.touristapp.model.database.Mark;

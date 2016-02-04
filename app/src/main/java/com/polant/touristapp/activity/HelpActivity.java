@@ -72,7 +72,7 @@ public class HelpActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int position) {
             TabHelpFragment selected = mAdapter.getItem(position);
-            mHelpText.setText(selected.getHelpText());
+            mHelpText.setText(selected.getContentText());
         }
 
         @Override

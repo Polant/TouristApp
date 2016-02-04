@@ -1,4 +1,4 @@
-package com.polant.touristapp.fragment.base.cursor;
+package com.polant.touristapp.fragment.base.recycler.cursor;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
