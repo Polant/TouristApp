@@ -34,7 +34,6 @@ public class SearchFragment extends BaseRecyclerFragment implements ISearchableF
 
     protected SearchMultiTypesAdapter mAdapter;
 
-    protected Handler handler = new Handler();
 
     @Override
     public void onAttach(Context context) {
@@ -112,7 +111,7 @@ public class SearchFragment extends BaseRecyclerFragment implements ISearchableF
                 List<SearchComplexItem> result = merge(marks, medias);
                 mAdapter.changeItems(result);
 
-                handler.post(new Runnable() {
+                mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         notifyRecyclerView();

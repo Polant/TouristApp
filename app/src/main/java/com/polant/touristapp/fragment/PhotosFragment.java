@@ -47,7 +47,6 @@ public class PhotosFragment extends BaseRecyclerActionModeFragment {
 
     private long mMarkId;
 
-    private Handler mHandler = new Handler();
 
     @Override
     public void onAttach(Context context) {

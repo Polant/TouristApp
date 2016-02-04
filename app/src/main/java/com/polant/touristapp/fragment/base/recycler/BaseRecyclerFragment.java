@@ -3,6 +3,7 @@ package com.polant.touristapp.fragment.base.recycler;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 
 import com.polant.touristapp.Constants;
@@ -18,6 +19,8 @@ public abstract class BaseRecyclerFragment extends Fragment implements RecyclerC
     protected Activity mActivity;
 
     protected int mUserId;
+
+    protected Handler mHandler = new Handler();
 
     @Override
     public void onAttach(Context context) {

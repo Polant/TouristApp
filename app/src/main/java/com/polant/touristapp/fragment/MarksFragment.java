@@ -56,7 +56,6 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
     //или добавления меток для нового фото.
     private boolean isCallToFilterOrAddMarksToPhoto;
 
-    private Handler mHandler = new Handler();
 
     @Override
     public void onAttach(Context context) {
