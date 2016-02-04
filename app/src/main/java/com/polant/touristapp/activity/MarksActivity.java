@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,6 +20,7 @@ import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.activity.base.BaseTouristActivity;
 import com.polant.touristapp.data.Database;
+import com.polant.touristapp.fab.ScrollAwareFABBehavior;
 import com.polant.touristapp.fragment.MarksFragment;
 import com.polant.touristapp.fragment.PhotosFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
@@ -124,14 +126,20 @@ public class MarksActivity extends BaseTouristActivity implements IWorkWithDatab
             new FloatingActionButton.OnVisibilityChangedListener() {
                 @Override
                 public void onShown(FloatingActionButton fab) {
-                    fab.setVisibility(View.VISIBLE);
+                    CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)fab.getLayoutParams();
+                    ScrollAwareFABBehavior behavior = (ScrollAwareFABBehavior)lp.getBehavior();
+                    behavior.setActive(true);
+
                     super.onShown(fab);
                 }
 
                 @Override
                 public void onHidden(FloatingActionButton fab) {
                     super.onHidden(fab);
-                    fab.setVisibility(View.INVISIBLE);
+
+                    CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)fab.getLayoutParams();
+                    ScrollAwareFABBehavior behavior = (ScrollAwareFABBehavior)lp.getBehavior();
+                    behavior.setActive(false);
                 }
             };
 

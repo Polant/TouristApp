@@ -12,11 +12,20 @@ import android.view.View;
  */
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 
+    private boolean isActive = true;
+
+    public ScrollAwareFABBehavior() {
+    }
+
     public ScrollAwareFABBehavior(Context context, AttributeSet attrs) {
         super();
         /*Because i am defining this behavior statically within the XML,
           i must also implement a constructor to enable layout inflation to work correctly.
          */
+    }
+
+    public void setActive(boolean isActive){
+        this.isActive = isActive;
     }
 
     @Override
@@ -31,6 +40,10 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
                                View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed,
                 dyUnconsumed);
+
+        if (!isActive){
+            return; // Если я временно отключил это поведение.
+        }
 
         if (dyConsumed > 0 && child.getVisibility() == View.VISIBLE) {
             child.hide();
