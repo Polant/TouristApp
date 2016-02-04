@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.CursorLoader;
@@ -54,6 +55,8 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
     //true - если Активити вызвана для фильтрования фото по меткам на карте
     //или добавления меток для нового фото.
     private boolean isCallToFilterOrAddMarksToPhoto;
+
+    private Handler mHandler = new Handler();
 
     @Override
     public void onAttach(Context context) {
@@ -231,19 +234,25 @@ public class MarksFragment extends BaseRecyclerActionModeFragment {
         }
 
         private void removeMarksWithTheirPhotos() {
-            Database db = getDatabase();
-            List<UserMedia> medias = db.selectUserMediaByFilter(mUserId, getSelectedItemsIdsArray());
-            if (medias.size() > 0) {
-                List<Long> mediasIds = new ArrayList<>(medias.size());
-                for (UserMedia m : medias) {
-                    mediasIds.add((long) m.getId());
-                }
-                db.deleteUserMedias(mediasIds);
-            }
-            db.deleteMarks(mAdapter.getSelectedItemsIds());
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Database db = getDatabase();
+                    List<UserMedia> medias = db.selectUserMediaByFilter(mUserId, getSelectedItemsIdsArray());
 
-            mActionMode.finish();
-            notifyRecyclerView();
+                    db.deleteUserMedias(medias);
+                    db.deleteMarks(mAdapter.getSelectedItemsIds());
+
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mActionMode.finish();
+                            notifyRecyclerView();
+                        }
+                    });
+                }
+            });
+            t.start();
         }
 
         private void removeMarksDialog() {

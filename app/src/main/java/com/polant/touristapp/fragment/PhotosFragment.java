@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -20,10 +21,14 @@ import android.widget.TextView;
 
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.PhotosCursorMultiAdapter;
+import com.polant.touristapp.data.Database;
 import com.polant.touristapp.fragment.base.recycler.cursor.BaseRecyclerActionModeFragment;
 import com.polant.touristapp.interfaces.ICollapsedToolbarActionModeActivity;
 import com.polant.touristapp.model.database.UserMedia;
 import com.polant.touristapp.utils.alert.AlertUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Антон on 25.01.2016.
@@ -41,6 +46,8 @@ public class PhotosFragment extends BaseRecyclerActionModeFragment {
     private View view;
 
     private long mMarkId;
+
+    private Handler mHandler = new Handler();
 
     @Override
     public void onAttach(Context context) {
@@ -167,9 +174,29 @@ public class PhotosFragment extends BaseRecyclerActionModeFragment {
         }
 
         private void removePhotos() {
-            getDatabase().deleteUserMedias(mAdapter.getSelectedItemsIds());
-            mActionMode.finish();
-            notifyRecyclerView();
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    List<Long> photosIds = mAdapter.getSelectedItemsIds();
+
+                    Database db = getDatabase();
+
+                    List<UserMedia> photos = new ArrayList<>();
+                    for (long id : photosIds){
+                        photos.add(db.findUserMediaById(id));
+                    }
+                    db.deleteUserMedias(photos);
+
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mActionMode.finish();
+                            notifyRecyclerView();
+                        }
+                    });
+                }
+            });
+            t.start();
         }
 
         private void removePhotosDialog() {

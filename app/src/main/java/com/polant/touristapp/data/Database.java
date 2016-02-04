@@ -73,11 +73,11 @@ public class Database {
         sqLiteDatabase.update(TABLE_USERS_MEDIA, cv, where, whereArgs);
     }
 
-    public void deleteUserMedias(List<Long> mediasIds){
+    public void deleteUserMedias(List<UserMedia> mediasIds){
         String query = "DELETE FROM " + TABLE_USERS_MEDIA + " WHERE " + MEDIA_ID + " IN (";
         StringBuilder whereBuilder = new StringBuilder(query);
-        for (long id : mediasIds){
-            whereBuilder.append(id).append(", ");
+        for (UserMedia id : mediasIds){
+            whereBuilder.append(id.getId()).append(", ");
         }
         whereBuilder.delete(whereBuilder.length() - 2, whereBuilder.length());//Убираю последнюю запятую.
         whereBuilder.append(");");
