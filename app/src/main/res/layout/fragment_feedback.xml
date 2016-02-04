@@ -12,6 +12,7 @@
         android:layout_margin="25dp"/>
 
     <TextView
+        android:id="@+id/feedback_app_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/feedback_app_version"
@@ -35,6 +36,7 @@
         android:layout_margin="25dp"/>
 
     <TextView
+        android:id="@+id/feedback_email_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/feedback_email"
@@ -47,6 +49,7 @@
         android:textColorLink="@color/feedback_link_color"/>
 
     <TextView
+        android:id="@+id/feedback_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/feedback_text"

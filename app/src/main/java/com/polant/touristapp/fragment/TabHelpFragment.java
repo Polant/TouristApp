@@ -28,14 +28,15 @@ public class TabHelpFragment extends BaseTabFragment {
         return view;
     }
 
-    public static TabHelpFragment getInstance(String tabTitle, String helpText, int drawableRes){
+    public static TabHelpFragment getInstance(String tabTitle, String contentText, int drawableRes){
         Bundle args = new Bundle();
         TabHelpFragment fragment = new TabHelpFragment();
 
         fragment.setArguments(args);
         fragment.setTabTitle(tabTitle);
-        fragment.setContentText(helpText);
+        fragment.setContentText(contentText);
         fragment.setContentDrawable(drawableRes);
+
         return fragment;
     }
 }
