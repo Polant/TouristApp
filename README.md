@@ -14,10 +14,14 @@ which are now gaining popularity.
 
 And if you have questions about using the application, you can find answers in the **"Help"** menu.
 
+##Requirements
+> API Level 15 (Android 4.0.3 Ice Cream Sandwich)
+
 ##Screenshots
 
 ![navigation_drawer](https://cloud.githubusercontent.com/assets/10827392/12829909/2220ee0e-cb95-11e5-8471-fff5062080de.png)
 ![map](https://cloud.githubusercontent.com/assets/10827392/12829902/2202a07a-cb95-11e5-8789-bc4b3d0b4132.png)
+![selected_photo](https://cloud.githubusercontent.com/assets/10827392/12831726/78c3b698-cb9e-11e5-95cc-070c2d544b08.png)
 
 ![marks_unselected](https://cloud.githubusercontent.com/assets/10827392/12829906/221a911c-cb95-11e5-8bd3-5720a9e962d0.png)
 ![marks_selected 2](https://cloud.githubusercontent.com/assets/10827392/12829907/221c69a6-cb95-11e5-9a67-3f1234cd4922.png)
