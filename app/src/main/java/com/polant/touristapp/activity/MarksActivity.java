@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -238,7 +239,7 @@ public class MarksActivity extends BaseTouristActivity implements IWorkWithDatab
         MarksFragment fragment = findMarksListMultiFragmentByTag();
         fragment.notifyRecyclerView();
 
-        showSnackbar(fab, R.string.mark_was_added);
+        showSnackbar(fab, R.string.mark_was_added, Snackbar.LENGTH_INDEFINITE);
     }
 
     //-------------------------------Photos------------------------------------//

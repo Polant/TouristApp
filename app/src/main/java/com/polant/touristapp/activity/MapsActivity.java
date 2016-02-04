@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -171,7 +172,7 @@ public class MapsActivity extends BaseTouristActivity implements OnMapReadyCallb
                         //Сбрасываю фильтр.
                         mFilterMarks = null;
                         updateClustersByFilter(null);
-                        showSnackbar(findViewById(R.id.fab), R.string.reset_filter_text);
+                        showSnackbar(findViewById(R.id.fab), R.string.reset_filter_text, Snackbar.LENGTH_LONG);
                         return true;
                 }
                 return false;
@@ -220,7 +221,7 @@ public class MapsActivity extends BaseTouristActivity implements OnMapReadyCallb
             openDatabase();
             //Обновляю кластеры после добавления нового фото.
             updateClustersByFilter(mFilterMarks);
-            showSnackbar(findViewById(R.id.fab), R.string.reset_filter_text);
+            showSnackbar(findViewById(R.id.fab), R.string.add_photo_text, Snackbar.LENGTH_LONG);
         }
         else if (requestCode == Constants.SHOW_SELECTED_PHOTO_ACTIVITY_FROM_INFO_WINDOW && resultCode == RESULT_OK){
             openDatabase();

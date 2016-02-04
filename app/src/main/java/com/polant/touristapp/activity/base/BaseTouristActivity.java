@@ -29,8 +29,8 @@ public class BaseTouristActivity extends AppCompatActivity {
         }
     }
 
-    protected void showSnackbar(View view, int stringResource) {
-        Snackbar.make(view, stringResource, Snackbar.LENGTH_INDEFINITE)
+    protected void showSnackbar(View view, int stringResource, int lengthTime) {
+        Snackbar.make(view, stringResource, lengthTime)
                 .setAction(R.string.snackbar_close_text, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
