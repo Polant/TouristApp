@@ -16,4 +16,8 @@
     <color name="selected_overlay">#DDDDDD</color>
     <color name="selected_recycle_item_title_color">#ff009688</color>
     <color name="selected_recycler_item_subtitle_color">#ff263238</color>
+
+    <color name="feedback_horizontal_divider_color">#ff263238</color>
+    <color name="feedback_title_color">#ff263238</color>
+    <color name="feedback_link_color">#009688</color>
 </resources>

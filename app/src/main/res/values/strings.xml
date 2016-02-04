@@ -132,5 +132,9 @@
     <string name="help_title_text">Прикрепляйте метки к фотографиям</string>
     <string name="help_search_text">Пользуйтесь удобным поиском</string>
     <string name="help_settings_text">Настраивайте приложение под себя</string>
+    <string name="feedback_app_version">Tourist app 1.0</string>
+    <string name="feedback_title">Обратная связь с нами</string>
+    <string name="feedback_email">anton.poltoratskii@gmail.com</string>
+    <string name="feedback_text">Мы ценим Ваши отзывы и постараемся учитывать пожелания, которые Вы можете написать на нашу электронную почту</string>
 
 </resources>
