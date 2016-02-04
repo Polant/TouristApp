@@ -6,7 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.polant.touristapp.R;
+import com.polant.touristapp.fragment.TabFeedbackFragment;
 import com.polant.touristapp.fragment.TabHelpFragment;
+import com.polant.touristapp.fragment.base.tabs.BaseTabFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +20,7 @@ public class TabsHelpFragmentAdapter extends FragmentPagerAdapter {
 
     private Context context;
 
-    private Map<Integer, TabHelpFragment> tabs;
+    private Map<Integer, BaseTabFragment> tabs;
 
     public TabsHelpFragmentAdapter(Context context, FragmentManager fm) {
         super(fm);
@@ -44,10 +46,15 @@ public class TabsHelpFragmentAdapter extends FragmentPagerAdapter {
         tabs.put(4, TabHelpFragment.getInstance(context.getString(R.string.tab_settings_title),
                 context.getString(R.string.help_settings_text),
                 R.drawable.help_settings));
+        tabs.put(5, TabFeedbackFragment.getInstance(context.getString(R.string.tab_feedback_title),
+                context.getString(R.string.feedback_text),
+                R.mipmap.ic_launcher,
+                context.getString(R.string.feedback_app_version),
+                context.getString(R.string.feedback_email)));
     }
 
     @Override
-    public TabHelpFragment getItem(int position) {
+    public BaseTabFragment getItem(int position) {
         return tabs.get(position);
     }
 
