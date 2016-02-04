@@ -25,6 +25,12 @@ import com.polant.touristapp.activity.SettingsActivity;
  */
 public class NavigationDrawer {
 
+    public static final int ITEM_MAP = 1;
+    public static final int ITEM_SEARCH = 2;
+    public static final int ITEM_MARKS = 3;
+    public static final int ITEM_SETTINGS = 4;
+    public static final int ITEM_HELP = 5;
+
     private Activity activity;
     private Toolbar toolbar;
 
@@ -46,33 +52,38 @@ public class NavigationDrawer {
                 .withTranslucentStatusBar(true)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.navigation_item_map_name).withIcon(R.drawable.ic_map).withIdentifier(1),
-                        new PrimaryDrawerItem().withName(R.string.navigation_item_search_name).withIcon(R.drawable.ic_magnify).withIdentifier(2),
-                        new PrimaryDrawerItem().withName(R.string.navigation_item_marks_name).withIcon(R.drawable.ic_bookmark).withIdentifier(3),
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_map_name).withIcon(R.drawable.ic_map)
+                                .withIdentifier(ITEM_MAP),
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_search_name).withIcon(R.drawable.ic_magnify)
+                                .withIdentifier(ITEM_SEARCH),
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_marks_name).withIcon(R.drawable.ic_bookmark)
+                                .withIdentifier(ITEM_MARKS),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName(R.string.navigation_item_settings_name).withIcon(R.drawable.ic_settings).withIdentifier(4),
-                        new PrimaryDrawerItem().withName(R.string.navigation_item_help_name).withIcon(R.drawable.ic_help).withIdentifier(5)
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_settings_name).withIcon(R.drawable.ic_settings)
+                                .withIdentifier(ITEM_SETTINGS),
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_help_name).withIcon(R.drawable.ic_help)
+                                .withIdentifier(ITEM_HELP)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         switch (drawerItem.getIdentifier()) {
-                            case 2://Поиск.
+                            case ITEM_SEARCH://Поиск.
                                 Intent search = new Intent(activity, SearchActivity.class);
                                 search.putExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
                                 activity.startActivityForResult(search, Constants.SHOW_SEARCH_ACTIVITY);
                                 break;
-                            case 3://Метки.
+                            case ITEM_MARKS://Метки.
                                 Intent marks = new Intent(activity, MarksActivity.class);
                                 marks.putExtra(Constants.USER_ID, Constants.DEFAULT_USER_ID_VALUE);
                                 marks.putExtra(MarksActivity.CALL_FILTER_OR_ADD_MARKS, false);
                                 activity.startActivityForResult(marks, Constants.SHOW_MARKS_ACTIVITY);
                                 break;
-                            case 4://Настройки.
+                            case ITEM_SETTINGS://Настройки.
                                 Intent settings = new Intent(activity, SettingsActivity.class);
                                 activity.startActivityForResult(settings, Constants.SHOW_SETTINGS_ACTIVITY);
                                 break;
-                            case 5://Помощь.
+                            case ITEM_HELP://Помощь.
                                 Intent help = new Intent(activity, HelpActivity.class);
                                 activity.startActivity(help);
                                 break;

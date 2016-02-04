@@ -242,6 +242,7 @@ public class MapsActivity extends BaseTouristActivity implements OnMapReadyCallb
             //Сделал обновление данные для работы TouristLocationManager в его методе
             //registerListener(), который вызывается в onResume().
         }
+        mNavigationDrawer.setSelection(NavigationDrawer.ITEM_MAP);
     }
 
     private void startSelectedPhotoActivity(){
