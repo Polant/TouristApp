@@ -51,13 +51,11 @@ public class NavigationDrawer {
                         new PrimaryDrawerItem().withName(R.string.navigation_item_marks_name).withIcon(R.drawable.ic_bookmark).withIdentifier(3),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.navigation_item_settings_name).withIcon(R.drawable.ic_settings).withIdentifier(4),
-                        new PrimaryDrawerItem().withName(R.string.navigation_item_help_name).withIcon(R.drawable.ic_help).withIdentifier(5),
-                        new PrimaryDrawerItem().withName(R.string.navigation_item_feedback_name).withIcon(R.drawable.ic_contact_mail).withIdentifier(6)
+                        new PrimaryDrawerItem().withName(R.string.navigation_item_help_name).withIcon(R.drawable.ic_help).withIdentifier(5)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        //TODO: реализовать обработку клика по navigation drawer.
                         switch (drawerItem.getIdentifier()) {
                             case 2://Поиск.
                                 Intent search = new Intent(activity, SearchActivity.class);
