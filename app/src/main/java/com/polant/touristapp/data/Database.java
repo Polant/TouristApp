@@ -13,6 +13,7 @@ import com.polant.touristapp.R;
 import com.polant.touristapp.model.database.Mark;
 import com.polant.touristapp.model.database.MarkRecord;
 import com.polant.touristapp.model.database.UserMedia;
+import com.polant.touristapp.utils.file.FilesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +77,9 @@ public class Database {
     public void deleteUserMedias(List<UserMedia> mediasIds){
         String query = "DELETE FROM " + TABLE_USERS_MEDIA + " WHERE " + MEDIA_ID + " IN (";
         StringBuilder whereBuilder = new StringBuilder(query);
-        for (UserMedia id : mediasIds){
-            whereBuilder.append(id.getId()).append(", ");
+        for (UserMedia media : mediasIds){
+            whereBuilder.append(media.getId()).append(", ");
+            FilesUtil.deleteFile(media.getMediaExternalPath());//Удаляю само фото с телефона.
         }
         whereBuilder.delete(whereBuilder.length() - 2, whereBuilder.length());//Убираю последнюю запятую.
         whereBuilder.append(");");
@@ -405,7 +407,7 @@ public class Database {
 
     private static class TouristOpenHelper extends SQLiteOpenHelper{
 
-        private static final int DB_VERSION = 10;
+        private static final int DB_VERSION = 11;
         private static final String DB_NAME = "Tourist";
 
         private Context context;
