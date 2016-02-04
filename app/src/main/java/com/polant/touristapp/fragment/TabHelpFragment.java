@@ -2,26 +2,20 @@ package com.polant.touristapp.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.polant.touristapp.R;
+import com.polant.touristapp.fragment.base.tabs.BaseTabFragment;
 
 /**
  * Created by Антон on 03.02.2016.
  */
-public class TabHelpFragment extends Fragment {
+public class TabHelpFragment extends BaseTabFragment {
 
     private static final int LAYOUT = R.layout.fragment_help;
-
-    private String tabTitle;
-
-    private String contentText;
-
-    private int contentDrawable;
 
     @Nullable
     @Override
@@ -43,25 +37,5 @@ public class TabHelpFragment extends Fragment {
         fragment.setContentText(helpText);
         fragment.setContentDrawable(drawableRes);
         return fragment;
-    }
-
-    public String getTabTitle() {
-        return tabTitle;
-    }
-
-    public void setTabTitle(String title) {
-        this.tabTitle = title;
-    }
-
-    public String getContentText() {
-        return contentText;
-    }
-
-    public void setContentText(String contentText) {
-        this.contentText = contentText;
-    }
-
-    public void setContentDrawable(int contentDrawable) {
-        this.contentDrawable = contentDrawable;
     }
 }
