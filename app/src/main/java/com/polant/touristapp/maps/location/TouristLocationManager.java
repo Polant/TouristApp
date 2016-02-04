@@ -10,10 +10,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.polant.touristapp.Constants;
+import com.polant.touristapp.R;
 import com.polant.touristapp.activity.SettingsActivity;
 
 /**
@@ -66,8 +69,23 @@ public class TouristLocationManager implements ILocationManager{
 
     private void updateMapWithLocation(Location l) {
         mLocation = l;
-        if (mMap != null && myLocation != null){
-            myLocation.setPosition(new LatLng(l.getLatitude(), l.getLongitude()));
+        Log.d(Constants.APP_LOG_TAG, " map = " + mMap);
+        if (mMap != null){
+            Log.d(Constants.APP_LOG_TAG, " my location = " + l);
+            Log.d(Constants.APP_LOG_TAG, " my location marker = " + myLocation);
+            if(myLocation != null) {
+                myLocation.setPosition(new LatLng(l.getLatitude(), l.getLongitude()));
+            }
+            else{
+                MarkerOptions options = new MarkerOptions()
+                        .position(new LatLng(l.getLatitude(), l.getLongitude()))
+                        .title(mContext.getString(R.string.i_am_here));
+
+                myLocation = mMap.addMarker(options);
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation.getPosition()));
+            }
+            Log.d(Constants.APP_LOG_TAG, " my location marker = " + myLocation);
         }
     }
 
@@ -80,6 +98,7 @@ public class TouristLocationManager implements ILocationManager{
                 String.valueOf(Constants.DEFAULT_LOCATION_UPDATE_MIN_DISTANCE)));
 
         String provider = mLocationManager.getBestProvider(mCriteria, true);
+        Log.d(Constants.APP_LOG_TAG, " provider = " + provider);
         mLocationManager.requestLocationUpdates(provider,
                 locationUpdateFrequency,
                 locationUpdateMinDistance,
