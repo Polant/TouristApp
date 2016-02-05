@@ -18,7 +18,7 @@ And if you have questions about using the application, you can find answers in t
 > API Level 15 (Android 4.0.3 Ice Cream Sandwich)
 
 ##Download
-<a href="https://www.dropbox.com/s/m0ls71wwcjg56vf/TouristApp.apk?dl=0">Tourist app .apk file</a>
+<a href="https://www.dropbox.com/s/m0ls71wwcjg56vf/TouristApp.apk?dl=0"> Tourist app .apk </a>
 
 ##Screenshots
 
