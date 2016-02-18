@@ -6,13 +6,16 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.adapter.recycler.SearchMultiTypesAdapter;
 import com.polant.touristapp.data.Database;
+import com.polant.touristapp.data.MediaMatcher;
 import com.polant.touristapp.fragment.base.recycler.BaseRecyclerFragment;
 import com.polant.touristapp.interfaces.ISearchableFragment;
 import com.polant.touristapp.model.database.Mark;
@@ -21,6 +24,8 @@ import com.polant.touristapp.model.search.SearchComplexItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Фрагмент, содержащий RecyclerView, который служит для вывода результата поиска.
@@ -59,7 +64,7 @@ public class SearchFragment extends BaseRecyclerFragment implements ISearchableF
         initRecycledView();
 
         //Сначала вывожу все данные.
-        search("");
+        search(null);
     }
 
     protected void initAdapter(){
@@ -105,8 +110,21 @@ public class SearchFragment extends BaseRecyclerFragment implements ISearchableF
             @Override
             public void run() {
                 Database db = getDatabase();
-                List<Mark> marks = db.searchMarks(mUserId, filter);
-                List<UserMedia> medias = db.searchUserMedia(mUserId, filter);
+
+                MediaMatcher matcher;
+                if (filter == null || filter.isEmpty()){
+                    matcher = new MediaMatcher() {
+                        @Override
+                        public boolean match(String name, String description) {
+                            return true;
+                        }
+                    };
+                }else{
+                    matcher = new SearchMatcher(filter);
+                }
+
+                List<Mark> marks = db.searchMarks(mUserId, matcher);
+                List<UserMedia> medias = db.searchUserMedia(mUserId, matcher);
 
                 List<SearchComplexItem> result = merge(marks, medias);
                 mAdapter.changeItems(result);
@@ -120,6 +138,22 @@ public class SearchFragment extends BaseRecyclerFragment implements ISearchableF
             }
         });
         t.start();
+    }
+
+    //Выполняет роль делегата для поиска данных.
+    class SearchMatcher implements MediaMatcher {
+
+        private String mFilter;
+
+        public SearchMatcher(String filter) {
+            this.mFilter = filter;
+        }
+
+        @Override
+        public boolean match(String name, String description) {
+            return name.toLowerCase().contains(mFilter.toLowerCase())
+                    || description.toLowerCase().contains(mFilter.toLowerCase());
+        }
     }
 
     private List<SearchComplexItem> merge(List<Mark> marks, List<UserMedia> medias) {

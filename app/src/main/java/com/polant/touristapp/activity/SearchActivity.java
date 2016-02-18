@@ -91,7 +91,7 @@ public class SearchActivity extends BaseTouristActivity
                 switch (id) {
                     case R.id.action_search_show_all:
                         searchItem.collapseActionView();
-                        mSearchableFragment.search("");
+                        mSearchableFragment.search(null);
                         return true;
                 }
                 return false;
@@ -192,7 +192,7 @@ public class SearchActivity extends BaseTouristActivity
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
             //Обновляю список на случай того, если удалил фото.
-            mSearchableFragment.search("");
+            mSearchableFragment.search(null);
 
             setToolbarSearchData();
         }else {
@@ -213,7 +213,7 @@ public class SearchActivity extends BaseTouristActivity
             }
             else {
                 //Если открыт SearchFragment.
-                mSearchableFragment.search("");
+                mSearchableFragment.search(null);
             }
         }
     }

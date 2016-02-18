@@ -57,7 +57,7 @@ public class Database {
         String[] whereArgs = {String.valueOf(userId)};
         Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, whereArgs, null, null, null);
 
-        parseUserMediaCursor(c, result);
+        parseUserMediaCursor(c, result, null);
         return result;
     }
 
@@ -87,9 +87,10 @@ public class Database {
         sqLiteDatabase.execSQL(whereBuilder.toString());
     }
 
-    private void parseUserMediaCursor(Cursor c, List<UserMedia> result){
+    private void parseUserMediaCursor(Cursor c, List<UserMedia> result, MediaMatcher matcher){
         if (c != null) {
             if (c.moveToFirst()) {
+
                 int colId = c.getColumnIndex(MEDIA_ID);
                 int colName = c.getColumnIndex(MEDIA_NAME);
                 int colDescription = c.getColumnIndex(MEDIA_DESCRIPTION);
@@ -100,18 +101,23 @@ public class Database {
                 int colIsInGallery = c.getColumnIndex(MEDIA_IS_IN_GALLERY);
                 int colCreatedDate = c.getColumnIndex(MEDIA_CREATED_DATE);
                 do {
-                    UserMedia media = new UserMedia(
-                            c.getInt(colId),
-                            c.getString(colName),
-                            c.getString(colDescription),
-                            c.getInt(colUserId),
-                            c.getDouble(colLatitude),
-                            c.getDouble(colLongitude),
-                            c.getString(colExternalPath),
-                            c.getInt(colIsInGallery),
-                            c.getLong(colCreatedDate)
-                    );
-                    result.add(media);
+                    String name = c.getString(colName);
+                    String description = c.getString(colDescription);
+
+                    if (matcher != null && !matcher.match(name, description)) continue;
+
+                    int id = c.getInt(colId);
+                    int userId = c.getInt(colUserId);
+                    double latitude = c.getInt(colLatitude);
+                    double longitude = c.getInt(colLongitude);
+                    String mediaExternalPath = c.getString(colExternalPath);
+                    int isInGallery = c.getInt(colIsInGallery);
+                    long createdDate = c.getLong(colCreatedDate);
+
+                    result.add(new UserMedia(
+                            id, name, description, userId, latitude, longitude,
+                            mediaExternalPath, isInGallery, createdDate
+                    ));
                 } while (c.moveToNext());
             }
             c.close();
@@ -167,7 +173,6 @@ public class Database {
         }
     }
 
-    //Создание ContentValues для талбицы TABLE_MARK_RECORDS.
     private ContentValues putMarkRecordContentValues(MarkRecord record){
         ContentValues cv = new ContentValues();
         cv.put(MARK_RECORD_MEDIA_ID, record.getMediaId());
@@ -229,7 +234,7 @@ public class Database {
         String query = createUserMediaFilterQueryByMark(userId, medias, MEDIA_ID);
         Cursor c = sqLiteDatabase.rawQuery(query, null);
 
-        parseUserMediaCursor(c, result);
+        parseUserMediaCursor(c, result, null);
         return result;
     }
 
@@ -297,40 +302,46 @@ public class Database {
         return cv;
     }
 
-    //----------------------Find by id-----------------------//
-
-    public Mark findMarkById(long markId){
-        ArrayList<Mark> result = new ArrayList<>(1);
-        String where = MARK_ID + "=" + markId;
-        Cursor c = sqLiteDatabase.query(TABLE_MARKS, null, where, null, null, null, null);
-        parseMarkCursor(c, result);
-        return result.size() > 0 ? result.get(0) : null;
-    }
-
-    private void parseMarkCursor(Cursor c, List<Mark> result) {
+    private void parseMarkCursor(Cursor c, List<Mark> result, MediaMatcher matcher) {
         if (c != null) {
             if (c.moveToFirst()) {
+
                 int colId = c.getColumnIndex(MARK_ID);
                 int colName = c.getColumnIndex(MARK_NAME);
                 int colDescription = c.getColumnIndex(MARK_DESCRIPTION);
                 int colUserId = c.getColumnIndex(MARK_USER_ID);
                 do {
-                    Mark m = new Mark(
-                            c.getInt(colId),
-                            c.getString(colName),
-                            c.getString(colDescription),
-                            c.getInt(colUserId));
-                    result.add(m);
+                    String name = c.getString(colName);
+                    String description = c.getString(colDescription);
+
+                    if (matcher != null && !matcher.match(name, description)) continue;
+
+                    int id = c.getInt(colId);
+                    int userId = c.getInt(colUserId);
+
+                    result.add(new Mark(id, name, description, userId));
                 } while (c.moveToNext());
             }
             c.close();
         }
     }
 
+    //----------------------Find by id-----------------------//
+
+    public Mark findMarkById(long markId){
+        ArrayList<Mark> result = new ArrayList<>(1);
+        String where = MARK_ID + "=" + markId;
+        Cursor c = sqLiteDatabase.query(TABLE_MARKS, null, where, null, null, null, null);
+
+        parseMarkCursor(c, result, null);
+        return result.size() > 0 ? result.get(0) : null;
+    }
+
     public List<Long> findMarksIdsByMediaId(int mediaId){
         ArrayList<Long> result = new ArrayList<>();
         String where = MARK_RECORD_MEDIA_ID + "=" + mediaId;
         Cursor c = sqLiteDatabase.query(TABLE_MARK_RECORDS, null, where, null, null, null, null);
+
         parseMarkRecordMarksIdsCursor(c, result);
         return result;
     }
@@ -339,35 +350,32 @@ public class Database {
         ArrayList<UserMedia> result = new ArrayList<>(1);
         String where = MEDIA_ID + "=" + mediaId;
         Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, null, null, null, null);
-        parseUserMediaCursor(c, result);
+
+        parseUserMediaCursor(c, result, null);
         return result.size() > 0 ? result.get(0) : null;
     }
 
     //-------------------------------------Search-----------------------------------------//
 
-    //TODO: возможно стоит перевести приложение на английский язык, так как Lower(), Upper() не работают с utf-8.
-
-    public ArrayList<UserMedia> searchUserMedia(int userId, String filter){
+    public ArrayList<UserMedia> searchUserMedia(int userId, MediaMatcher matcher){
         ArrayList<UserMedia> result = new ArrayList<>();
 
-        String where = MEDIA_USER_ID + "=? AND (" + MEDIA_NAME + " LIKE ? OR " +
-                    MEDIA_DESCRIPTION + " LIKE ?)";
-        String[] whereArgs = new String[]{ String.valueOf(userId), "%" +filter + "%","%" + filter + "%" };
-        Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, whereArgs, null, null, MEDIA_NAME);
+        String where = MEDIA_USER_ID + "=?";
+        String[] whereArgs = {String.valueOf(userId)};
+        Cursor c = sqLiteDatabase.query(TABLE_USERS_MEDIA, null, where, whereArgs, null, null, null);
 
-        parseUserMediaCursor(c, result);
+        parseUserMediaCursor(c, result, matcher);
         return result;
     }
 
-    public ArrayList<Mark> searchMarks(int userId, String filter){
+    public ArrayList<Mark> searchMarks(int userId, MediaMatcher matcher){
         ArrayList<Mark> result = new ArrayList<>();
 
-        String where = MARK_USER_ID + "=? AND (" + MARK_NAME + " LIKE ? OR " +
-                    MARK_DESCRIPTION + " LIKE ?)";
-        String[] whereArgs = new String[]{ String.valueOf(userId), "%" +filter + "%","%" + filter + "%" };
+        String where = MARK_USER_ID + "=?";
+        String[] whereArgs = new String[]{ String.valueOf(userId) };
         Cursor c = sqLiteDatabase.query(TABLE_MARKS, null, where, whereArgs, null, null, MARK_NAME);
 
-        parseMarkCursor(c, result);
+        parseMarkCursor(c, result, matcher);
         return result;
     }
 
