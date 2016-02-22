@@ -19,6 +19,8 @@ import com.polant.touristapp.Constants;
 import com.polant.touristapp.R;
 import com.polant.touristapp.activity.SettingsActivity;
 
+import java.util.List;
+
 /**
  * Класс-обертка для работы с результатами геолокации на карте.
  */
@@ -26,7 +28,7 @@ public class TouristLocationManager implements ILocationManager{
 
     private Context mContext;
     private LocationManager mLocationManager;
-    private Criteria mCriteria;
+    private Criteria mCriteria = new Criteria();
     private Location mLocation;
 
     private GoogleMap mMap;
@@ -49,7 +51,6 @@ public class TouristLocationManager implements ILocationManager{
     }
 
     private void initCriteria(){
-        mCriteria = new Criteria();
         mCriteria.setAccuracy(Criteria.ACCURACY_FINE);
         mCriteria.setPowerRequirement(Criteria.POWER_LOW);
         mCriteria.setAltitudeRequired(false);
@@ -91,23 +92,61 @@ public class TouristLocationManager implements ILocationManager{
 
     @Override
     public void registerListener() {
+        unregisterAllListeners();
+
+        //Частота обновлений хранится в SharedPreferences.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         int locationUpdateFrequency = Integer.valueOf(sp.getString(SettingsActivity.KEY_LOCATION_UPDATE_FREQUENCY,
                 String.valueOf(Constants.DEFAULT_LOCATION_UPDATE_FREQUENCY)));
         int locationUpdateMinDistance = Integer.valueOf(sp.getString(SettingsActivity.KEY_LOCATION_UPDATE_MIN_DISTANCE,
                 String.valueOf(Constants.DEFAULT_LOCATION_UPDATE_MIN_DISTANCE)));
 
-        String provider = mLocationManager.getBestProvider(mCriteria, true);
-        Log.d(Constants.APP_LOG_TAG, " provider = " + provider);
-        mLocationManager.requestLocationUpdates(provider,
-                locationUpdateFrequency,
-                locationUpdateMinDistance,
-                mLocationListener);
+        String bestProvider = mLocationManager.getBestProvider(mCriteria, false);
+        String bestAvailableProvider = mLocationManager.getBestProvider(mCriteria, true);
+        Log.d(Constants.APP_LOG_TAG, " providers: " + bestProvider + "/" + bestAvailableProvider);
+
+        if (bestProvider == null){
+            Log.d(Constants.APP_LOG_TAG, "No Location Providers exists on device");
+        }
+        else if (bestProvider.equals(bestAvailableProvider)){
+            mLocationManager.requestLocationUpdates(bestAvailableProvider,
+                    locationUpdateFrequency,
+                    locationUpdateMinDistance,
+                    mBestAvailableLocationListener);
+        }
+        else{
+            mLocationManager.requestLocationUpdates(bestProvider,
+                    locationUpdateFrequency,
+                    locationUpdateMinDistance,
+                    mBestLocationListener);
+
+            if (bestAvailableProvider != null){
+                mLocationManager.requestLocationUpdates(bestAvailableProvider,
+                        locationUpdateFrequency,
+                        locationUpdateMinDistance,
+                        mBestAvailableLocationListener);
+            }
+            else {
+                List<String> allProviders = mLocationManager.getAllProviders();
+                for (String provider : allProviders){
+                    mLocationManager.requestLocationUpdates(provider,
+                            0,
+                            0,
+                            mBestLocationListener);
+                }
+                Log.d(Constants.APP_LOG_TAG, "No Location Providers currently available");
+            }
+        }
     }
 
     @Override
     public void unregisterListener() {
-        mLocationManager.removeUpdates(mLocationListener);
+        unregisterAllListeners();
+    }
+
+    private void unregisterAllListeners() {
+        mLocationManager.removeUpdates(mBestLocationListener);
+        mLocationManager.removeUpdates(mBestAvailableLocationListener);
     }
 
     @Override
@@ -115,7 +154,7 @@ public class TouristLocationManager implements ILocationManager{
         return mLocation;
     }
 
-    private final LocationListener mLocationListener = new LocationListener() {
+    private final LocationListener mBestLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             updateMapWithLocation(location);
@@ -125,7 +164,27 @@ public class TouristLocationManager implements ILocationManager{
         public void onStatusChanged(String provider, int status, Bundle extras) {}
 
         @Override
-        public void onProviderEnabled(String provider) {}
+        public void onProviderEnabled(String provider) {
+            registerListener();
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {}
+    };
+
+    private final LocationListener mBestAvailableLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            updateMapWithLocation(location);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            registerListener();
+        }
 
         @Override
         public void onProviderDisabled(String provider) {}
